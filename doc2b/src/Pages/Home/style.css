@@ -1,0 +1,197 @@
+.GroupedBlocks {
+    display: flex;
+}
+
+.GroupedBlocksTwo {
+    width: 64.7%;
+    margin-right: 10px;
+}
+
+.dashBlock {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 15px;
+    padding-bottom: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 40%;
+}
+
+.NumbersBlock {
+    width: 25%;
+}
+
+.NumberBlock1, .NumberBlock2 {
+    background: url(../../assets/Images/NumBG1.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 10px 20px;
+    border-radius: 15px;
+    color: #ffffff;
+}
+
+.NumberBlock2 {
+    margin-top: 10px;
+    background: url(../../assets/Images/NumBG2.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.NumberBlock1 h3, .NumberBlock2 h3 {
+    font-size: 42px;
+    font-family: 'LabGrotesque', sans-serif;
+    font-weight: 500;
+}
+
+.NumberBlock1 h3::selection, .NumberBlock2 h3::selection, .NumberBlock1 h5::selection, .NumberBlock2 h5::selection, .label-percentage::selection {
+    background-color: #ffffff;
+    color: var(--dark-green);
+}
+
+.NumberBlock1 h5, .NumberBlock2 h5 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu', sans-serif;
+    font-weight: 500;
+}
+
+.Chart {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px 5px;
+    padding-bottom: 10px;
+    border-radius: 15px;
+}
+
+.chartlabel {
+    display: grid;
+    justify-content: flex-start;
+    width: 345px;
+    margin-right: 20px;
+}
+
+.label-percentage {
+    width: 70px;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #ffffff;
+    font-family: 'LabGrotesque', sans-serif;
+    font-weight: 600;
+}
+
+.label-text {
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu', sans-serif;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.pieChart {
+    position: relative;
+    top: 10px;
+}
+
+.chartFilters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="radio"] {
+    position: relative;
+    padding: 8px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    border: none;
+    background: transparent;
+    width: 10px;
+    height: 10px;
+    border: 2px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+  
+input[type="radio"]::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 2.55px;
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+  
+input[type="radio"]:checked {
+    border: 2px solid var(--orange);
+}
+
+input[type="radio"]:checked::before {
+    background-color: var(--orange);
+}
+  
+.chartFilters label {
+    font-size: 15px;
+    font-family: 'Arnamu', sans-serif;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.AddsSection {
+    width: 35%;
+    height: auto;
+    background: url(../../assets/Images/office.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sliderBlock {
+    margin-top: 15px;
+    width: 100%;
+    padding: 20px;
+}
+
+.sliderHeaderBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sliderHeaderBlock h3 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu', sans-serif;
+}
+
+.sliderHeaderBlock button {
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu Bold', sans-serif;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
+    color: #ffffff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.sliderHeaderBlock button:hover {
+    transform: scale(1.1);
+}
