@@ -1,0 +1,59 @@
+.AddCompany {
+    background: url(../../assets/Images/NumBG2.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 27px 11px;
+}
+
+.singleComany {
+    overflow: hidden;
+    padding-bottom: 60px;
+    padding-right: 6.5em;
+}
+
+.CompanyIcon {
+    position: absolute;
+    width: 75px;
+    left: -5px;
+    bottom: -10px;
+}
+
+.companyHead {
+    position: relative;
+    right: 5px;
+    font-size: 16px !important;
+}
+
+.comanyName {
+    position: absolute;
+    bottom: 20px;
+    left: 4em;
+    font-size: 20px !important;
+    font-family: 'LabGrotesque Medium', sans-serif;
+    font-weight: 500 !important;
+}
+
+.AddCompany h3 {
+    margin-right: 7px;
+}
+
+.AddCompany .StaffPlusBtn {
+    margin-left: 0 !important;
+}
+
+@media screen and (max-width: 500px) {
+    .AddCompany h3 {
+        margin-right: 30px;
+    }
+    .CompanyIcon {
+        width: 80px;
+    }
+    .comanyName {
+        left: 5em;
+    }
+    .AddCompanyPopUp {
+        top: -5em;
+        padding-bottom: 3em;
+    }
+}

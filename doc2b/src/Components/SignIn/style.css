@@ -424,7 +424,7 @@
 }
 
 .errorLabel {
-  background: var(--red) !important;
+  background: linear-gradient(45deg, #e00056 10.2%,  #ff639f 90.2%) !important;
   transform: translateY(-28px) !important;
 }
 

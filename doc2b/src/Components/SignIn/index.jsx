@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import './style.css';
+import { useGlobalContext } from "../../Context/Context";
 
 //Logos
 import Logo from "../../assets/Images/Logo.png";
@@ -14,6 +15,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 
 export default function SignIn() {
+    const {darkMode} = useGlobalContext();
     const overlayRef = useRef(null);
     const leftTextRef = useRef(null);
     const rightTextRef = useRef(null);
@@ -116,7 +118,6 @@ export default function SignIn() {
         }, 400);
 
         setTimeout(() => {
-            
             SignInBtn.current.style.display = "block";
             accountFormRef.current.classList.add("form-left-slide-in");
         }, 400);
@@ -349,54 +350,54 @@ export default function SignIn() {
             </div>
             <div className="form">
                 <div className="logo-block">
-                    {isSignInOpen ? <img src={Logo} alt="mainLogo"/>: <img src={LogoWhite} alt="mainLogo"/>}
+                    {darkMode ? <img src={LogoWhite} alt="mainLogo"/> : (isSignInOpen ? <img src={Logo} alt="mainLogo"/> : <img src={LogoWhite} alt="mainLogo"/>)}
                 </div>
                 <div className="sign-in" ref={accountFormRef} style={{display: "flex"}}>
                     <h1>Մուտք Գործել</h1>
-                    <p className="small">Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>
+                    <p className={"small" + (darkMode ? ' whiteElement' : '')}>Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>
                     <form id="sign-in-form"> 
                         <div className="InputContainer">
-                            <input type="email" name="Email-1" className={"inpts" + (email1Error ? " errorInpt": "")} onChange={(e) => chechLabelEmail1(e.target.value)}/>
+                            <input type="email" name="Email-1" className={"inpts" + (email1Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelEmail1(e.target.value)} autoComplete="email"/>
                             <label htmlFor="Email-1" className={"myLabel" + (email1Label ? " upLabel" : "") + (email1Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Էլ․ փոստ</label>
                             {email1Error ? <div><span className="errorMessage">{email1Error}</span></div>: null}
                         </div>
                         <div className="InputContainer">
                             <div>
-                                <input type={showSignInPass ? "text": "password"} name="Գաղտնաբառ-1" className={"inpts" + (pass1Error ? " errorInpt": "")} onChange={(e) => chechLabelPass1(e.target.value)}/>
+                                <input type={showSignInPass ? "text": "password"} name="Գաղտնաբառ-1" className={"inpts" + (pass1Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass1(e.target.value)} autoComplete="current-password"/>
                                 <label htmlFor="Գաղտնաբառ-1" className={"myLabel" + (password1Label ? " upLabel" : "") + (pass1Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Գաղտնաբառ</label>
                                 {!showSignInPass ? <FaEyeSlash className={"passwordIcon" + (pass1Error ? " errorEye" : "")} onClick={handleSignInShowPassword}/>: <FaEye className={"passwordIcon" + (pass1Error ? " errorEye" : "")} onClick={handleSignInShowPassword}/>}
                                 {pass1Error ? <div><span className="errorMessage">{pass1Error}</span></div>: null}
                             </div>
                         </div>
-                        <p className="forgot-password">Մոռացել եմ գաղտնաբառը</p>
+                        <p className={"forgot-password" + (darkMode ? ' whiteElement' : '')}>Մոռացել եմ գաղտնաբառը</p>
                         <button className="control-button in" ref={SignInBtn} onClick={logIn}>Մուտք գործել</button>
                     </form>
                 </div>
                 <div className="sign-up" ref={signinFormRef}>
                     <h1>Ստեղծել Հաշիվ</h1>
-                    <p className="small">Լրացրեք ձեր տվյալները և դարձեք
+                    <p className={"small" + (darkMode ? ' whiteElement' : '')}>Լրացրեք ձեր տվյալները և դարձեք
                     մեր խելացի համակարգի օգտատերերից մեկը:</p>
                     <form id="sign-up-form">
                         <div className="groupedInpts">
                             <div className="InputContainer">
-                                <input type="text" name="Name" className={"inpts" + (nameError ? " errorInpt": "")} onChange={(e) => chechLabelName(e.target.value)}/>
+                                <input type="text" name="Name" className={"inpts" + (nameError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelName(e.target.value)}/>
                                 <label htmlFor="Name" className={"myLabel" + (nameLabel ? " upLabel" : "") + (nameError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Անուն</label>
                                 {nameError ? <div><span className="errorMessage">{nameError}</span></div>: null}
                             </div>
                             <div className="InputContainer">
-                                <input type="text" name="Ազգանուն" className={"inpts" + (surnameError ? " errorInpt": "")} onChange={(e) => chechLabelSurname(e.target.value)}/>
+                                <input type="text" name="Ազգանուն" className={"inpts" + (surnameError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelSurname(e.target.value)}/>
                                 <label htmlFor="Ազգանուն" className={"myLabel" + (surnameLabel ? " upLabel" : "") + (surnameError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Ազգանուն</label>
                                 {surnameError ? <div><span className="errorMessage">{surnameError}</span></div>: null}
                             </div>
                         </div>
                         <div className="groupedInpts">
                             <div className="InputContainer">
-                                <input type="email" name="Email-2" className={"inpts" + (email2Error ? " errorInpt": "")} onChange={(e) => chechLabelEmail2(e.target.value)}/>
+                                <input type="email" name="Email-2" className={"inpts" + (email2Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelEmail2(e.target.value)}/>
                                 <label htmlFor="Email-2" className={"myLabel" + (email2Label ? " upLabel" : "") + (email2Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Էլ․ փոստ</label>
                                 {email2Error ? <div><span className="errorMessage">{email2Error}</span></div>: null}
                             </div>
                             <div className="InputContainer">
-                                <input type="tel" name="Հեռ․" className={"inpts" + (telError ? " errorInpt": "")} value={tel} onChange={(e) => chechLabelTel(e.target.value)}/>
+                                <input type="tel" name="Հեռ․" className={"inpts" + (telError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} value={tel} onChange={(e) => chechLabelTel(e.target.value)} autoComplete={tel}/>
                                 <label htmlFor="Հեռ․" className={"myLabel" + (telLabel ? " upLabel" : "") + (telError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Հեռ․</label>
                                 {telError ? <div><span className="errorMessage">{telError}</span></div>: null}
                             </div>
@@ -404,7 +405,7 @@ export default function SignIn() {
                         <div className="groupedInpts">
                             <div className="InputContainer">
                                 <div>
-                                    <input type={showSignUpPass ? "text": "password"} name="Գաղտնաբառ-2" className={"inpts" + (pass2Error ? " errorInpt": "")} onChange={(e) => chechLabelPass2(e.target.value)}/>
+                                    <input type={showSignUpPass ? "text": "password"} name="Գաղտնաբառ-2" className={"inpts" + (pass2Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass2(e.target.value)} autoComplete="new-password"/>
                                     <label htmlFor="Գաղտնաբառ-2" className={"myLabel" + (password2Label ? " upLabel" : "") + (pass2Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Գաղտնաբառ</label>
                                     {!showSignUpPass ? <FaEyeSlash className={"passwordIcon" + (pass2Error ? " errorEye" : "")} onClick={handleSignUpShowPassword}/>: <FaEye className={"passwordIcon" + (pass2Error ? " errorEye" : "")} onClick={handleSignUpShowPassword}/>}
                                     {pass2Error ? <div><span className="errorMessage">{pass2Error}</span></div>: null}
@@ -412,7 +413,7 @@ export default function SignIn() {
                             </div>
                             <div className="InputContainer">
                                 <div>
-                                    <input type={showReapetPass ? "text": "password"} className={"inpts" + (pass3Error ? " errorInpt": "")} onChange={(e) => chechLabelPass3(e.target.value)}/>
+                                    <input type={showReapetPass ? "text": "password"} className={"inpts" + (pass3Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass3(e.target.value)} autoComplete="current-password"/>
                                     <label htmlFor="Գաղտնաբառ-1" className={"myLabel" + (password3Label ? " upLabel" : "") + (pass3Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Կրկնեք գաղտնաբառը</label>
                                     {!showReapetPass ? <FaEyeSlash className={"passwordIcon" + (pass3Error ? " errorEye" : "")} onClick={handleReapeatShowPassword}/>: <FaEye className={"passwordIcon" + (pass3Error ? " errorEye" : "")} onClick={handleReapeatShowPassword}/>}
                                     {pass3Error ? <div><span className="errorMessage">{pass3Error}</span></div>: null}
@@ -421,7 +422,7 @@ export default function SignIn() {
                         </div>
                         <div className="agree">
                             <input type="checkbox" name="պայմաններ" checked={isChecked} onChange={() => setIsChecked(!isChecked)}/>
-                            <label htmlFor="պայմաններ" className={!agreed ? 'notAgree' : ''} onClick={handleLabelClick}>Համաձայն եմ ընդհանուր դրույթներին և պայմաններին</label>
+                            <label htmlFor="պայմաններ" className={!agreed ? 'notAgree' : '' + (darkMode ? ' whiteElement' : '')} onClick={handleLabelClick}>Համաձայն եմ ընդհանուր դրույթներին և պայմաններին</label>
                         </div>
                         <button className="control-button up" ref={SignUpBtn} onClick={signUp}>Ստեղծել հաշիվ</button>
                     </form>
@@ -431,48 +432,48 @@ export default function SignIn() {
 
         <div className="mobileLogIn">
             <div className="logo-block">
-                <img src={Logo} alt="mainLogo"/>
+                {darkMode ? <img src={LogoWhite} alt="mainLogo"/> : <img src={Logo} alt="mainLogo"/>} 
             </div>
             {isSignInOpen ? <h1 className="mainTitle">Մուտք Գործել</h1>: <h1 className="mainTitle">Ստեղծել Հաշիվ</h1>}
-            {isSignInOpen ? <p className="small">Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>: <p className="small">Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>}
-            {isSignInOpen ? <form id="sign-in-form"> 
+            {isSignInOpen ? <p className={"small" + (darkMode ? ' whiteElement' : '')}>Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>: <p className={"small" + (darkMode ? ' whiteElement' : '')}>Լրացրեք ձեր տվյալները և դարձեք մեր խելացի համակարգի օգտատերերից մեկը:</p>}
+            {isSignInOpen ? <form id="sign-in-form sign-in-form-2"> 
                 <div className="InputContainer">
-                    <input type="email" name="Email-1" className={"inpts" + (email1Error ? " errorInpt": "")} onChange={(e) => chechLabelEmail1(e.target.value)}/>
+                    <input type="email" name="Email-1" className={"inpts" + (email1Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelEmail1(e.target.value)} autoComplete="email"/>
                     <label htmlFor="Email-1" className={"myLabel" + (email1Label ? " upLabel" : "") + (email1Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Էլ․ փոստ</label>
                     {email1Error ? <div><span className="errorMessage">{email1Error}</span></div>: null}
                 </div>
                 <div className="InputContainer">
                     <div>
-                        <input type={showSignInPass ? "text": "password"} name="Գաղտնաբառ-1" className={"inpts" + (pass1Error ? " errorInpt": "")} onChange={(e) => chechLabelPass1(e.target.value)}/>
+                        <input type={showSignInPass ? "text": "password"} name="Գաղտնաբառ-1" className={"inpts" + (pass1Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass1(e.target.value)} autoComplete="current-password"/>
                         <label htmlFor="Գաղտնաբառ-1" className={"myLabel" + (password1Label ? " upLabel" : "") + (pass1Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Գաղտնաբառ</label>
                         {!showSignInPass ? <FaEyeSlash className={"passwordIcon" + (pass1Error ? " errorEye" : "")} onClick={handleSignInShowPassword}/>: <FaEye className={"passwordIcon" + (pass1Error ? " errorEye" : "")} onClick={handleSignInShowPassword}/>}
                         {pass1Error ? <div><span className="errorMessage">{pass1Error}</span></div>: null}
                     </div>
                 </div>
-                <p className="forgot-password">Մոռացել եմ գաղտնաբառը</p>
+                <p className={"forgot-password" + (darkMode ? ' whiteElement' : '')}>Մոռացել եմ գաղտնաբառը</p>
                 <button className="control-button in" ref={SignInBtn} onClick={logIn}>Մուտք գործել</button>
             </form> :
             <form id="sign-up-form">
                 <div className="groupedInpts">
                     <div className="InputContainer">
-                        <input type="text" name="Name" className={"inpts" + (nameError ? " errorInpt": "")} onChange={(e) => chechLabelName(e.target.value)}/>
+                        <input type="text" name="Name" className={"inpts" + (nameError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelName(e.target.value)}/>
                         <label htmlFor="Name" className={"myLabel" + (nameLabel ? " upLabel" : "") + (nameError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Անուն</label>
                         {nameError ? <div><span className="errorMessage">{nameError}</span></div>: null}
                     </div>
                     <div className="InputContainer">
-                        <input type="text" name="Ազգանուն" className={"inpts" + (surnameError ? " errorInpt": "")} onChange={(e) => chechLabelSurname(e.target.value)}/>
+                        <input type="text" name="Ազգանուն" className={"inpts" + (surnameError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelSurname(e.target.value)}/>
                         <label htmlFor="Ազգանուն" className={"myLabel" + (surnameLabel ? " upLabel" : "") + (surnameError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Ազգանուն</label>
                         {surnameError ? <div><span className="errorMessage">{surnameError}</span></div>: null}
                     </div>
                 </div>
                 <div className="groupedInpts">
                     <div className="InputContainer">
-                        <input type="email" name="Email-2" className={"inpts" + (email2Error ? " errorInpt": "")} onChange={(e) => chechLabelEmail2(e.target.value)}/>
+                        <input type="email" name="Email-2" className={"inpts" + (email2Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelEmail2(e.target.value)}/>
                         <label htmlFor="Email-2" className={"myLabel" + (email2Label ? " upLabel" : "") + (email2Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Էլ․ փոստ</label>
                         {email2Error ? <div><span className="errorMessage">{email2Error}</span></div>: null}
                     </div>
                     <div className="InputContainer">
-                        <input type="tel" name="Հեռ․" className={"inpts" + (telError ? " errorInpt": "")} value={tel} onChange={(e) => chechLabelTel(e.target.value)}/>
+                        <input type="tel" name="Հեռ․" className={"inpts" + (telError ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} value={tel} onChange={(e) => chechLabelTel(e.target.value)} autoComplete={tel}/>
                         <label htmlFor="Հեռ․" className={"myLabel" + (telLabel ? " upLabel" : "") + (telError ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Հեռ․</label>
                         {telError ? <div><span className="errorMessage">{telError}</span></div>: null}
                     </div>
@@ -480,7 +481,7 @@ export default function SignIn() {
                 <div className="groupedInpts">
                     <div className="InputContainer">
                         <div>
-                            <input type={showSignUpPass ? "text": "password"} name="Գաղտնաբառ-2" className={"inpts" + (pass2Error ? " errorInpt": "")} onChange={(e) => chechLabelPass2(e.target.value)}/>
+                            <input type={showSignUpPass ? "text": "password"} name="Գաղտնաբառ-2" className={"inpts" + (pass2Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass2(e.target.value)} autoComplete="new-password"/>
                             <label htmlFor="Գաղտնաբառ-2" className={"myLabel" + (password2Label ? " upLabel" : "") + (pass2Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Գաղտնաբառ</label>
                             {!showSignUpPass ? <FaEyeSlash className={"passwordIcon" + (pass2Error ? " errorEye" : "")} onClick={handleSignUpShowPassword}/>: <FaEye className={"passwordIcon" + (pass2Error ? " errorEye" : "")} onClick={handleSignUpShowPassword}/>}
                             {pass2Error ? <div><span className="errorMessage">{pass2Error}</span></div>: null}
@@ -488,7 +489,7 @@ export default function SignIn() {
                     </div>
                     <div className="InputContainer">
                         <div>
-                            <input type={showReapetPass ? "text": "password"} className={"inpts" + (pass3Error ? " errorInpt": "")} onChange={(e) => chechLabelPass3(e.target.value)}/>
+                            <input type={showReapetPass ? "text": "password"} className={"inpts" + (pass3Error ? " errorInpt": "") + (darkMode ? ' darkInpt' : '')} onChange={(e) => chechLabelPass3(e.target.value)} autoComplete="current-password"/>
                             <label htmlFor="Գաղտնաբառ-1" className={"myLabel" + (password3Label ? " upLabel" : "") + (pass3Error ? " upLabel errorLabel" : "")} onClick={(e) => upLabel(e.target)}>Կրկնեք գաղտնաբառը</label>
                             {!showReapetPass ? <FaEyeSlash className={"passwordIcon" + (pass3Error ? " errorEye" : "")} onClick={handleReapeatShowPassword}/>: <FaEye className={"passwordIcon" + (pass3Error ? " errorEye" : "")} onClick={handleReapeatShowPassword}/>}
                             {pass3Error ? <div><span className="errorMessage">{pass3Error}</span></div>: null}
@@ -497,7 +498,7 @@ export default function SignIn() {
                 </div>
                 <div className="agree">
                     <input type="checkbox" name="պայմաններ" checked={isChecked} onChange={() => setIsChecked(!isChecked)}/>
-                    <label htmlFor="պայմաններ" className={!agreed ? 'notAgree' : ''} onClick={handleLabelClick}>Համաձայն եմ ընդհանուր դրույթներին և պայմաններին</label>
+                    <label htmlFor="պայմաններ" className={!agreed ? 'notAgree' : '' + (darkMode ? ' whiteElement' : '')} onClick={handleLabelClick}>Համաձայն եմ ընդհանուր դրույթներին և պայմաններին</label>
                 </div>
                 <button className="control-button up" ref={SignUpBtn} onClick={signUp}>Ստեղծել հաշիվ</button>
             </form>}

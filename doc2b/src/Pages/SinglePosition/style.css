@@ -1,0 +1,114 @@
+.SinglePositionName {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.allTheStaff {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.AllTheStaffSection {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.staff-col {
+    width: 50%;
+}
+
+.gorcaruyt-block {
+    position: relative;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #F5F7FA;
+    border: 1px solid #d6d6d6;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.edit-gorcaruyt {
+    margin-bottom: 9px;
+}
+
+.delete-gorcaruyt {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    border: none;
+    background-color: transparent;
+    color: #8c8c8c;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.delete-gorcaruyt:hover {
+    color: var(--red);
+}
+
+.secondary-add-gorcaruyt-btn {
+    position: absolute;
+    top: -5px;
+    right: 12em;
+}
+
+.single-position-edit .staff-edit-button, .single-position-edit .staff-edit-group-btns{
+    top: -3px;
+    right: -15px;
+}
+
+.gorcaruyt-block h3 {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #949494;
+    font-weight: 600;
+}
+
+.gorcaruyt-block p {
+    font-family: 'Arnamu Medium', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.gorcaruyt-block textarea {
+    width: 100%;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #d6d6d6;
+    outline: none;
+    background-color: #ffffff;
+    font-family: 'Arnamu Medium', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 5px;
+}
+
+@media screen and (max-width: 500px) {
+    .staff-col {
+        width: 100%;
+    }
+    .add-gorcaruyt .secondary-add-staff-btn {
+        display: flex;
+        position: relative;
+        left: 0;
+        margin-top: 15px;
+    }
+    .single-position-edit .staff-edit-button, .single-position-edit .staff-edit-group-btns{
+        position: relative !important;
+        margin-top: 20px;
+    }
+    .gorcaruyt-block textarea {
+        height: 70px;
+    }
+}

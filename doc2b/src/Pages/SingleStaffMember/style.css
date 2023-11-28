@@ -1,0 +1,392 @@
+.singleStaffRow, .singleStaffNameSection, .PositionDivisionSec {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.singleStaffRow {
+    margin-top: 23px;
+    margin-right: 30px;
+}
+
+.singleStaffNameSection .userAvatar {
+    border: 2px solid #d6d6d6;
+    border-radius: 50%;
+    background-color: #ffffff;
+    padding: 20px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: auto;
+}
+
+.uploadStaffAvatarSec {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.uploadStaffAvatarSec div {
+    background-color: #F5F7FA;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 6px;
+    padding-top: 3px;
+}
+
+.uploadStaffAvatarSec div svg {
+    color: var(--light-green);
+    width: 20px;
+    height: 20px;
+}
+
+.singleStaffName {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.singleStaffStatus {
+    font-family: 'LabGrotesque', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--red);
+    margin-top: 5px;
+}
+
+.staff-edit-button, .staff-edit-group-btns {
+    text-transform: capitalize;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute !important;
+    top: 10px;
+    right: 0;
+}
+
+.staff-edit-group-btns button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 5px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.save-staff-edit {
+    font-size: 16px !important;
+    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
+}
+
+.cancel-staff-edit {
+    background: linear-gradient(45deg, #ff0061 10.2%, #ff7cae 80.2%);
+}
+
+.staff-edit-button svg {
+    margin-left: 15px;
+}
+
+.PositionDivisionSec h3 {
+    margin-right: 6em;
+    margin-left: 10px;
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.staffInputSec {
+    display: grid;
+    justify-content: flex-start;
+    margin-left: 10px;
+    margin-right: 25px;
+}
+
+.DateInputSec {
+    margin-right: 15px;
+}
+
+.NameInptSec, .RoleInptSec {
+    margin-left: 0;
+}
+
+.NameInptSec {
+    display: flex;
+}
+
+.NameInptSec div {
+    display: grid;
+    margin-right: 15px;
+}
+
+.RoleInptSec {
+    margin-top: 5px;
+}
+
+.editStaffInputSec {
+    margin-right: 5px;
+    margin-top: -7px;
+}
+
+.staffInputSec input, .staffInputSec select {
+    width: 133px;
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: 1px solid #d6d6d6;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu', sans-serif;
+    background-color: #F5F7FA;
+}
+
+.staffInputSec label {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: #949494;
+    font-weight: 600;
+}
+
+.staffInputSec h3 {
+    font-family: 'Arnamu Medium', sans-serif;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.staffInputSec a {
+    color: #000000;
+}
+
+.InputsRow {
+    justify-content: flex-start;
+    margin-right: 5px;
+}
+
+#Address, #LegalAddress, #BusinessAddress {
+    width: 22.5em;
+}
+
+#PassportGivenBy, .DateInputSec input, #HoursPerWeek, #WorkingDaysWeek {
+    width: 100%;
+}
+
+#Salary, #Telephone {
+    width: 150px;
+}
+
+#Currency, #Nationality {
+    width: 80px;
+}
+
+#Position, #Division {
+    width: 200px;
+}
+
+.InputsRow button {
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu Bold', sans-serif;
+    text-transform: capitalize;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-left: 10px;
+    margin-top: -10px;
+    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
+    color: #ffffff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.InputsRow button:hover {
+    transform: scale(1.05);
+}
+
+.upload-doc-sec {
+    display: flex;
+}
+
+.StaffMemberEditDoc {
+    display: grid;
+    position: relative;
+    top: -7px;
+    margin-left: 30px;
+}
+
+.StaffMemberEditDoc div {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.StaffMemberEditDoc h2 {
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    font-size: 13px;
+    margin-bottom: 7px;
+    color: #949494;
+    font-weight: 600;
+}
+
+.StaffMemberEditDoc label {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.edit-upload-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 15px;
+    left: -20px;
+    font-size: 15px !important;
+}
+
+.edit-upload-btn svg {
+    margin-left: 15px;
+}
+
+.uploadedFileIcon {
+    font-size: 20px;
+    font-weight: 600;
+    width: 25px;
+    height: 25px;
+}
+
+button.instructionsIcon {
+    position: relative;
+    top: 19px;
+    left: -20px;
+    background: linear-gradient(45deg, rgb(240, 192, 2) 11.2%, rgb(255, 226, 61) 100.2%);
+    color: #000000;
+    border-radius: 50%;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uploadInstructions {
+    position: absolute;
+    visibility: hidden;
+    width: 500px;
+    z-index: 15;
+    background-color: #F5F7FA;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #d6d6d6;
+    top: -20.5em;
+    right: 2em;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-family: 'Arnamu', sans-serif;
+    transition: all 0.5s ease;
+}
+
+.darkUploadInstructions {
+    color: #ffffff;
+    background-color: #262626;
+    border: 1px solid #393939 !important;
+}
+
+.instructions-sec:hover .uploadInstructions, .uploadInstructions:hover {
+    visibility: visible;
+}
+
+.numbers {
+    font-family: 'LabGrotesque', sans-serif !important;
+}
+
+@media screen and (max-width: 500px) {
+    .singleStaffRow, .singleStaffNameSection, .PositionDivisionSec {
+       display: grid;
+    }
+    .singleStaffRow {
+        margin-right: 0;
+    }
+    .InputsRow {
+       display: flex;
+       flex-wrap: wrap;
+    }
+    .staffInputSec {
+       display: grid;
+       margin-top: 7px;
+       margin-bottom: 7px;
+       margin-right: 25px;
+       margin-left: 0;
+    }
+    .NameInptSec {
+        display: flex !important;
+        flex-wrap: wrap;
+        margin-right: 0;
+    }
+    .PositionDivisionSec h3 {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .editStaffInputSec {
+        margin-right: 13px;
+    }
+    .staffInputSec label, .StaffMemberEditDoc h2 {
+        font-size: 16px;
+    }
+
+    .staffInputSec h3, .StaffMemberEditDoc label {
+        font-size: 18px;
+    }
+    .staffInputSec input, .staffInputSec select {
+        width: 132px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+    .StaffMemberEditDoc {
+        margin-left: 0;
+        margin-bottom: 20px;
+        right: 0;
+    }
+    .upload-doc-sec {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-bottom: 25px;
+    }
+    .edit-upload-btn {
+        margin-left: 0 !important;
+        margin-right: 10px;
+        left: 0;
+    }
+    .uploadInstructions {
+        left: 0;
+        width: auto;
+        top: -25.5em;
+    }
+    button.instructionsIcon {
+        left: 0;
+    }
+}

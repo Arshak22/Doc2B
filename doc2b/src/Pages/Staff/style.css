@@ -1,0 +1,239 @@
+.StaffPage {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.LeftBlockSection {
+    position: relative;
+    width: 75%;
+    margin-left: 10px;
+    padding: 20px;
+    padding-right: 0;
+    padding-top: 0;
+    border-radius: 20px;
+    background-color: #ffffff;
+}
+
+.LeftBlockSection .InputContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-right: 5px;
+    margin-bottom: 20px;
+}
+
+.staff-filter-section {
+    display: flex;
+    align-items: flex-end;
+}
+
+.LeftBlockSection .headerInpt {
+    width: 250px;
+    margin-left: 10px;
+}
+
+.LeftBlockSection .searchIcon {
+    position: relative;
+    top: 7px !important;
+    right: 32px !important;
+}
+
+.StatusFilter {
+    position: relative;
+    top: -5px;
+    margin-right: 10px;
+}
+
+.StatusFilter label {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    font-family: 'LabGrotesque', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.StatusFilter input {
+    margin-right: 7px;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.groupedSideBlocks {
+    display: grid;
+    width: 39%;
+    margin-right: 10px;
+}
+
+.adds_2 {
+    width: 95%;
+    margin-left: 20px;
+}
+
+.groupedSideBlocks .event-calendar {
+    width: 95%;
+}
+
+.pagination {
+    position: absolute;
+    right: 0;
+    bottom: 30px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 12px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.page-item {
+    transition: all 0.3s ease;
+}
+
+.page-item:hover {
+    transform: scale(1.05);
+}
+
+.page-item .page-link {
+    background-color: #F5F7FA;
+    color: #000;
+    margin-right: 10px;
+    font-size: 15px;
+    padding: 4px 11px;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-item.active .page-link, .page-item .page-link:hover {
+    color: #ffffff !important;
+    border-color: #00959f;
+    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
+}
+
+.paginationArrows {
+    padding-top: 2px;
+}
+
+.page-item.disabled {
+    opacity: 0.5;
+}
+
+.page-item.disabled .page-link:hover {
+    background: #F5F7FA;
+    color: #000;
+    cursor: auto;
+    border: 1px solid #d6d6d6;
+}
+
+.secondary-add-staff-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: url(../../assets/Images/NumBG1.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+}
+
+.secondary-add-staff-btn:hover {
+    transform: scale(1.05);
+}
+
+.secondary-add-staff-btn span {
+    color: #000000;
+    background: linear-gradient(45deg, rgb(240, 192, 2) 11.2%, rgb(255, 226, 61) 100.2%);
+    border-radius: 50%;
+    height: 10px;
+    font-size: 20px;
+    padding: 13px;
+    width: 10px;
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-staff-content {
+    text-align: center;
+}
+
+.no-staff-content .welcome-section {
+    margin-bottom: 9em;
+}
+
+.no-staff-content .welcome-btn {
+    margin-top: 3em;
+}
+
+@media screen and (max-width: 500px) {
+    .StaffPage {
+        display: grid;
+        padding-bottom: 6em;
+    }
+    .LeftBlockSection {
+        padding: 20px;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    .LeftBlockSection, .groupedSideBlocks {
+        width: 100%;
+    }
+    .LeftBlockSection .InputContainer {
+        display: grid;
+    }
+    .groupedSideBlocks {
+        margin-top: 3em;
+    }
+    .adds_2 {
+        width: 100%;
+        margin: 0;
+    }
+    .staffList {
+        display: grid !important;
+        position: relative;
+        left: 10px;
+    }
+    .StaffPlusBtn {
+        margin-left: 80px !important;
+    }
+    .pagination {
+        position: relative;
+        top: 5px;
+        bottom: 0;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    .staff-filter-section {
+        display: grid;
+    }
+    .secondary-add-staff-btn {
+        display: none;
+    }
+    .StatusFilter {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-right: 0;
+    }
+    .StatusFilter label {
+        margin-bottom: 10px;
+    }
+    .LeftBlockSection .headerInpt {
+        margin-left: 35px;
+    }
+}

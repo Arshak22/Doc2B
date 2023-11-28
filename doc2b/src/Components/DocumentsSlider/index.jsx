@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import Slider from "react-slick";
 import { NavLink } from "react-router-dom";
+import { ROUTE_NAMES } from "../../Routes";
+import { useGlobalContext } from "../../Context/Context";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./style.css";
@@ -13,45 +14,7 @@ import DocumentInProcess from "../../assets/Images/DocumentInProcess.png";
 import { HiDotsHorizontal } from "react-icons/hi";
 
 export default function DocumentSlider({ documnets }) {
-  const settings = {
-    dots: false,
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    initialSlide: 0,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-    pauseOnHover: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: false,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
+  const {darkMode} = useGlobalContext();
   const [menuVisible, setMenuVisible] = useState([]);
   const menuRefs = useRef([]);
 
@@ -66,73 +29,45 @@ export default function DocumentSlider({ documnets }) {
     setMenuVisible(updatedMenuVisible);
   };
 
-  const handleClickOutside = (event, index) => {
-    if (
-      menuRefs.current[index] &&
-      !menuRefs.current[index].contains(event.target)
-    ) {
-      const updatedMenuVisible = [...menuVisible];
-      updatedMenuVisible[index] = false;
-      setMenuVisible(updatedMenuVisible);
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+        return text;
+    } else {
+        return text.substring(0, maxLength - 2) + '..';
     }
   };
 
-  useEffect(() => {
-    const handleOutsideClicks = (event, index) => {
-      handleClickOutside(event, index);
-    };
-
-    menuRefs.current.forEach((menuRef, index) => {
-      if (menuRef) {
-        document.addEventListener("mousedown", (event) =>
-          handleOutsideClicks(event, index)
-        );
-      }
-    });
-
-    return () => {
-      menuRefs.current.forEach((menuRef, index) => {
-        if (menuRef) {
-          document.removeEventListener("mousedown", (event) =>
-            handleOutsideClicks(event, index)
-          );
-        }
-      });
-    };
-  }, [menuVisible]);
-
   return (
     <div className="sliderSection">
-      <Slider {...settings}>
-        {documnets.map((elem, index) => {
-          return (
-            <div className={!elem.category ? "document": "document application"} key={index}>
-              <div className="three-dots">
-                <HiDotsHorizontal
-                  className="three-dots-icon"
-                  onClick={() => toggleMenu(index)}
-                />
-                {menuVisible[index] && (
-                  <div className="dots-menu" ref={(el) => (menuRefs.current[index] = el)}>
-                    <ul>
-                      <li>Դիտել</li>
-                      <li>Ներբեռնել</li>
-                      <li>Ուղարկել</li>
-                      <li>Ջնջել</li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-              <h2>{elem.name}</h2>
-              <h3>{elem.date}</h3>
-              {!elem.category ? <img src={Document} alt={`document${index}`} className="documentPic"/> :
-              elem.category === 'Accepted' ? <img src={DocumentAccepted} alt={`document${index}`} className="documentPic"/> :
-              elem.category === 'Declined' ? <img src={DocumentDeclined} alt={`document${index}`} className="documentPic"/> :
-              elem.category === 'In Process' ? <img src={DocumentInProcess} alt={`document${index}`} className="documentPic"/> : null}
+      {documnets.map((elem, index) => {
+        const dateParts = elem.date.split(" ");
+        return (
+          <div className={!elem.category ? "document": "document application" + (darkMode ? ' lightDark' : '')} key={index}>
+            <div className="three-dots">
+              <HiDotsHorizontal
+                className={"three-dots-icon" + (darkMode ? ' darkModeThreeDots' : '')}
+                onClick={() => toggleMenu(index)}
+              />
+              {menuVisible[index] && (
+                <div className="dots-menu" ref={(el) => (menuRefs.current[index] = el)}>
+                  <ul>
+                    <NavLink to={ROUTE_NAMES.ACTIVITY + '1'}><li>Դիտել</li></NavLink>
+                    <li>Ներբեռնել</li>
+                    <li>Ջնջել</li>
+                  </ul>
+                </div>
+              )}
             </div>
-          );
-        })}
-      </Slider>
+            <NavLink to={ROUTE_NAMES.ACTIVITY + '1'}><h2>{truncateText(elem.name, 41)}</h2></NavLink>
+            <NavLink to={ROUTE_NAMES.ACTIVITY + '1'}><h4>{elem.person}</h4></NavLink>
+            <h3><span>{dateParts[0]}</span> {dateParts[1]} <span>{dateParts[2]}</span></h3>
+            {!elem.category ? <img src={Document} alt={`document${index}`} className="documentPic"/> :
+            elem.category === 'Accepted' ? <img src={DocumentAccepted} alt={`document${index}`} className="documentPic"/> :
+            elem.category === 'Declined' ? <img src={DocumentDeclined} alt={`document${index}`} className="documentPic"/> :
+            elem.category === 'In Process' ? <img src={DocumentInProcess} alt={`document${index}`} className="documentPic"/> : null}
+          </div>
+        );
+      })}
     </div>
   );
 };

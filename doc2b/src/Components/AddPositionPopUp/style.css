@@ -1,0 +1,102 @@
+.AddPopUp.AddPositionPopUp {
+    left: 42%;
+    transform: translateX(-20%);
+}
+
+.AddPopUp.AddPositionPopUp .gorcaruyt-block {
+    width: 25vw;
+    margin-top: 15px;
+}
+
+.gorcaruyt-popup-section {
+    height: 258px;
+    margin-bottom: 5px;
+    overflow-x: hidden;
+}
+
+.gorcaruyt-popup-section::-webkit-scrollbar {
+    display: block !important;
+    width: 5px;
+    border-radius: 20px;
+}
+
+.gorcaruyt-popup-section::-webkit-scrollbar-track {
+    background: transparent;
+  }
+      
+.gorcaruyt-popup-section::-webkit-scrollbar-thumb {
+    background-color: var(--dark-green) !important;
+    border-radius: 20px;
+    border-right: none;
+    border-left: none;
+}
+  
+.gorcaruyt-popup-section::-webkit-scrollbar-thumb:hover {
+    background-color: var(--light-green);
+}
+  
+.gorcaruyt-popup-section::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+    margin-bottom: 5px; 
+}
+  
+::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+    margin-top: 5px;
+}
+
+.popup-gorcaruyt {
+    width: 25vw;
+    margin-top: 15px;
+}
+
+.shortTextarea {
+    width: 93% !important;
+}
+
+.popup-gorcaruyt .delete-gorcaruyt {
+    top: 30%;
+}
+
+.add-more-gorcaruyt {
+    color: #ffffff;
+    background: linear-gradient(45deg, rgb(0, 173, 186), rgb(0, 212, 227));
+    border-radius: 50%;
+    border: none;
+    height: 20px;
+    font-size: 25px;
+    padding: 16px;
+    width: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-more-gorcaruyt:hover {
+    transform: scale(1.1);
+}
+
+.add-gorcaruyt-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 500px) {
+    .AddPopUp.AddPositionPopUp {
+        top: -7em;
+        padding-bottom: 3em;
+        left: 30%;
+        transform: translateX(-50%);
+    }
+
+    .AddPopUp.AddPositionPopUp .gorcaruyt-block {
+        width: 75vw;
+    }
+
+    .gorcaruyt-popup-section {
+        height: 350px;
+    }
+}

@@ -1,124 +1,135 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import "./style.css";
+import { useGlobalContext } from "../../Context/Context";
 import DocumentSlider from "../../Components/DocumentsSlider";
 import MyEventCalendar from "../../Components/MyEventCalendar";
+import AddCompanyPopUp from "../../Components/AddCompanyPopUp";
+import Popup from 'reactjs-popup';
+import { NavLink } from "react-router-dom";
+import { ROUTE_NAMES } from "../../Routes";
+
+import Document from "../../assets/Images/Document.png";
+import CaseIcon from "../../assets/Icons/CaseIcon.png";
 
 export default function Home() {
+  const {darkMode, setPopUpOpen} = useGlobalContext();
   const canvasRef = useRef(null);
+  let firstPerc = 60;
+  let secondPerc = 30;
+  let thirdPerc = 10;
 
   const data = useMemo(() => [
     {
       name: "Աշխատողի նախաձեռնությամբ",
-      percentage: 60,
-      color1: "#00d4e3",
-      color2: "#00adba"
+      percentage: firstPerc,
+      color1: firstPerc === 0 ? "#dcdcdc" : "#00d4e3",
+      color2: firstPerc === 0 ? "#a6a6a6" : "#00adba"
     },
     {
       name: "Աշխատավարձի փոփոխման համաձայնագիր",
-      percentage: 30,
-      color1: "#ee02fa",
-      color2: "#ac00bf"
+      percentage: secondPerc,
+      color1: secondPerc === 0 ? "#dcdcdc" : "#ee02fa",
+      color2: secondPerc === 0 ? "#a6a6a6" : "#ac00bf"
     },
     {
       name: "Այլ",
-      percentage: 10,
-      color1: "#0080ff",
-      color2: "#005ebd"
+      percentage: thirdPerc,
+      color1: thirdPerc === 0 ? "#dcdcdc" : "#0080ff",
+      color2: thirdPerc === 0 ? "#a6a6a6" : "#005ebd"
     },
   ], []);
 
-  const documents = [
-    {
-      name: "Աշխատակցի ազատման ծանուցում 1",
-      date: "13 Հուլ 2023"
-    },
-    {
-      name: "Աշխատակցի ազատման ծանուցում 2",
-      date: "13 Հուլ 2023"
-    },
-    {
-      name: "Աշխատակցի ազատման ծանուցում 3",
-      date: "13 Հուլ 2023"
-    },
-    {
-      name: "Աշխատակցի ազատման ծանուցում 4",
-      date: "13 Հուլ 2023"
-    },
-    {
-      name: "Աշխատակցի ազատման ծանուցում 5",
-      date: "13 Հուլ 2023"
-    },
-  ];
+  // const applications = [];
 
   const applications = [
     {
       name: "Աշխատակցի ազատման ծանուցում 1",
+      person: "Անուն Ազգանուն",
       date: "13 Հուլ 2023",
       category: 'Accepted'
     },
     {
       name: "Աշխատակցի ազատման ծանուցում 2",
+      person: "Անուն Ազգանուն",
       date: "13 Հուլ 2023",
       category: 'Declined'
     },
     {
       name: "Աշխատակցի ազատման ծանուցում 3",
+      person: "Անուն Ազգանուն",
       date: "13 Հուլ 2023",
       category: 'In Process'
     },
     {
       name: "Աշխատակցի ազատման ծանուցում 4",
+      person: "Անուն Ազգանուն",
       date: "13 Հուլ 2023",
       category: 'Accepted'
     },
     {
       name: "Աշխատակցի ազատման ծանուցում 5",
+      person: "Անուն Ազգանուն",
       date: "13 Հուլ 2023",
       category: 'Declined'
+    },
+    {
+      name: "Աշխատակցի ազատման ծանուցում 6",
+      person: "Անուն Ազգանուն",
+      date: "13 Հուլ 2023",
+      category: 'In Process'
     },
   ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
-
+  
     if (canvas) {
       const ctx = canvas.getContext("2d");
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const radius = Math.min(centerX, centerY);
-      const gap = 0.02 * Math.PI;
-
+      let gap = 0;
+  
+      if (firstPerc === 0 && secondPerc === 0 && thirdPerc === 0) {
+        // All percentages are 0, so no gap is needed for a full circle
+        gap = 0;
+      } else {
+        // gap = 0.02 * Math.PI;
+      }
+  
       let startAngle = -0.5 * Math.PI;
-
+  
       data.forEach((item) => {
+        let percentage = firstPerc === 0 && secondPerc === 0 && thirdPerc === 0 ? 100 : item.percentage;
         const endAngle =
-          startAngle + (item.percentage / 100) * (2 * Math.PI - data.length * gap);
-
+          startAngle + (percentage / 100) * (2 * Math.PI - data.length * gap);
+  
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, item.color1);
         gradient.addColorStop(1, item.color2);
-
+  
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
         ctx.closePath();
         ctx.fillStyle = gradient;
         ctx.fill();
-
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
+  
+        // if (!firstPerc === 0 && !secondPerc === 0 && !thirdPerc === 0) {
+        //   ctx.strokeStyle = "#fff";
+        //   ctx.lineWidth = 2.5;
+        //   ctx.stroke();
+        // } 
 
         startAngle = endAngle + gap;
       });
     }
-  }, [data]);
-
+  }, [data, firstPerc, secondPerc, thirdPerc]);
   
   return (
     <div >
       <div className="GroupedBlocks">
-        <div className="NumbersBlock dashBlock">
+        <div className={"NumbersBlock dashBlock" + (darkMode ? ' Dark' : '')}>
           <div className="NumberBlock1">
             <h3>23</h3>
             <h5>Ընթացիկ փաստաթղթեր</h5>
@@ -128,25 +139,25 @@ export default function Home() {
             <h5>Ստեղծված փաստաթղթեր</h5>
           </div>
         </div>
-        <div className="dashBlock">
+        <div className={"dashBlock" + (darkMode ? ' Dark' : '')}>
           <div className="Chart">
             <div className="labels">
               {data.map((item, index) => (
                 <div key={index} className="chartlabel">
                   <span className="label-percentage" style={{background: `linear-gradient(45deg, ${item.color2}, ${item.color1})`}}>{`${item.percentage}%`}</span>
-                  <span className="label-text">{item.name}</span>
+                  <span className={"label-text" +  (darkMode ? ' whiteElement' : '')}>{item.name}</span>
                 </div>
               ))}
             </div>
             <div>
-              <div className="chartFilters">
-                <input type="radio" id="FilterChoice1" name="chartFilter" value="Տարի" defaultChecked/>
-                <label htmlFor="filterChoice1">Տարի</label>
+              <div className={"chartFilters" + (darkMode ? ' darkChartFilters' : '')}>
+                <input type="radio" id="filterChoice1" name="chartFilter" value="Տարի" defaultChecked/>
+                <label htmlFor="filterChoice1" className={darkMode ? ' whiteElement' : ''}>Տարի</label>
 
                 <input type="radio" id="filterChoice2" name="chartFilter" value="Ամիս" />
-                <label htmlFor="filterChoice2">Ամիս</label>
+                <label htmlFor="filterChoice2" className={darkMode ? ' whiteElement' : ''}>Ամիս</label>
               </div>
-              <canvas className="pieChart" ref={canvasRef} width={160} height={160}></canvas>
+              <canvas className="pieChart" ref={canvasRef} width={140} height={140}></canvas>
             </div>
           </div>
         </div>
@@ -155,20 +166,52 @@ export default function Home() {
       </div>
       <div className="GroupedBlocks">
         <div className="GroupedBlocksTwo">
-          <div className="dashBlock sliderBlock">
-              <div className="sliderHeaderBlock">
-                <h3>Իմ Փաստաթղթերը</h3>
-                <button>Դիտել Բոլորը</button>
+
+          {/* In case of empty content */}
+          {/* <div className={"empty-content" + (darkMode ? ' Dark' : '')}>
+              <div className="welcome-section">
+                <h5>Բարի գալուստ,</h5>
+                <h3 className={(darkMode ? ' whiteElement' : '')}>Անուն</h3>
               </div>
-              <DocumentSlider documnets={documents}/>
-          </div>
-          <div className="dashBlock sliderBlock">
+              <div className={"empty-content-image-block" + (darkMode ? ' darkWelcome' : '')}>
+                  <img src={CaseIcon} alt="CaseIcon"/>
+                  <h5>Ավելացրեք կազմակերպություն, որպեսզի սկսեք ձեր աշխատանքը համակարգում</h5>
+              </div>
+              <div>
+                <Popup
+                    trigger={
+                    <div>
+                      <button className="welcome-btn">Ավելացնել</button>
+                    </div>}
+                    position="top center"
+                    onOpen={()=> setPopUpOpen(true)}
+                    onClose={() => setPopUpOpen(false)}
+                    >
+                    {close => (
+                        <AddCompanyPopUp darkMode={darkMode} close={close}/>
+                    )}
+                </Popup>
+              </div>
+          </div> */}
+
+          {applications.length > 0 ? 
+          <div className={"dashBlock sliderBlock" +  (darkMode ? ' Dark' : '')}>
               <div className="sliderHeaderBlock">
-                <h3>Իմ Հայտերը</h3>
-                <button>Դիտել Բոլորը</button>
+                <h3 className={darkMode ? 'whiteElement' : ''}>Իմ Գործողությունները</h3>
+                <NavLink to={ROUTE_NAMES.ACTIVITES}><button>Դիտել Բոլորը</button></NavLink>
               </div>
               <DocumentSlider documnets={applications}/>
-          </div>
+          </div>: 
+          <div className={'dashBlock sliderBlock no-staff-content' + (darkMode ? ' Dark' : '')}>
+            <div className="welcome-section">
+                <h5>Դուք դեռ չունեք</h5>
+                <h3 className={darkMode ? ' whiteElement' : ''}>Փաստաթղթեր</h3>
+            </div>
+            <div className={"empty-content-image-block" + (darkMode ? ' darkWelcome' : '')}>
+                <img src={Document} alt="Document"/>
+                <h5>Ավելացրեք փաստաթղթեր, որպեսզի ստուգեք ներբեռնած փաստաթղթերը և ընթացիկ թարմացումները</h5>
+            </div>
+          </div>}
         </div>
         <MyEventCalendar/>
       </div>

@@ -1,15 +1,20 @@
 .sliderSection {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
-    margin-top: 15px;
-    padding: 0 20px;
+    margin-top: 20px;
 }
 
 .document {
+    width: 31%;
     position: relative;
     border-radius: 10px;
     background-color: #E4F4F7;
     padding: 10px;
-    padding-bottom: 30px;
+    margin-left: 10px;
+    margin-right: 6px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
     transition: all 0.3s ease;
 }
 
@@ -23,7 +28,7 @@
 
 .slick-slide div {
     margin-left: 5px;
-    margin-right: 5px;
+    margin-right: 6px;
 }
 
 .slick-prev:before, .slick-next:before {
@@ -57,20 +62,39 @@
     transform: rotate(135deg);
 }
 
-.document h2 {
-    font-size: 15px;
+.document h2, .document h4 {
+    font-size: 14px;
     font-family: 'Arnamu', sans-serif;
+    font-weight: 600;
     letter-spacing: 1px;
     padding-right: 2em;
+    color: #000000;
+}
+
+.document h3, .document h4 {
+    position: relative;
+    bottom: 5px;
+    margin-top: 20px;
+    font-size: 13px;
+    font-family: 'Arnamu', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
 }
 
 .document h3 {
-    position: relative;
-    top: 20px;
-    margin-top: 20px;
+    font-weight: 600;
+}
+
+.document.lightDark h3, .document.lightDark h4, .document.lightDark h2 {
+    color: #ffffff;
+}
+
+.document h3 span {
+    font-family: 'LabGrotesque', sans-serif;
+}
+
+.document h4 {
     font-size: 14px;
-    font-family: 'Arnamu', sans-serif;
-    letter-spacing: 1px;
 }
 
 .documentPic {
@@ -94,6 +118,11 @@
     color: gray;
     opacity: 0.7;
     cursor: pointer;
+}
+
+.darkModeThreeDots {
+    color: #ffffff;
+    opacity: 0.6;
 }
 
 .dots-menu {
@@ -122,4 +151,10 @@
 .delete {
     color: red;
     font-weight: 600;
+}
+
+@media screen and (max-width: 500px) {
+    .document {
+        width: 100%;
+    }
 }

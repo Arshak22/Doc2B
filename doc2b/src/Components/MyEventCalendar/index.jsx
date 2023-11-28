@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobalContext } from "../../Context/Context";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import TimePicker from 'react-time-picker';
@@ -8,10 +9,11 @@ import './style.css';
 
 import { RxCross2 } from "react-icons/rx";
 import { AiFillEdit } from "react-icons/ai";
-import { BsCheckLg } from "react-icons/bs";
+import { ImCheckmark } from "react-icons/im";
 import { ImCross } from "react-icons/im";
 
 export default function MyEventCalendar() {
+  const {darkMode} = useGlobalContext();
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState({});
   const [newEvent, setNewEvent] = useState({
@@ -140,7 +142,6 @@ const toggleEditMode = (event, index) => {
   }
 };
 
-  
   const deleteEvent = (index) => {
       const updatedEvents = { ...events };
       updatedEvents[date.toDateString()].splice(index, 1);
@@ -155,10 +156,43 @@ const toggleEditMode = (event, index) => {
       setHidePopUp(true);
   };
 
+  useEffect(() => {
+    if (darkMode) {
+      document.querySelectorAll('.react-calendar__month-view__weekdays__weekday abbr').forEach(item => {
+        item.style.color = '#ffffff';
+      });
+
+      document.querySelectorAll('.react-calendar__tile.react-calendar__month-view__days__day abbr').forEach(item => {
+        item.style.color = '#ffffff';
+      });
+
+      if( document.querySelectorAll('.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day abbr')[0]) {
+      document.querySelectorAll('.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day abbr')[0].style.color = 'var(--light-green)';
+      }
+      document.querySelectorAll('.react-calendar__navigation__arrow.react-calendar__navigation__prev-button')[0].style.color = '#ffffff';
+      document.querySelectorAll('.react-calendar__navigation__arrow.react-calendar__navigation__next-button')[0].style.color = '#ffffff';
+    } else {
+      document.querySelectorAll('.react-calendar__month-view__weekdays__weekday abbr').forEach(item => {
+        item.style.color = '#000000';
+      });
+
+      document.querySelectorAll('.react-calendar__tile.react-calendar__month-view__days__day abbr').forEach(item => {
+        item.style.color = '#000000';
+      });
+
+      if( document.querySelectorAll('.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day abbr')[0]) {
+        document.querySelectorAll('.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day abbr')[0].style.color = 'var(--light-green)';
+      }
+
+      document.querySelectorAll('.react-calendar__navigation__arrow.react-calendar__navigation__prev-button')[0].style.color = '#000000';
+      document.querySelectorAll('.react-calendar__navigation__arrow.react-calendar__navigation__next-button')[0].style.color = '#000000';
+    }
+  }, [darkMode, activeStartDate]);
+
   return (
-    <div className='event-calendar'>
+    <div className={'event-calendar' + (darkMode ? ' Dark' : '')}>
       <div className={"calendar-container" + (showPopup ? ' moveUpOne': '') + (hidePopUp ? ' moveBackOne': '')}>
-        <h3 className='calendarActiveDate'>
+        <h3 className={'calendarActiveDate' + (darkMode ? ' whiteElement' : '')}>
           {armenianMonths[activeStartDate.getMonth()]} <span>{activeStartDate.getFullYear()}</span>
         </h3>
         <div className="calendar">
@@ -181,16 +215,16 @@ const toggleEditMode = (event, index) => {
       </div>
       <div className={"event-popup" + (showPopup ? ' moveUpTwo': '') + (hidePopUp ? ' moveBackTwo': '')}>
           <div className="event-list">
-            <button className='event-closeBtn' onClick={HidePopUp}><RxCross2/></button>
-            <h3 className='calendarActiveDate'>
+            <button className={'event-closeBtn' + (darkMode ? ' whiteX' : '')} onClick={HidePopUp}><RxCross2/></button>
+            <h3 className={'calendarActiveDate' + (darkMode ? ' darkDate' : '')}>
               {armenianMonths[activeStartDate.getMonth()]} <span>{date.getDate()}, {activeStartDate.getFullYear()}</span>
             </h3>
-            <h2 className='events-title'>Իրադարձություններ</h2>
+            <h2 className={'events-title' + (darkMode ? ' whiteElement' : '')}>Իրադարձություններ</h2>
             
-              {filteredEvents.length === 0 ? <h3 className='no-events-title'>Իրադարձություններ Չկան</h3>:
+              {filteredEvents.length === 0 ? <h3 className={'no-events-title' + (darkMode ? ' darkDate' : '')}>Իրադարձություններ Չկան</h3>:
               <div className='myEvents'>
                 {filteredEvents.map((event, index) => (
-                   <div key={index} className='my-event'>
+                   <div key={index} className={'my-event' + (darkMode ? ' lightDark' : '')}>
                    {editingEvent !== null && editingEvent.index === index ? (
                      <div className="event-details edit-details">
                       <div className='edit-inpts-grouped'>
@@ -200,10 +234,10 @@ const toggleEditMode = (event, index) => {
                             value={editingEvent.time}
                             onChange={(time) => setEditingEvent({ ...editingEvent, time })}
                           /></div>
-                          <div className='event-information'>
+                          <div className={'event-information' + (darkMode ? ' whiteElement' : '')}>
                               <div className="event-name">
                                 <input
-                                className='event-inpts event-name-inpt edit-name-inpt'
+                                className={'event-inpts event-name-inpt edit-name-inpt' + (darkMode ? ' darkInpt2' : '')}
                                 type="text"
                                 placeholder="Անվանում"
                                 value={editingEvent.name}
@@ -216,7 +250,7 @@ const toggleEditMode = (event, index) => {
                       
                           <div className="event-description">
                             <textarea
-                              className='event-inpts edit-description-inpt'
+                              className={'event-inpts edit-description-inpt' + (darkMode ? ' darkInpt2' : '')}
                               placeholder="Նկարագրություն"
                               style={{ width: '100%' }}
                               value={editingEvent.description}
@@ -227,7 +261,7 @@ const toggleEditMode = (event, index) => {
                    ) : (
                      <div key={index} className="event-details">
                        <div className="event-time">{event.time}</div>
-                       <div className='event-information'>
+                       <div className={'event-information' + (darkMode ? ' whiteElement' : '')}>
                          <div className="event-name">{event.name}</div>
                          <div className="event-description">{event.description}</div>
                        </div>
@@ -236,7 +270,7 @@ const toggleEditMode = (event, index) => {
                    <div className="event-actions">
                      {editingEvent === null || editingEvent.index !== index ? (
                        <button className='edit-event' onClick={() => toggleEditMode(event, index)}><AiFillEdit/></button>
-                     ) : <button className='save-event' onClick={updateEvent}><BsCheckLg/></button>}
+                     ) : <button className='save-event' onClick={updateEvent}><ImCheckmark/></button>}
                      
                      <button onClick={() => deleteEvent(index)}><ImCross/></button>
                    </div>
@@ -249,12 +283,12 @@ const toggleEditMode = (event, index) => {
             {/* <h3 className='new-event-title'>Ավելացնել նոր իրադարձություն</h3> */}
             <div className='grouped-event-inpts'>
               <TimePicker
-                className="time-picker"
+                className={"time-picker" + (darkMode ? ' darkTime' : '')}
                 value={newEvent.time}
                 onChange={(time) => setNewEvent({ ...newEvent, time })}
               />
               <input
-                className='event-inpts event-name-inpt'
+                className={'event-inpts event-name-inpt' + (darkMode ? ' darkInpt' : '')}
                 type="text"
                 placeholder="Անվանում"
                 value={newEvent.name}
@@ -263,7 +297,7 @@ const toggleEditMode = (event, index) => {
             </div>
             <div className='grouped-event-inpts'>
               <textarea
-                className='event-inpts'
+                className={'event-inpts' + (darkMode ? ' darkInpt' : '')}
                 placeholder="Նկարագրություն"
                 style={{width: '100%'}}
                 value={newEvent.description}

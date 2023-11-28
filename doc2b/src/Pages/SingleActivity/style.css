@@ -1,0 +1,158 @@
+.DocumentInfo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 2em;
+    font-family: 'Arnamu', sans-serif;
+    letter-spacing: 1px;
+}
+
+.DocumentInfo img {
+    max-width: 100%;
+    width: 145px;
+    margin-right: 10px;
+    margin-left: 0px;
+}
+
+.DocumentInfo h2 {
+    font-size: 30px;
+}
+
+.DocumentInfo h3 {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.DocumentInfo h4 {
+    font-size: 16px;
+}
+
+.DocumentInfo h5 {
+    font-size: 16px;
+    margin-top: 5px;
+    font-weight: 600;
+    color: var(--orange);
+}
+
+.documnents-list-sec {
+    margin-top: 3em;
+    margin-right: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #E4EEF7;
+}
+
+.documents {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.relatedDoc {
+    width: 110px;
+    display: grid;
+    justify-content: center;
+    background-color: #D0DFED;
+    border-radius: 10px;
+    padding: 15px 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.darkDoc {
+    border: 2px solid #393939;
+}
+
+.relatedDoc img {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; 
+    max-width: 100%;
+    width: 75%;
+    cursor: pointer;
+    transform: rotate(5deg);
+    transition: all 0.3s ease;
+}
+
+.relatedDoc img:hover {
+    transform: rotate(5deg) scale(1.07);
+}
+
+.document-download-btns button:hover {
+    transform: scale(1.05);
+}
+
+.relatedDoc p {
+    font-family: 'Arnamu Medium', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-size: 10px;
+    text-align: center;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.document-download-btns  {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.document-download-btns button {
+    border: none;
+    border-radius: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-family: 'LabGrotesque', sans-serif;
+    letter-spacing: 1px;
+    font-size: 11px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.document-download-btns button a {
+    color: #ffffff;
+}
+
+.doc-download {
+    background: linear-gradient(45deg, rgb(0, 94, 189), rgb(73, 164, 255));
+}
+
+.pdf-download {
+    background: linear-gradient(45deg, #e00056 10.2%,  #ff639f 90.2%);
+}
+
+.my-doc-viewer-style {
+    position: fixed;
+    left: 35%;
+    top: 15%;
+}
+
+@media screen and (max-width: 500px) {
+    .DocumentInfo, .documents {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .DocumentInfo img {
+        width: 130px;
+    }
+    .DocumentInfo h2 {
+        margin-top: 15px;
+    }
+    .documnents-list-sec {
+        margin-right: 0;
+    }
+    .sliderHeaderBlock h3 {
+        margin-right: 10px;
+    }
+    .relatedDoc {
+        width: 45%;
+        margin-bottom: 14px;
+    }
+    .relatedDoc p {
+        font-size: 14px;
+    }
+}

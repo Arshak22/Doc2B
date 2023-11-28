@@ -1,0 +1,102 @@
+.companies-slider-section {
+    background-color: #F5F7FA;
+    padding: 20px 35px;
+    padding-top: 0;
+    border-radius: 20px;
+    margin-top: 1.5em;
+    margin-right: 30px;
+    margin-left: 10px;
+}
+
+.related-companies {
+    display: flex !important;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #d6d6d6;
+    overflow: hidden;
+    margin-top: 10px;
+    height: 70px;
+    /* width: 230px !important; */
+}
+
+.related-companies img {
+    max-width: 100%;
+    width: 100px;
+    position: relative;
+    left: -35px;
+    bottom: -25px;
+}
+
+.related-company-info {
+    position: relative;
+    left: -35px;
+}
+
+.related-company-info h3 {
+    font-size: 17px;
+}
+
+.related-company-info h5 {
+    font-size: 13px;
+    font-weight: 600 !important;
+}
+
+.related-company-info h3, .related-company-info h5 {
+    font-family: 'Arnamu Medium', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.slick-list {
+    height: 85px;
+}
+
+.slick-track {
+    position: absolute;
+}
+
+.ProfilePage .sliderHeaderBlock h3 {
+    font-size: 15px;
+}
+
+.ProfilePage .sliderHeaderBlock button {
+    font-size: 13px;
+}
+
+.email-pass-change-sec {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.change-email-pass-block {
+    display: grid;
+}
+
+#ChangeEmail, #OldPass, #NewPass {
+    width: 160px;
+    margin-right: 10px;
+}
+
+#RepeatNewPass {
+    width: 220px;
+    margin-right: 10px;
+}
+
+.save-email-pass-change {
+    font-size: 13px !important;
+    padding: 7px 15px !important;
+}
+
+@media screen and (max-width: 500px) {
+    .ProfilePage .LeftBlockSection {
+        margin-right: -100px;
+    }
+    .companies-slider-section {
+        margin-right: 0;
+    } 
+}
