@@ -609,3 +609,9 @@ textarea {
     font-size: 12px !important;
     background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%) !important;
 }
+
+@media screen and (max-width: 500px) {
+    .react-time-picker__wrapper {
+        margin-right: 25px;
+    }
+}
