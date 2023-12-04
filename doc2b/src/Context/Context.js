@@ -11,9 +11,9 @@ const AppProvider = ({ children }) => {
     localStorage.setItem('darkMode', darkMode.toString());
     localStorage.getItem('darkMode') === 'false' ? setDarkMode(false) : setDarkMode(true);
   }, [darkMode]);
-  return ( 
+  return (
     <AppContext.Provider
-      value={{darkMode, setDarkMode, popUpOpen, setPopUpOpen}}>
+      value={{ darkMode, setDarkMode, popUpOpen, setPopUpOpen }}>
       {children}
     </AppContext.Provider>
   );

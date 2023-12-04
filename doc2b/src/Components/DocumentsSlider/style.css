@@ -1,160 +1,169 @@
 .sliderSection {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .document {
-    width: 31%;
-    position: relative;
-    border-radius: 10px;
-    background-color: #E4F4F7;
-    padding: 10px;
-    margin-left: 10px;
-    margin-right: 6px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    transition: all 0.3s ease;
+  width: 31%;
+  position: relative;
+  border-radius: 10px;
+  background-color: #e4f4f7;
+  padding: 10px;
+  margin-left: 10px;
+  margin-right: 6px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  transition: all 0.3s ease;
 }
 
 .document:hover {
-    transform: scale(1.03);
+  transform: scale(1.03);
 }
 
 .application {
-    background-color: #E4EEF7;
+  background-color: #e4eef7;
 }
 
 .slick-slide div {
-    margin-left: 5px;
-    margin-right: 6px;
+  margin-left: 5px;
+  margin-right: 6px;
 }
 
-.slick-prev:before, .slick-next:before {
-    content: "";
-    color: black;
-    display: block;
-    margin: 30px auto;
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid #7a7a7a;
-    border-left: 2px solid #7a7a7a;
+.slick-prev:before,
+.slick-next:before {
+  content: '';
+  color: black;
+  display: block;
+  margin: 30px auto;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #7a7a7a;
+  border-left: 2px solid #7a7a7a;
 }
 
 .slick-prev:before {
-    position: absolute;
-    top: -30px;
-    left: 10px;
+  position: absolute;
+  top: -30px;
+  left: 10px;
 }
 
 .slick-next:before {
-    position: relative;
-    right: 7px;
-    bottom: 23px;
+  position: relative;
+  right: 7px;
+  bottom: 23px;
 }
 
 .slick-prev {
-    transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 .slick-next {
-    transform: rotate(135deg);
+  transform: rotate(135deg);
 }
 
-.document h2, .document h4 {
-    font-size: 14px;
-    font-family: 'Arnamu', sans-serif;
-    font-weight: 600;
-    letter-spacing: 1px;
-    padding-right: 2em;
-    color: #000000;
+.document h2,
+.document h4 {
+  font-size: 14px;
+  font-family: 'Arnamu', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding-right: 2em;
+  color: #000000;
 }
 
-.document h3, .document h4 {
-    position: relative;
-    bottom: 5px;
-    margin-top: 20px;
-    font-size: 13px;
-    font-family: 'Arnamu', sans-serif;
-    font-weight: 500;
-    letter-spacing: 1px;
+.document h3,
+.document h4 {
+  position: relative;
+  bottom: 5px;
+  margin-top: 20px;
+  font-size: 13px;
+  font-family: 'Arnamu', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
 .document h3 {
-    font-weight: 600;
+  font-weight: 600;
 }
 
-.document.lightDark h3, .document.lightDark h4, .document.lightDark h2 {
-    color: #ffffff;
+.document.lightDark h3,
+.document.lightDark h4,
+.document.lightDark h2 {
+  color: #ffffff;
 }
 
 .document h3 span {
-    font-family: 'LabGrotesque', sans-serif;
+  font-family: 'LabGrotesque', sans-serif;
 }
 
 .document h4 {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .documentPic {
-    position: absolute;
-    bottom: 0;
-    right: 10px;
-    width: 85px;
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  width: 85px;
 }
 
 .three-dots {
-    position: relative;
-    top: -5px;
+  position: relative;
+  top: -5px;
 }
 
 .three-dots-icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 30px;
-    height: 30px;
-    color: gray;
-    opacity: 0.7;
-    cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  color: gray;
+  opacity: 0.7;
+  cursor: pointer;
 }
 
 .darkModeThreeDots {
-    color: #ffffff;
-    opacity: 0.6;
+  color: #ffffff;
+  opacity: 0.6;
 }
 
 .dots-menu {
-    position: absolute;
-    right: 2em;
-    top: 0px;
-    background-color: #F5F7FA;
-    padding: 7px 20px;
-    border-radius: 5px;
-    z-index: 20;
+  position: absolute;
+  right: 2em;
+  top: 0px;
+  background-color: #f5f7fa;
+  padding: 7px 20px;
+  border-radius: 5px;
+  z-index: 20;
 }
 
 .dots-menu ul {
-    list-style: none;
-    font-family: 'Arnamu', sans-serif;
-    letter-spacing: 1px;
-    font-size: 15px;
-    line-height: 23px;
+  list-style: none;
+  font-family: 'Arnamu', sans-serif;
+  letter-spacing: 1px;
+  font-size: 15px;
+  line-height: 23px;
+}
+
+.dots-menu ul li {
+  cursor: pointer;
 }
 
 .send {
-    color: var(--light-green);
-    font-weight: 600;
+  color: var(--light-green);
+  font-weight: 600;
 }
 
 .delete {
-    color: red;
-    font-weight: 600;
+  color: red;
+  font-weight: 600;
 }
 
 @media screen and (max-width: 500px) {
-    .document {
-        width: 100%;
-    }
+  .document {
+    width: 100%;
+  }
 }

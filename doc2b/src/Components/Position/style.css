@@ -1,44 +1,44 @@
 .AddPosition {
-    padding: 16px 17px;
+  padding: 16px 17px;
 }
 
 .AddPosition h3 {
-    margin-right: 24px;
-    font-size: 17px;
+  margin-right: 24px;
+  font-size: 17px;
 }
 
 .singlePosition {
-    overflow: hidden;
-    padding: 25px 30px;
-    width: 178px;
+  overflow: hidden;
+  padding: 25px 30px;
+  width: 178px;
 }
 
 .PositionIcon {
-    width: 85px;
-    position: absolute;
-    left: -27px;
-    transform: rotate(7deg);
-    bottom: -19px;
+  width: 85px;
+  position: absolute;
+  left: -27px;
+  transform: rotate(7deg);
+  bottom: -19px;
 }
 
 .positionName {
-    position: relative;
-    top: 7px;
-    margin-left: 15px;
-    font-size: 15px !important;
+  position: relative;
+  top: 7px;
+  margin-left: 15px;
+  font-size: 15px !important;
 }
 
 .position-three-dots .dots-menu {
-    top: 5px;
-    right: 2.5em;
+  top: 5px;
+  right: 2.5em;
 }
 
 @media screen and (max-width: 500px) {
-    .singlePosition {
-        width: 95%;
-    }
-    .AddPosition {
-        display: flex;
-        justify-content: space-between;
-    }
+  .singlePosition {
+    width: 95%;
+  }
+  .AddPosition {
+    display: flex;
+    justify-content: space-between;
+  }
 }

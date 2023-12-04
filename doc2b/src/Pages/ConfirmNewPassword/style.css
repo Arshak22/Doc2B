@@ -1,0 +1,17 @@
+.resetPassPage .success-logo-section {
+  margin-bottom: 3em;
+}
+
+.reset-pass-inpts-sec {
+  display: flex;
+  justify-content: center;
+}
+
+.success-changed-pass {
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-family: 'Arnamu', sans-serif;
+  font-weight: 500;
+  margin-top: 30px;
+}

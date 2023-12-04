@@ -1,46 +1,46 @@
 #CompanyName {
-    width: 100%;
+  width: 100%;
 }
 
 .DirectorNameSec {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .labelLike {
-    font-family: 'Arnamu', sans-serif;
-    letter-spacing: 1px;
-    font-size: 13px;
-    margin-bottom: 10px;
-    color: #949494;
-    font-weight: 600;
-    margin-left: 10px;
-    margin-top: 15px;
-    margin-bottom: 10px;
+  font-family: 'Arnamu', sans-serif;
+  letter-spacing: 1px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #949494;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 
 .AddresswithHeadline {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .DirectorSec {
-    margin-top: 10px;
-    align-items: flex-end;
+  margin-top: 10px;
+  align-items: flex-end;
 }
 
 .DirectorSec .staffInputSec {
-    margin-right: 2px;
+  margin-right: 2px;
 }
 
 .otherInputSec {
-    position: relative;
-    margin-right: 0 !important;
-    margin-left: 0;
-    top: 15px;
+  position: relative;
+  margin-right: 0 !important;
+  margin-left: 0;
+  top: 15px;
 }
 
 @media screen and (max-width: 500px) {
-    .labelLike {
-        font-size: 16px;
-        margin-left: 0;
-    }
+  .labelLike {
+    font-size: 16px;
+    margin-left: 0;
+  }
 }

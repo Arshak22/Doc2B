@@ -5,10 +5,10 @@
 }
 
 :root {
-    --dark-green: #01808a;
-    --light-green: #009da8;
-    --orange: #ffc107;
-    --red: #fd166e;
+  --dark-green: #01808a;
+  --light-green: #009da8;
+  --orange: #ffc107;
+  --red: #fd166e;
 }
 
 ::-webkit-scrollbar {
@@ -65,7 +65,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-    background-color: #F5F7FA;
+  background-color: #f5f7fa;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -77,15 +77,30 @@ code {
 }
 
 ::selection {
-	background: var(--light-green);
-	color: #ffffff;
+  background: var(--light-green);
+  color: #ffffff;
 }
 
-img::selection, label::selection, .page-item .page-link::selection, button::selection, abbr::selection, .calendarActiveDate::selection, .calendarActiveDate span::selection {
+img::selection,
+label::selection,
+.page-item .page-link::selection,
+button::selection,
+abbr::selection,
+.calendarActiveDate::selection,
+.calendarActiveDate span::selection {
   background-color: transparent !important;
   color: inherit;
 }
 
 a {
   text-decoration: none;
+}
+
+.inptError,
+.darkInpt.inptError {
+  border-color: var(--red) !important;
+}
+
+.upload-error-btn {
+  background: var(--red) !important;
 }

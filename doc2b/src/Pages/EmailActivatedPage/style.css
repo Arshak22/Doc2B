@@ -1,0 +1,29 @@
+.success-logo-section {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.success-logo-section img {
+  position: relative;
+  max-width: 100%;
+  width: 120px;
+  left: 3em;
+  top: 1em;
+}
+
+.succesfuly-activated {
+  text-align: center;
+  position: relative;
+  top: 3em;
+  font-size: 80px;
+  letter-spacing: 1px;
+  font-family: 'Arnamu', sans-serif;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 500px) {
+  .succesfuly-activated {
+    font-size: 35px;
+    top: 6em;
+  }
+}

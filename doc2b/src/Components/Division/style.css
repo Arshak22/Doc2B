@@ -1,44 +1,44 @@
 .singleDivision {
-    padding-bottom: 39px;
-    padding-right: 82px;
+  padding-bottom: 39px;
+  padding-right: 82px;
 }
 
 .DivisionIcon {
-    width: 95px;
-    position: absolute;
-    left: -27px;
-    bottom: -19px;
+  width: 95px;
+  position: absolute;
+  left: -27px;
+  bottom: -19px;
 }
 
 .DivisionName {
-    position: relative;
-    top: 25px;
-    left: 45px;
-    font-size: 14px !important;
+  position: relative;
+  top: 25px;
+  left: 45px;
+  font-size: 14px !important;
 }
 
 .AddDivision {
-    padding: 16px 15px;
+  padding: 16px 15px;
 }
 
 .AddDivision h3 {
-    font-size: 17px;
+  font-size: 17px;
 }
 
 .AddDivision .StaffPlusBtn {
-    margin-left: 7px;
+  margin-left: 7px;
 }
 
 @media screen and (max-width: 500px) {
-    .AddDivision {
-        display: flex;
-        justify-content: space-between;
-    }
-    .AddDivision .StaffPlusBtn {
-        margin-left: 0px !important;
-    }   
-    .DivisionName {
-        left: 56px;
-        font-size: 18px !important;
-    }
+  .AddDivision {
+    display: flex;
+    justify-content: space-between;
+  }
+  .AddDivision .StaffPlusBtn {
+    margin-left: 0px !important;
+  }
+  .DivisionName {
+    left: 56px;
+    font-size: 18px !important;
+  }
 }

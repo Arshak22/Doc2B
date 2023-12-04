@@ -1,184 +1,208 @@
 .event-calendar {
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    justify-content: center;
-    width: 35.3%;
-    height: 372px;
-    background-color: #ffffff;
-    border-radius: 20px;
-    padding: 15px;
-    padding-bottom: 0;
-    margin-right: 10px;
-    margin-left: 20px;
-    margin-top: 15px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  justify-content: center;
+  width: 35.3%;
+  height: 372px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 15px;
+  padding-bottom: 0;
+  margin-right: 10px;
+  margin-left: 20px;
+  margin-top: 15px;
 }
 
 .calendar-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 20px;
-    left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 20px;
+  left: 0;
 }
 
 .react-calendar__viewContainer {
-    padding: 0 20px !important;
+  padding: 0 20px !important;
 }
 
 .react-calendar {
-    width: 100%;
-    border: none;
-    line-height: 1.125em;
-    background: transparent;
+  width: 100%;
+  border: none;
+  line-height: 1.125em;
+  background: transparent;
 }
 
 .calendarActiveDate {
-    position: relative;
-    text-align: center;
-    font-family: 'Arnamu', sans-serif;
-    letter-spacing: 1px;
-    top: 0.7em;
-    z-index: 2;
+  position: relative;
+  text-align: center;
+  font-family: 'Arnamu', sans-serif;
+  letter-spacing: 1px;
+  top: 0.7em;
+  z-index: 2;
 }
 
 .calendarActiveDate span {
-    font-family: 'LabGrotesque', sans-serif;
+  font-family: 'LabGrotesque', sans-serif;
 }
 
 .event-popup .calendarActiveDate {
-    color: #8f8f8f;
-    top: 0;
-    text-align: left;
-    font-size: 15px;
+  color: #8f8f8f;
+  top: 0;
+  text-align: left;
+  font-size: 15px;
 }
 
-.calendarActiveDate.darkDate, .no-events-title.darkDate {
-    color: #bcbcbc !important;
+.calendarActiveDate.darkDate,
+.no-events-title.darkDate {
+  color: #bcbcbc !important;
 }
 
 .calendar {
-    position: relative;
-    top: -25px;
+  position: relative;
+  top: -25px;
 }
 
 .react-calendar__navigation button {
-    font-size: 27px;
-    min-width: 30px;
-    width: 30px;
-    height: 30px;
-    background: none;
-    margin-left: 22px;
-    margin-right: 22px;
-    position: relative;
-    top: 12px;
-    z-index: 5;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+  font-size: 27px;
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  background: none;
+  margin-left: 22px;
+  margin-right: 22px;
+  position: relative;
+  top: 12px;
+  z-index: 5;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-.react-calendar__navigation__arrow.react-calendar__navigation__prev-button, .react-calendar__navigation__arrow.react-calendar__navigation__next-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 3px;
+.react-calendar__navigation__arrow.react-calendar__navigation__prev-button,
+.react-calendar__navigation__arrow.react-calendar__navigation__next-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 3px;
 }
 
-.react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus {
-    background: #edf1f8;
-    color: #000000 !important;
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background: #edf1f8;
+  color: #000000 !important;
 }
 
-.react-calendar__month-view__days__day--neighboringMonth, .react-calendar__navigation__label {
-    opacity: 0;
-    visibility: hidden;
+.react-calendar__month-view__days__day--neighboringMonth,
+.react-calendar__navigation__label {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.react-calendar__navigation__prev2-button, .react-calendar__navigation__next2-button {
-    display: none;
+.react-calendar__navigation__prev2-button,
+.react-calendar__navigation__next2-button {
+  display: none;
 }
 
 .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active.react-calendar__tile--range.react-calendar__tile--rangeStart.react-calendar__tile--rangeEnd.react-calendar__tile--rangeBothEnds.react-calendar__month-view__days__day {
-    background-color: transparent;
+  background-color: transparent;
 }
 
-.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day abbr {
-    transform: scale(1.19);
-    background-color: transparent !important;
-    border: 2px solid var(--light-green) !important;
-    color: var(--light-green);
+.react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day
+  abbr {
+  transform: scale(1.19);
+  background-color: transparent !important;
+  border: 2px solid var(--light-green) !important;
+  color: var(--light-green);
 }
 
-.react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active.react-calendar__tile--range.react-calendar__tile--rangeStart.react-calendar__tile--rangeEnd.react-calendar__tile--rangeBothEnds.react-calendar__month-view__days__day.has-events abbr {
-    border: 1px solid #ffffff !important;
+.react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active.react-calendar__tile--range.react-calendar__tile--rangeStart.react-calendar__tile--rangeEnd.react-calendar__tile--rangeBothEnds.react-calendar__month-view__days__day.has-events
+  abbr {
+  border: 1px solid #ffffff !important;
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
-    color: #000000;
-    text-decoration: none;
-    font-size: 14px;
-    letter-spacing: 1px;
-    font-family: 'Arnamu', sans-serif;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-family: 'Arnamu', sans-serif;
 }
 
 .react-calendar__tile.react-calendar__month-view__days__day {
-    margin-top: -7px;
+  margin-top: -7px;
 }
 
 .react-calendar__tile.react-calendar__month-view__days__day abbr {
-    color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    font-family: 'LabGrotesque', sans-serif;
-    font-weight: 600;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'LabGrotesque', sans-serif;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
 }
 
-.react-calendar__tile.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend abbr, .react-calendar__month-view__weekdays__weekday.react-calendar__month-view__weekdays__weekday--weekend abbr {
-    color: var(--red) !important;
+.react-calendar__tile.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend
+  abbr,
+.react-calendar__month-view__weekdays__weekday.react-calendar__month-view__weekdays__weekday--weekend
+  abbr {
+  color: var(--red) !important;
 }
 
-.react-calendar__tile:enabled:hover, .react-calendar__tile:enabled:focus, .react-calendar__tile--now, .react-calendar__tile--active {
-    background: transparent;
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus,
+.react-calendar__tile--now,
+.react-calendar__tile--active {
+  background: transparent;
 }
 
-.react-calendar__tile:enabled abbr, .react-calendar__tile:enabled abbr {
-    transition: all 0.3s ease;
+.react-calendar__tile:enabled abbr,
+.react-calendar__tile:enabled abbr {
+  transition: all 0.3s ease;
 }
 
 .react-calendar__month-view__days__day.has-events abbr {
-    background-color: none !important;
-    background: linear-gradient(80deg, var(--dark-green) 0%, #009da9 40%, #00cedc 100%) !important;
-    border: none !important;
-    color: #ffffff !important;
+  background-color: none !important;
+  background: linear-gradient(
+    80deg,
+    var(--dark-green) 0%,
+    #009da9 40%,
+    #00cedc 100%
+  ) !important;
+  border: none !important;
+  color: #ffffff !important;
 }
 
-.react-calendar__tile:enabled:hover abbr, .react-calendar__tile:enabled:focus abbr {
-    background: linear-gradient(45deg, rgb(240, 192, 2) 11.2%,  rgb(255, 226, 61) 100.2%) !important;
-    background-color: none !important;
-    border: none !important;
-    color: black !important;
+.react-calendar__tile:enabled:hover abbr,
+.react-calendar__tile:enabled:focus abbr {
+  background: linear-gradient(
+    45deg,
+    rgb(240, 192, 2) 11.2%,
+    rgb(255, 226, 61) 100.2%
+  ) !important;
+  background-color: none !important;
+  border: none !important;
+  color: black !important;
 }
 
 .event-popup {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 30em;
-    padding: 20px 30px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 30em;
+  padding: 20px 30px;
 }
 
 .calendar-container.moveUpOne {
-    animation: moveUpOne 1s ease-in-out forwards;
+  animation: moveUpOne 1s ease-in-out forwards;
 }
 
 .event-popup.moveUpTwo {
-    animation: moveUpTwo 1s ease-in-out forwards;
+  animation: moveUpTwo 1s ease-in-out forwards;
 }
 
 .calendar-container,
@@ -187,431 +211,458 @@
 }
 
 .calendar-container.moveBackOne {
-    animation: moveBackOne 1s ease-in-out forwards;
+  animation: moveBackOne 1s ease-in-out forwards;
 }
 
 .event-popup.moveBackTwo {
-    animation: moveBackTwo 1s ease-in-out forwards;
-} 
+  animation: moveBackTwo 1s ease-in-out forwards;
+}
 
-.react-clock__second-hand__body, .react-time-picker__clock-button.react-time-picker__button {
-    display: none;
+.react-clock__second-hand__body,
+.react-time-picker__clock-button.react-time-picker__button {
+  display: none;
 }
 
 .react-time-picker__inputGroup__input {
-    outline: none !important;
+  outline: none !important;
 }
 
-.react-time-picker__button:enabled:hover .react-time-picker__button__icon, .react-time-picker__button:enabled:focus .react-time-picker__button__icon {
-    stroke: var(--dark-green);
+.react-time-picker__button:enabled:hover .react-time-picker__button__icon,
+.react-time-picker__button:enabled:focus .react-time-picker__button__icon {
+  stroke: var(--dark-green);
 }
 
 @keyframes moveUpOne {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    20% {
-        opacity: 0.5;
-    }
-    100% {
-      transform: translateY(-30em);
-      opacity: 0;
-      visibility: hidden;
-    }
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-30em);
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 @keyframes moveUpTwo {
-    0% {
-      transform: translateY(0);
-      opacity: 0;
-      visibility: hidden;
-    }
-    20% {
-        opacity: 0.5;
-    }
-    100% {
-      transform: translateY(-30em);
-      opacity: 1;
-    }
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+    visibility: hidden;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-30em);
+    opacity: 1;
+  }
 }
 
 @keyframes moveBackOne {
-    0% {
-      transform: translateY(-30em);
-      opacity: 0;
-      visibility: hidden;
-    }
-    80% {
-        opacity: 0.5;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  0% {
+    transform: translateY(-30em);
+    opacity: 0;
+    visibility: hidden;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes moveBackTwo {
-    0% {
-        transform: translateY(-30em);
-        opacity: 1;
-      }
-      20% {
-          opacity: 0.5;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 0;
-        visibility: hidden;
-      }
+  0% {
+    transform: translateY(-30em);
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 .event-closeBtn {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    right: 20px;
-    top: 10px;
-    border: none;
-    outline: none;
-    border-radius: 50%;
-    padding: 5px;
-    background: none;
-    font-size: 20px;
-    color: #000000;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    z-index: 5;
-    cursor: pointer;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  right: 20px;
+  top: 10px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  padding: 5px;
+  background: none;
+  font-size: 20px;
+  color: #000000;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 5;
+  cursor: pointer;
 }
 
 .event-closeBtn:hover {
-    background: #edf1f8;
+  background: #edf1f8;
 }
 
 .whiteX {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .whiteX:hover {
-    color: #000000;
+  color: #000000;
 }
 
-.events-title, .new-event-title, .no-events-title {
-    font-family: 'Arnamu', sans-serif;
-    letter-spacing: 1px;
-    font-size: 18px;
-} 
+.events-title,
+.new-event-title,
+.no-events-title {
+  font-family: 'Arnamu', sans-serif;
+  letter-spacing: 1px;
+  font-size: 18px;
+}
 
 .no-events-title {
-    color: #9b9b9b;
-    text-align: center;
-    font-size: 23px;
-    margin-top: 70px;
-    margin-bottom: 80px;
+  color: #9b9b9b;
+  text-align: center;
+  font-size: 23px;
+  margin-top: 70px;
+  margin-bottom: 80px;
 }
 
 .new-event-title {
-    text-align: center;
-    font-size: 18px;
+  text-align: center;
+  font-size: 18px;
 }
 
 .grouped-event-inpts {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.event-inpts, .react-time-picker__wrapper, .react-time-picker__clock {
-    position: relative;
-    border-radius: 4px;
-    border: 1px solid #d6d6d6;
-    outline: none;
-    background-color: #f1f1f1;
-    font-family: 'Arnamu Medium', sans-serif;
-    font-size: 15px;
-    letter-spacing: 1px;
-    padding: 5px;
-    margin-right: 20px;
+.event-inpts,
+.react-time-picker__wrapper,
+.react-time-picker__clock {
+  position: relative;
+  border-radius: 4px;
+  border: 1px solid #d6d6d6;
+  outline: none;
+  background-color: #f1f1f1;
+  font-family: 'Arnamu Medium', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  padding: 5px;
+  margin-right: 20px;
 }
 
-.darkTime .react-time-picker__wrapper, .darkTime .react-time-picker__clock {
-    background-color: #262626 !important;
-    border: 2px solid #393939 !important;
-    color: #ffffff;
+.darkTime .react-time-picker__wrapper,
+.darkTime .react-time-picker__clock {
+  background-color: #262626 !important;
+  border: 2px solid #393939 !important;
+  color: #ffffff;
 }
 
 .darkTime .react-time-picker__button svg {
-    stroke: #ffffff;
+  stroke: #ffffff;
 }
 
 .darkInpt2 {
-    background-color: #1d1d1d !important;
-    border: 2px solid #393939 !important;
-    color: #ffffff;
+  background-color: #1d1d1d !important;
+  border: 2px solid #393939 !important;
+  color: #ffffff;
 }
 
 .react-time-picker__wrapper {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .edit-details {
-    display: grid !important;
+  display: grid !important;
 }
 
 .edit-inpts-grouped {
-    display: flex;
-    margin-right: 1em;
+  display: flex;
+  margin-right: 1em;
 }
 
 .edit-inpts-grouped .react-time-picker__inputGroup__input::selection {
-    background-color: #ffffff;
-    color: var(--light-green);
+  background-color: #ffffff;
+  color: var(--light-green);
 }
 
 .edit-time .react-time-picker__wrapper {
-    border: none !important;
-    background-color: transparent !important;
+  border: none !important;
+  background-color: transparent !important;
 }
 
 .edit-time .react-time-picker__inputGroup {
-    padding: 0 0 !important;
-    min-width: calc((1px * 3) + 0.1em * 6 + 0.383em * 2) !important;
+  padding: 0 0 !important;
+  min-width: calc((1px * 3) + 0.1em * 6 + 0.383em * 2) !important;
 }
 
 .edit-time .react-time-picker__button:enabled .react-time-picker__button__icon,
 .edit-time .react-time-picker__button:enabled .react-time-picker__button__icon,
-.edit-time .react-time-picker__button:enabled:hover .react-time-picker__button__icon,
-.edit-time .react-time-picker__button:enabled:focus .react-time-picker__button__icon {
-    position: relative;
-    right: 7px;
-    stroke: #ffffff;
+.edit-time
+  .react-time-picker__button:enabled:hover
+  .react-time-picker__button__icon,
+.edit-time
+  .react-time-picker__button:enabled:focus
+  .react-time-picker__button__icon {
+  position: relative;
+  right: 7px;
+  stroke: #ffffff;
 }
 
-.edit-name-inpt, .edit-description-inpt {
-    background-color: #fff;
-    position: relative;
-    top: -6px;
-    right: 10px;
-    padding: 7px !important;
-    width: 100% !important;
+.edit-name-inpt,
+.edit-description-inpt {
+  background-color: #fff;
+  position: relative;
+  top: -6px;
+  right: 10px;
+  padding: 7px !important;
+  width: 100% !important;
 }
 
 .edit-description-inpt {
-    right: 0;
-    width: 91% !important;
+  right: 0;
+  width: 91% !important;
 }
 
 .event-inpts::placeholder {
   font-family: 'Arnamu', sans-serif;
   color: #777777;
-  transition: color 0.6s ease, transform 0.6s ease, font-weight 0.6s ease, background-image 0.6s ease;
+  transition: color 0.6s ease, transform 0.6s ease, font-weight 0.6s ease,
+    background-image 0.6s ease;
   letter-spacing: 1px;
   font-size: 15px;
   cursor: auto;
 }
 
 .event-inpts:focus-visible {
-    outline: none;
+  outline: none;
 }
 
 .event-name-inpt {
-    width: 100%;
-    margin-left: 10px;
-    padding: 10px;
+  width: 100%;
+  margin-left: 10px;
+  padding: 10px;
 }
 
 textarea {
-    padding: 10px;
-    resize: none;
+  padding: 10px;
+  resize: none;
 }
 
 .add-event-btn {
-    font-size: 15px;
-    letter-spacing: 1px;
-    font-family: 'Arnamu Bold', sans-serif;
-    text-align: center;
-    border: none; 
-    border-radius: 20px;
-    padding: 8px 15px;
-    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
-    color: #ffffff;
-    transition: all 0.3s ease;
-    cursor: pointer;
+  font-size: 15px;
+  letter-spacing: 1px;
+  font-family: 'Arnamu Bold', sans-serif;
+  text-align: center;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  background: linear-gradient(
+    45deg,
+    var(--light-green) 0%,
+    #00959f 30%,
+    #00cad8 100%
+  );
+  color: #ffffff;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .add-event-btn:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .shrink-button {
-    transform: scale(0.9);
-  }
+  transform: scale(0.9);
+}
 
 .react-time-picker__clock {
-    width: 114px !important;
-    height: 114px !important;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding: 10px;
+  width: 114px !important;
+  height: 114px !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
 }
 
 .react-clock {
-    width: 95px !important;
-    height: 95px !important;
+  width: 95px !important;
+  height: 95px !important;
 }
 
 .react-clock__face {
-    border: 2px solid var(--dark-green);
+  border: 2px solid var(--dark-green);
 }
 
-.react-clock__hand__body.react-clock__hour-hand__body, .react-clock__mark__body.react-clock__hour-mark__body {
-    background-color: var(--dark-green);
+.react-clock__hand__body.react-clock__hour-hand__body,
+.react-clock__mark__body.react-clock__hour-mark__body {
+  background-color: var(--dark-green);
 }
 
 .react-clock__hand__body.react-clock__minute-hand__body {
-    background-color: var(--dark-green);
-    width: 3px;
+  background-color: var(--dark-green);
+  width: 3px;
 }
 
 .react-clock__mark__body.react-clock__minute-mark__body {
-    background-color: var(--orange);
+  background-color: var(--orange);
 }
 
 .my-event {
-    position: relative;
-    display: flex;
-    padding: 15px;
-    margin-bottom: 7px;
-    margin-right: 5px;
-    border-radius: 5px;
-    background-color: #f1f1f1;
+  position: relative;
+  display: flex;
+  padding: 15px;
+  margin-bottom: 7px;
+  margin-right: 5px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
 }
 
 .event-details {
-    display: flex;
+  display: flex;
 }
 
 .event-time {
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 17px;
-    font-family: 'LabGrotesque', sans-serif;
-    font-weight: 600;
-    letter-spacing: 1px;
-    border-radius: 5px;
-    padding: 5px;
-    color: #ffffff;
-    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%);
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-family: 'LabGrotesque', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 5px;
+  padding: 5px;
+  color: #ffffff;
+  background: linear-gradient(
+    45deg,
+    var(--light-green) 0%,
+    #00959f 30%,
+    #00cad8 100%
+  );
 }
 
 .addEventSection {
-    width: 90%;
-    position: absolute;
-    bottom: 10px;
+  width: 90%;
+  position: absolute;
+  bottom: 10px;
 }
 
 .myEvents {
-    height: 130px;
-    overflow-x: hidden;
-    margin-top: 15px;
-    margin-bottom: 10px;
+  height: 130px;
+  overflow-x: hidden;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 
 .myEvents::-webkit-scrollbar {
-    display: block !important;
-    width: 5px;
-    border-radius: 20px;
+  display: block !important;
+  width: 5px;
+  border-radius: 20px;
 }
 
 .myEvents::-webkit-scrollbar-track {
-    background: transparent;
-  }
-      
+  background: transparent;
+}
+
 .myEvents::-webkit-scrollbar-thumb {
-    background-color: var(--dark-green);
-    border-radius: 20px;
-    border-right: none;
-    border-left: none;
+  background-color: var(--dark-green);
+  border-radius: 20px;
+  border-right: none;
+  border-left: none;
 }
-  
+
 .myEvents::-webkit-scrollbar-thumb:hover {
-    background-color: var(--light-green);
+  background-color: var(--light-green);
 }
-  
+
 .myEvents::-webkit-scrollbar-track-piece:end {
-    background: transparent;
-    margin-bottom: 5px; 
+  background: transparent;
+  margin-bottom: 5px;
 }
-  
+
 ::-webkit-scrollbar-track-piece:start {
-    background: transparent;
-    margin-top: 5px;
+  background: transparent;
+  margin-top: 5px;
 }
-  
 
 .event-information {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
-.event-name, .event-description {
-    word-break: break-word;
-    font-size: 13px;
-    padding-right: 3em;
-    letter-spacing: 1px;
-    font-family: 'Arnamu', sans-serif;
+.event-name,
+.event-description {
+  word-break: break-word;
+  font-size: 13px;
+  padding-right: 3em;
+  letter-spacing: 1px;
+  font-family: 'Arnamu', sans-serif;
 }
 
 .event-description {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .event-name {
-    position: relative;
-    top: 5px;
-    font-size: 17px;
-    font-weight: 600;
+  position: relative;
+  top: 5px;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .event-actions {
-    position: absolute;
-    right: 15px;
-    display: flex;
+  position: absolute;
+  right: 15px;
+  display: flex;
 }
 
 .event-actions button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 10px;
-    width: 22px;
-    height: 22px;
-    border: none;
-    border-radius: 5px;
-    margin-left: 5px;
-    color: #ffffff;
-    background: linear-gradient(45deg, #ff0061 10.2%,  #ff7cae 80.2%);
-    cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 5px;
+  color: #ffffff;
+  background: linear-gradient(45deg, #ff0061 10.2%, #ff7cae 80.2%);
+  cursor: pointer;
 }
 
 .edit-event {
-    font-size: 12px !important;
-    background: linear-gradient(45deg, rgb(240, 192, 2) 11.2%,  rgb(255, 226, 61) 100.2%) !important;
+  font-size: 12px !important;
+  background: linear-gradient(
+    45deg,
+    rgb(240, 192, 2) 11.2%,
+    rgb(255, 226, 61) 100.2%
+  ) !important;
 }
 
 .save-event {
-    font-size: 12px !important;
-    background: linear-gradient(45deg, var(--light-green) 0%, #00959f 30%, #00cad8 100%) !important;
-}
-
-@media screen and (max-width: 500px) {
-    .react-time-picker__wrapper {
-        margin-right: 25px;
-    }
+  font-size: 12px !important;
+  background: linear-gradient(
+    45deg,
+    var(--light-green) 0%,
+    #00959f 30%,
+    #00cad8 100%
+  ) !important;
 }
