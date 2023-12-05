@@ -1,4 +1,5 @@
 import { React, useState, useRef } from 'react';
+import './style.css';
 
 import StaffAvatar from '../../assets/Images/StaffAvatar.png';
 
@@ -221,6 +222,22 @@ export default function AddStaffPopUp({ darkMode, close }) {
                       }`}
                       onChange={(e) => handleInputChange(e, 'FathersName')}
                     />
+                  </div>
+                  <div className='mySwitchSection'>
+                    <div>
+                      <label for='AddMe'>Կցել ինձ</label>
+                      <input id='AddMe' type='checkbox' class='switch' />
+                    </div>
+                    <div>
+                      <label for='ConfirmUserAccount'>
+                        Ավելացնել օգտահաշիվ
+                      </label>
+                      <input
+                        id='ConfirmUserAccount'
+                        type='checkbox'
+                        class='switch'
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className='staffInputSec RoleInptSec InputsRow popUpUploadRow'>

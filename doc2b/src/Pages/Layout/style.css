@@ -59,6 +59,8 @@
 
 .dark-open-info {
   background: #262626;
+  border: 2px solid #393939;
+  border-left: none;
 }
 
 .dark-open-info .menuBtn {
@@ -856,6 +858,7 @@
     padding: 0 1.5em;
     border-bottom: 1px solid #b2b2b2;
     z-index: 20;
+    z-index: 9999;
   }
 
   .mobile-bottom-menu {

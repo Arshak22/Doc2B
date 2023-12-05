@@ -12,6 +12,7 @@ import DivisionIcon from '../../assets/Icons/DivisionIcon.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import { GetAllDepartments } from '../../Platform/DepartmentRequests';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -26,100 +27,14 @@ export default function Divisions() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasCompanies, setHasCompnaies] = useState(false);
 
-  const divisions = [];
-  // const divisions = [
-  //   {
-  //     id: 0,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 7,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 8,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 13,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 14,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 15,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 13,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 14,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  //   {
-  //     id: 15,
-  //     name: 'Ստորաբաժանում',
-  //   },
-  // ];
+  const [divisions, setDivisions] = useState([]);
+
+  const getDivisonsList = async () => {
+    const result = await GetAllDepartments();
+    if (result) {
+      setDivisions(result.data);
+    }
+  };
 
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();
@@ -131,11 +46,14 @@ export default function Divisions() {
   };
 
   useEffect(() => {
+    getDivisonsList();
+  }, []);
+
+  useEffect(() => {
     getCompaniesList();
   }, []);
 
   const handlePageClick = (event) => {
-    // Calculate the new offset based on the selected page
     const newOffset = event.selected * itemsPerPage;
     const endOffset = newOffset + itemsPerPage;
     const current = divisions.slice(newOffset, endOffset);
@@ -151,7 +69,7 @@ export default function Divisions() {
     const count = Math.ceil(divisions.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, []);
+  }, [divisions]);
 
   useEffect(() => {
     if (darkMode) {

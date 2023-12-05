@@ -16,6 +16,8 @@ import { GetAllCompanies } from '../../Platform/CompanyRequests';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
+import { NavLink } from 'react-router-dom';
+import { ROUTE_NAMES } from '../../Routes';
 
 export default function Activities() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
@@ -29,93 +31,6 @@ export default function Activities() {
 
   const applications = [];
 
-  // const applications = [
-  //   {
-  //     id: 1,
-  //     name: 'Աշխատակցի ազատման ծանուցում 1',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Աշխատակցի ազատման ծանուցում 2',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Աշխատակցի ազատման ծանուցում 3',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Աշխատակցի ազատման ծանուցում 4',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Աշխատակցի ազատման ծանուցում 5',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Աշխատակցի ազատման ծանուցում 6',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  //   {
-  //     id: 7,
-  //     name: 'Աշխատակցի ազատման ծանուցում 7',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     id: 8,
-  //     name: 'Աշխատակցի ազատման ծանուցում 8',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Աշխատակցի ազատման ծանուցում 9',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Աշխատակցի ազատման ծանուցում 4',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Աշխատակցի ազատման ծանուցում 10',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Աշխատակցի ազատման ծանուցում 11',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  // ];
-
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();
     if (result) {
@@ -128,7 +43,7 @@ export default function Activities() {
   useEffect(() => {
     getCompaniesList();
   }, []);
-  
+
   const handlePageClick = (event) => {
     // Calculate the new offset based on the selected page
     const newOffset = event.selected * itemsPerPage;
@@ -263,8 +178,7 @@ export default function Activities() {
               />
             </>
           </>
-        ) : (
-          hasCompanies ? 
+        ) : hasCompanies ? (
           <div className='no-staff-content'>
             <div className='welcome-section'>
               <h5>Դուք դեռ չունեք</h5>
@@ -282,40 +196,43 @@ export default function Activities() {
               </h5>
             </div>
             <div>
-              <button className='welcome-btn'>Ավելացնել</button>
-            </div>
-          </div> : 
-          <div className='no-staff-content'>
-          <div className='welcome-section'>
-            <h5>Դուք դեռ չունեք</h5>
-            <h3 className={darkMode ? ' whiteElement' : ''}>
-              Կազմակերպություն
-            </h3>
-          </div>
-          <div
-            className={
-              'empty-content-image-block' + (darkMode ? ' darkWelcome' : '')
-            }
-          >
-            <img src={CaseIcon} alt='CaseIcon' />
-            <h5>
-              Ավելացրեք կազմակերպություն, որպեսզի սկսեք ձեր աշխատանքը
-              համակարգում
-            </h5>
-          </div>
-          <Popup
-            trigger={
-              <div>
+              <NavLink to={ROUTE_NAMES.NEWACTIVITY}>
                 <button className='welcome-btn'>Ավելացնել</button>
-              </div>
-            }
-            position='top center'
-            onOpen={() => setPopUpOpen(true)}
-            onClose={() => setPopUpOpen(false)}
-          >
-            {(close) => <AddCompanyPopUp darkMode={darkMode} close={close} />}
-          </Popup>
-        </div>
+              </NavLink>
+            </div>
+          </div>
+        ) : (
+          <div className='no-staff-content'>
+            <div className='welcome-section'>
+              <h5>Դուք դեռ չունեք</h5>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Կազմակերպություն
+              </h3>
+            </div>
+            <div
+              className={
+                'empty-content-image-block' + (darkMode ? ' darkWelcome' : '')
+              }
+            >
+              <img src={CaseIcon} alt='CaseIcon' />
+              <h5>
+                Ավելացրեք կազմակերպություն, որպեսզի սկսեք ձեր աշխատանքը
+                համակարգում
+              </h5>
+            </div>
+            <Popup
+              trigger={
+                <div>
+                  <button className='welcome-btn'>Ավելացնել</button>
+                </div>
+              }
+              position='top center'
+              onOpen={() => setPopUpOpen(true)}
+              onClose={() => setPopUpOpen(false)}
+            >
+              {(close) => <AddCompanyPopUp darkMode={darkMode} close={close} />}
+            </Popup>
+          </div>
         )}
       </div>
       <div className='groupedSideBlocks'>

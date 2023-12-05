@@ -8,11 +8,24 @@ import { ImCross } from 'react-icons/im';
 
 import DivisionIcon from '../../assets/Icons/DivisionIcon.png';
 
+import { DeleteDepartment } from '../../Platform/DepartmentRequests';
+
 export default function Division({ currentItems, currentPage }) {
   const { darkMode, setPopUpOpen } = useGlobalContext();
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteError, setDeleteError] = useState('');
   const [deletingId, setDeletingId] = useState(null);
+
+  const handleDelete = async () => {
+    if (deletingId) {
+      try {
+        await DeleteDepartment(deletingId);
+        setDeleteError('Ստորաբաժանումը հաջողությամբ ջնջված է');
+      } catch (error) {
+        setDeleteError('Դուք չեք կարող ջնջել այս ստորաբաժանումը');
+      }
+    }
+  };
 
   useEffect(() => {}, [openDelete]);
 
@@ -103,7 +116,9 @@ export default function Division({ currentItems, currentPage }) {
       </h3>
       {!deleteError ? (
         <div>
-          <button className='save-staff-edit'>Այո</button>
+          <button className='save-staff-edit' onClick={handleDelete}>
+            Այո
+          </button>
           <button
             className='cancel-staff-edit'
             onClick={() => setOpenDelete(false)}

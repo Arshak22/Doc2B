@@ -45,46 +45,46 @@ export default function Home() {
     []
   );
 
-  // const applications = [];
+  const applications = [];
 
-  const applications = [
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 1',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'Accepted',
-    },
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 2',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'Declined',
-    },
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 3',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'In Process',
-    },
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 4',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'Accepted',
-    },
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 5',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'Declined',
-    },
-    {
-      name: 'Աշխատակցի ազատման ծանուցում 6',
-      person: 'Անուն Ազգանուն',
-      date: '13 Հուլ 2023',
-      category: 'In Process',
-    },
-  ];
+  // const applications = [
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 1',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'Accepted',
+  //   },
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 2',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'Declined',
+  //   },
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 3',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'In Process',
+  //   },
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 4',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'Accepted',
+  //   },
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 5',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'Declined',
+  //   },
+  //   {
+  //     name: 'Աշխատակցի ազատման ծանուցում 6',
+  //     person: 'Անուն Ազգանուն',
+  //     date: '13 Հուլ 2023',
+  //     category: 'In Process',
+  //   },
+  // ];
 
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();

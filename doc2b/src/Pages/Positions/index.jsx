@@ -10,6 +10,8 @@ import Position from '../../Components/Position';
 
 import PositionIcon from '../../assets/Icons/PositionIcon.png';
 
+import { GetAllPositions } from '../../Platform/PositionRequests';
+
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
@@ -22,127 +24,20 @@ export default function Positions() {
   const [itemsPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const positions = [];
-  // const positions = [
-  //   {
-  //     id: 0,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 7,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 8,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 13,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 14,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 1,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 7,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 8,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 13,
-  //     name: 'Պաշտոն',
-  //   },
-  //   {
-  //     id: 14,
-  //     name: 'Պաշտոն',
-  //   },
-  // ];
+  const [positions, setPositions] = useState([]);
+
+  const getPositionsList = async () => {
+    const result = await GetAllPositions();
+    if (result) {
+      setPositions(result.data);
+    }
+  };
+
+  useEffect(() => {
+    getPositionsList();
+  }, []);
 
   const handlePageClick = (event) => {
-    // Calculate the new offset based on the selected page
     const newOffset = event.selected * itemsPerPage;
     const endOffset = newOffset + itemsPerPage;
     const current = positions.slice(newOffset, endOffset);
@@ -158,7 +53,7 @@ export default function Positions() {
     const count = Math.ceil(positions.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, []);
+  }, [positions]);
 
   useEffect(() => {
     if (darkMode) {

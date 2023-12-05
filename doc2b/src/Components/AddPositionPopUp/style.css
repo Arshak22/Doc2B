@@ -86,7 +86,7 @@
 
 @media screen and (max-width: 500px) {
   .AddPopUp.AddPositionPopUp {
-    top: -7em;
+    top: -29em;
     padding-bottom: 3em;
     left: 30%;
     transform: translateX(-50%);

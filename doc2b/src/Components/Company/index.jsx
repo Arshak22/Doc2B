@@ -37,17 +37,6 @@ export default function Company({ currentItems, currentPage }) {
     }
   };
 
-  useEffect(() => {
-    console.log("openDelete:", openDelete);
-    if (openDelete) {
-      const pagination = document.querySelector('.pagination');
-      console.log(pagination);
-      if (pagination) {
-        pagination.style.display = 'none !important';
-      }
-    }
-  }, []);
-
   return !openDelete ? (
     <>
       <div className='staffList'>
