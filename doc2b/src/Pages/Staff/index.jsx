@@ -12,6 +12,7 @@ import StaffIcon from '../../assets/Icons/StaffIcon.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import { GetAllStaff } from '../../Platform/StaffRequests';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -27,7 +28,7 @@ export default function Staff() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasCompanies, setHasCompnaies] = useState(false);
 
-  const staff = [];
+  const [staff, setStaff] = useState([]);
   // const staff = [
   //   {
   //     id: 0,
@@ -226,6 +227,14 @@ export default function Staff() {
   //   },
   // ];
 
+  const getStaffList = async (id) => {
+    const result = await GetAllStaff(id);
+    if (result) {
+      console.log(result.data);
+      setStaff(result.data);
+    }
+  };
+
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();
     if (result) {
@@ -239,8 +248,12 @@ export default function Staff() {
     getCompaniesList();
   }, []);
 
+  useEffect(() => {
+    const id = localStorage.getItem('companyID');
+    getStaffList(id);
+  }, []);
+
   const handlePageClick = (event) => {
-    // Calculate the new offset based on the selected page
     const newOffset = event.selected * itemsPerPage;
     const endOffset = newOffset + itemsPerPage;
     const current = staff.slice(newOffset, endOffset);
@@ -265,7 +278,7 @@ export default function Staff() {
     const count = Math.ceil(staff.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, []);
+  }, [staff]);
 
   useEffect(() => {
     if (darkMode) {
@@ -328,20 +341,20 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='user'
-                      checked={selectedStatus.includes('user')}
+                      value='inactive'
+                      checked={selectedStatus.includes('standart')}
                       onChange={handleCheckboxChange}
                     />
-                    User
+                    Standart
                   </label>
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
                       value='standart'
-                      checked={selectedStatus.includes('standart')}
+                      checked={selectedStatus.includes('inactive')}
                       onChange={handleCheckboxChange}
                     />
-                    Standard
+                    Inactive
                   </label>
                 </div>
                 <div>

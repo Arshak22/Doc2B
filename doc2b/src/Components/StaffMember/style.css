@@ -68,6 +68,10 @@
   padding: 14px;
 }
 
+.staffAvatar {
+  padding: 0;
+}
+
 .staffMemberInfo {
   display: grid;
   font-family: 'Arnamu', sans-serif;

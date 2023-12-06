@@ -84,39 +84,34 @@ export default function AddCompanyPopUp({ darkMode, close }) {
   };
 
   const handleSubmit = async () => {
-    // Reset errors
     setErrors({});
 
-    // Check for empty fields
     const requiredFields = [
       'companyName',
       'directorName',
       'directorSurname',
-      'directorFathersName',
+      // 'directorFathersName',
       'HVHHNumber',
-      'businessCountry',
-      'businessCity',
-      'businessAddress',
-      'legalCountry',
-      'legalCity',
-      'legalAddress',
-      'telephone',
-      'email',
+      // 'businessCountry',
+      // 'businessCity',
+      // 'businessAddress',
+      // 'legalCountry',
+      // 'legalCity',
+      // 'legalAddress',
+      // 'telephone',
+      // 'email',
       'petRegisterNumber',
     ];
 
-    // Create a copy of the inputs and errors to avoid modifying state directly
     const newInputs = { ...inputs };
     const newErrors = {};
 
-    // Check for empty required fields
     requiredFields.forEach((field) => {
       if (!newInputs[field]) {
         newErrors[field] = 'Դաշտը պարտադիր է';
       }
     });
 
-    // Check for 'OtherPosition' when 'directorPositionOption' is 'Այլ'
     if (
       newInputs.directorPositionOption === 'Այլ' &&
       !newInputs.otherDirectorPosition
@@ -124,23 +119,19 @@ export default function AddCompanyPopUp({ darkMode, close }) {
       newErrors.otherDirectorPosition = 'Դաշտը պարտադիր է';
     }
 
-    // Check for 'OtherLegalType' when 'legalTypeOption' is 'Այլ'
     if (newInputs.legalTypeOption === 'Այլ' && !newInputs.otherLegalType) {
       newErrors.otherLegalType = 'Դաշտը պարտադիր է';
     }
 
-    // Check for valid 'HVHHNumber'
     const isValidHVHHNumber =
       /^\d+$/.test(newInputs.HVHHNumber) && newInputs.HVHHNumber.length >= 8;
     if (!isValidHVHHNumber) {
       newErrors.HVHHNumber = '8 թիվ';
     }
 
-    // Update state with errors
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
-      // If no errors, proceed with form submission
       const company = {
         company_name: newInputs.companyName,
         company_director_first_name: newInputs.directorName,

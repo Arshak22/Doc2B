@@ -1,7 +1,11 @@
-import { React, useState, useRef } from 'react';
+import { React, useState, useRef, useEffect } from 'react';
 import './style.css';
 
 import StaffAvatar from '../../assets/Images/StaffAvatar.png';
+
+import { AddNewStaff } from '../../Platform/StaffRequests';
+import { GetAllPositions } from '../../Platform/PositionRequests';
+import { GetAllDepartments } from '../../Platform/DepartmentRequests';
 
 import { RxCross2 } from 'react-icons/rx';
 import { HiCamera } from 'react-icons/hi';
@@ -16,6 +20,10 @@ export default function AddStaffPopUp({ darkMode, close }) {
   const [selectedRadio, setSelectedRadio] = useState('Անձնագիր');
   const [selectedImage, setSelectedImage] = useState(null);
   const [submited, setSubmited] = useState(false);
+  const [addMeInstead, setAddMeInstead] = useState(false);
+  const [addNewAccount, setAddNewAccount] = useState(false);
+  const [positions, setPositions] = useState([]);
+  const [divisions, setDivisions] = useState([]);
 
   const [inputs, setInputs] = useState({
     Name: '',
@@ -33,6 +41,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
     city: '',
     address: '',
     PassportGivenBy: '',
+    PassportGivenDate: '',
     PassportType: '',
     PassportNumber: '',
     SocialNumber: '',
@@ -45,6 +54,45 @@ export default function AddStaffPopUp({ darkMode, close }) {
     salary: '',
     currency: 'AMD',
   });
+
+  const getPositionList = async () => {
+    const result = await GetAllPositions();
+    if (result) {
+      setPositions(result.data);
+      if (result.data[1]) {
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          position: result.data[1].id,
+        }));
+      }
+    }
+  };
+
+  const getDivisionList = async (id) => {
+    const result = await GetAllDepartments(id);
+    if (result) {
+      setDivisions(result.data);
+      if (result.data[1]) {
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          division: result.data[1].id,
+        }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    getPositionList();
+  }, []);
+
+  useEffect(() => {
+    const id = localStorage.getItem('companyID');
+    getDivisionList(id);
+  }, []);
+
+  useEffect(() => {
+    setErrors([]);
+  }, [positions, divisions]);
 
   const [errors, setErrors] = useState({});
 
@@ -94,64 +142,89 @@ export default function AddStaffPopUp({ darkMode, close }) {
     }));
   };
 
-  const handleSubmit = () => {
-    // Reset errors
+  const handleSubmit = async () => {
     setErrors({});
-    setFileUploadError(''); // Reset file upload error
+    setFileUploadError('');
 
-    // Check for empty fields
     const requiredFields = [
       'Name',
       'Surname',
-      'FathersName',
-      'position',
+      // 'FathersName',
+      // 'position',
       'division',
-      'BOT',
-      'nationality',
-      'sex',
-      'telephone',
+      // 'BOT',
+      // 'nationality',
+      // 'sex',
+      // 'telephone',
       'email',
-      'country',
-      'city',
-      'address',
-      'PassportGivenBy',
-      'PassportType',
-      'PassportNumber',
-      'SocialNumber',
-      'WorkingDaysWeek',
-      'HoursPerWeek',
-      'WorkStartTime',
-      'WorkEndTime',
-      'WorkStartDate',
-      'salary',
-      'currency',
+      // 'country',
+      // 'city',
+      // 'address',
+      // 'PassportGivenBy',
+      // 'PassportGivenDate',
+      // 'PassportType',
+      // 'PassportNumber',
+      // 'SocialNumber',
+      // 'WorkingDaysWeek',
+      // 'HoursPerWeek',
+      // 'WorkStartTime',
+      // 'WorkEndTime',
+      // 'WorkStartDate',
+      // 'salary',
+      // 'currency',
     ];
 
-    // Create a copy of the inputs and errors to avoid modifying state directly
     const newInputs = { ...inputs };
     const newErrors = {};
 
-    // Check for empty required fields
     requiredFields.forEach((field) => {
       if (!newInputs[field]) {
         newErrors[field] = 'Դաշտը պարտադիր է';
       }
     });
 
-    // Check for file upload
-    if (selectedFiles.length === 0) {
-      setFileUploadError('Ներբեռնել 2 ֆայլ');
-    }
+    // if (selectedFiles.length === 0) {
+    //   setFileUploadError('Ներբեռնել 2 ֆայլ');
+    // }
 
-    // Update state with errors
     if (Object.keys(newErrors).length > 0 || fileUploadError) {
       setErrors(newErrors);
-      console.log(newErrors);
     } else {
-      // If no errors, proceed with form submission
-      console.log(newInputs);
+      const employee = {
+        employer_image: selectedImage,
+        employer_first_name: inputs.Name,
+        employer_last_name: inputs.Surname,
+        employer_middle_name: inputs.FathersName,
+        employer_birth_date: inputs.BOT,
+        employer_social_card: inputs.SocialNumber,
+        employer_passport_type: inputs.PassportType,
+        employer_passport: inputs.PassportNumber,
+        employer_passport_date_of_issue: inputs.PassportGivenDate,
+        employer_passport_authority: inputs.PassportGivenBy,
+        employer_register_address: `${inputs.country} ${inputs.city} ${inputs.address}`,
+        employer_phone_number: inputs.telephone,
+        employer_email: inputs.email,
+        employer_nationality: inputs.nationality,
+        weekly_working_hours: inputs.HoursPerWeek,
+        weekly_working_days: inputs.WorkingDaysWeek,
+        employer_job_start_day: inputs.WorkStartDate,
+        employer_job_start_time: inputs.WorkStartTime,
+        employer_salary: inputs.salary,
+        employer_salary_currency: inputs.currency,
+        employer_status: inputs.role,
+        connected: addMeInstead || addNewAccount ? true : false,
+        employer_position: inputs.position,
+        employer_department: inputs.division,
+        company: localStorage.getItem('companyID'),
+      };
+      if (inputs.WorkEndDate !== '') {
+        employee.employer_job_end_day = inputs.WorkEndDate;
+      }
+      console.log(employee);
+      await AddNewStaff(employee);
       setSubmited(true);
       setSelectedFiles([]);
+      setSelectedImage(null);
     }
   };
 
@@ -225,17 +298,23 @@ export default function AddStaffPopUp({ darkMode, close }) {
                   </div>
                   <div className='mySwitchSection'>
                     <div>
-                      <label for='AddMe'>Կցել ինձ</label>
-                      <input id='AddMe' type='checkbox' class='switch' />
+                      <label htmlFor='AddMe'>Կցել ինձ</label>
+                      <input
+                        id='AddMe'
+                        type='checkbox'
+                        className='switch'
+                        onChange={() => setAddMeInstead(!addMeInstead)}
+                      />
                     </div>
                     <div>
-                      <label for='ConfirmUserAccount'>
+                      <label htmlFor='ConfirmUserAccount'>
                         Ավելացնել օգտահաշիվ
                       </label>
                       <input
                         id='ConfirmUserAccount'
                         type='checkbox'
-                        class='switch'
+                        className='switch'
+                        onChange={() => setAddNewAccount(!addNewAccount)}
                       />
                     </div>
                   </div>
@@ -253,7 +332,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                     >
                       <option value='Admin'>Admin</option>
                       <option value='Standart'>Standart</option>
-                      <option value='User'>User</option>
+                      <option value='Inactive'>Inactive</option>
                     </select>
                   </div>
                   <div className='upload-doc-sec'>
@@ -416,10 +495,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                   }`}
                   onChange={(e) => handleInputChange(e, 'position')}
                 >
-                  <option value='Պաշտոն 1'>Պաշտոն 1</option>
-                  <option value='Պաշտոն 2'>Պաշտոն 2</option>
-                  <option value='Պաշտոն 3'>Պաշտոն 3</option>
-                  <option value='Պաշտոն 4'>Պաշտոն 4</option>
+                  {positions.slice(1).map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className='staffInputSec editStaffInputSec'>
@@ -432,10 +512,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                   }`}
                   onChange={(e) => handleInputChange(e, 'division')}
                 >
-                  <option value='Ստորաբաժանում 1'>Ստորաբաժանում 1</option>
-                  <option value='Ստորաբաժանում 2'>Ստորաբաժանում 2</option>
-                  <option value='Ստորաբաժանում 3'>Ստորաբաժանում 3</option>
-                  <option value='Ստորաբաժանում 4'>Ստորաբաժանում 4</option>
+                  {divisions.slice(1).map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -491,18 +572,20 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 onChange={(e) => handleInputChange(e, 'telephone')}
               />
             </div>
-            <div className={'staffInputSec editStaffInputSec'}>
-              <label htmlFor='Email'>Էլ․ հասցե</label>
-              <input
-                type='email'
-                name='Email'
-                id='Email'
-                className={`${darkMode ? 'darkInpt' : ''} ${
-                  errors.email ? 'inptError' : ''
-                }`}
-                onChange={(e) => handleInputChange(e, 'email')}
-              />
-            </div>
+            {!addMeInstead ? (
+              <div className={'staffInputSec editStaffInputSec'}>
+                <label htmlFor='Email'>Էլ․ հասցե</label>
+                <input
+                  type='email'
+                  name='Email'
+                  id='Email'
+                  className={`${darkMode ? 'darkInpt' : ''} ${
+                    errors.email ? 'inptError' : ''
+                  }`}
+                  onChange={(e) => handleInputChange(e, 'email')}
+                />
+              </div>
+            ) : null}
           </div>
           <div className='singleStaffRow InputsRow'>
             <div className={'staffInputSec editStaffInputSec'}>
@@ -555,6 +638,18 @@ export default function AddStaffPopUp({ darkMode, close }) {
                   errors.PassportGivenBy ? 'inptError' : ''
                 }`}
                 onChange={(e) => handleInputChange(e, 'PassportGivenBy')}
+              />
+            </div>
+            <div className={'staffInputSec editStaffInputSec'}>
+              <label htmlFor='PassportGivenDate'>Անձնագրի տրման ամսաթիվը</label>
+              <input
+                type='date'
+                name='PassportGivenDate'
+                id='PassportGivenDate'
+                className={`${darkMode ? 'darkInpt' : ''} ${
+                  errors.BOT ? 'inptError' : ''
+                }`}
+                onChange={(e) => handleInputChange(e, 'PassportGivenDate')}
               />
             </div>
             <div className={'staffInputSec editStaffInputSec'}>

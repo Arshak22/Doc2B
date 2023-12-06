@@ -4,6 +4,8 @@ import { useGlobalContext } from '../../Context/Context';
 import { ROUTE_NAMES } from '../../Routes';
 import './style.css';
 
+import { GetAllCompanies } from '../../Platform/CompanyRequests';
+
 import Logo from '../../assets/Images/Logo.png';
 import LogoWhite from '../../assets/Images/LogoWhite.png';
 
@@ -66,9 +68,9 @@ export default function Layout() {
   const location = useLocation();
   const { popUpOpen, setPopUpOpen, darkMode, setDarkMode } = useGlobalContext();
   const isLoggedIn = localStorage.getItem('logedIn') === 'true';
-  const options = ['Team2B', 'How2B', 'Train2B'];
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [CompDropdownOpen, setCompDropdownOpen] = useState(false);
+  const [options, setOptions] = useState([]);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
   const [sideMenu, setSideMenu] = useState(false);
@@ -106,6 +108,21 @@ export default function Layout() {
       status: 'Not read',
     },
   ];
+
+  const getCompaniesList = async () => {
+    const result = await GetAllCompanies();
+    if (result) {
+      setOptions(result.data);
+      if (result.data[1]) {
+        setSelectedOption(result.data[1].company_name);
+        localStorage.setItem('companyID', result.data[1].id);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCompaniesList();
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -201,8 +218,8 @@ export default function Layout() {
   }, [setPopUpOpen, popUpOpen]);
 
   useEffect(() => {
-    if(options && options[0]) {
-      setSelectedOption(options[0]);
+    if (options && options[1]) {
+      setSelectedOption(options[1].company_name);
     }
     const handleScroll = () => {
       setMobileSearch(false);
@@ -386,7 +403,7 @@ export default function Layout() {
                       }`}
                       onClick={toggleDropdown}
                     />
-                    {dropdownOpen && (
+                    {dropdownOpen && options && options.length > 2 ? (
                       <div
                         className={
                           'CompanyDropdownOptions' +
@@ -394,17 +411,19 @@ export default function Layout() {
                         }
                         ref={dropdownRef}
                       >
-                        {options.map((option, index) => (
+                        {options.slice(1).map((option, index) => (
                           <div
                             key={index}
                             className='CompanyDropdownOption'
-                            onClick={() => handleOptionClick(option)}
+                            onClick={() =>
+                              handleOptionClick(option.company_name)
+                            }
                           >
-                            {option}
+                            {option.company_name}
                           </div>
                         ))}
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </div>
                 <div className='groupedHeaderSec'>
@@ -967,7 +986,7 @@ export default function Layout() {
                   </NavLink>
                 </div>
               )}
-              {CompDropdownOpen ? (
+              {CompDropdownOpen && options && options.length > 2 ? (
                 <div
                   className={
                     'CompanyDropdownOptions moveRight' +
@@ -975,13 +994,13 @@ export default function Layout() {
                   }
                   ref={dropdownRef}
                 >
-                  {options.map((option, index) => (
+                  {options.slice(1).map((option, index) => (
                     <div
                       key={index}
                       className='CompanyDropdownOption'
-                      onClick={() => handleOptionClick(option)}
+                      onClick={() => handleOptionClick(option.company_name)}
                     >
-                      {option}
+                      {option.company_name}
                     </div>
                   ))}
                 </div>
@@ -993,13 +1012,13 @@ export default function Layout() {
                   }
                   ref={dropdownRef}
                 >
-                  {options.map((option, index) => (
+                  {options.slice(1).map((option, index) => (
                     <div
                       key={index}
                       className='CompanyDropdownOption'
-                      onClick={() => handleOptionClick(option)}
+                      onClick={() => handleOptionClick(option.company_name)}
                     >
-                      {option}
+                      {option.company_name}
                     </div>
                   ))}
                 </div>

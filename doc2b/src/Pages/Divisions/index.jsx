@@ -29,8 +29,8 @@ export default function Divisions() {
 
   const [divisions, setDivisions] = useState([]);
 
-  const getDivisonsList = async () => {
-    const result = await GetAllDepartments();
+  const getDivisonsList = async (id) => {
+    const result = await GetAllDepartments(id);
     if (result) {
       setDivisions(result.data);
     }
@@ -46,7 +46,8 @@ export default function Divisions() {
   };
 
   useEffect(() => {
-    getDivisonsList();
+    const id = localStorage.getItem('companyID');
+    getDivisonsList(id);
   }, []);
 
   useEffect(() => {

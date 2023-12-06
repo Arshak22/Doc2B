@@ -12,8 +12,8 @@ export const AddNewDepartment = (department) => {
   return axios.post(`${API}/main/departments/`, department, options);
 };
 
-export const GetAllDepartments = () => {
-  return axios.get(`${API}/main/departments/`, options);
+export const GetAllDepartments = (id) => {
+  return axios.get(`${API}/main/departments/?company=${id}`, options);
 };
 
 export const GetSingleDepartment = (id) => {

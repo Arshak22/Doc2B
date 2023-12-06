@@ -35,8 +35,6 @@ export default function AddPositionPopUp({ darkMode, close }) {
         block.id === id ? { ...block, content: newContent } : block
       )
     );
-
-    // Check for empty content and update errors
     setErrors((prevErrors) => ({
       ...prevErrors,
       gorcaruyt: {
@@ -50,7 +48,6 @@ export default function AddPositionPopUp({ darkMode, close }) {
     const inputValue = e.target.value;
     setPosition(inputValue);
 
-    // Check for empty position and update errors
     setErrors((prevErrors) => ({
       ...prevErrors,
       position: inputValue.trim() ? '' : 'Դաշտը պարտադրի է',
@@ -58,24 +55,19 @@ export default function AddPositionPopUp({ darkMode, close }) {
   };
 
   const handleSubmit = () => {
-    // Reset errors
     setErrors({});
 
-    // Check for empty fields
     const requiredFields = ['Position'];
 
-    // Create a copy of the blocks and errors to avoid modifying state directly
     const newBlocks = [...gorcaruytBlocks];
     const newErrors = {};
 
-    // Check for empty required fields
     requiredFields.forEach((field) => {
       if (!newBlocks[0].content) {
         newErrors[field] = 'Դաշտը պարտադրի է';
       }
     });
 
-    // Check for errors in gorcaruyt blocks
     const gorcaruytErrors = {};
     newBlocks.forEach((block) => {
       if (!block.content) {
@@ -83,18 +75,12 @@ export default function AddPositionPopUp({ darkMode, close }) {
       }
     });
 
-    // Update state with errors
     if (
       Object.keys(newErrors).length > 0 ||
       Object.keys(gorcaruytErrors).length > 0
     ) {
       setErrors({ ...newErrors, gorcaruyt: gorcaruytErrors });
     } else {
-      // If no errors, proceed with form submission
-      console.log({
-        position: position,
-        gorcaruyts: newBlocks.map((block) => block.content),
-      });
       setSubmited(true);
     }
   };

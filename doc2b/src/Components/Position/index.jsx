@@ -74,7 +74,7 @@ export default function Position({ currentItems, currentPage }) {
                     (darkMode ? ' darkStaffMember' : '')
                   }
                 >
-                  <NavLink to={ROUTE_NAMES.POSITION + '1'}>
+                  <NavLink to={ROUTE_NAMES.POSITION + item.id}>
                     <img
                       src={PositionIcon}
                       alt='PositionIcon'
@@ -82,7 +82,7 @@ export default function Position({ currentItems, currentPage }) {
                     />
                     <div className='staffMemberInfo comanyInfo'>
                       <h3 className='positionName'>
-                        {truncateText(item.name, 12)}
+                        {truncateText(item.name, 8)}
                       </h3>
                     </div>
                   </NavLink>

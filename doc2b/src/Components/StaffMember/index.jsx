@@ -10,6 +10,8 @@ import StaffAvatar from '../../assets/Images/StaffAvatar.png';
 
 import { ImCross } from 'react-icons/im';
 
+import { DeleteStaff } from '../../Platform/StaffRequests';
+
 export default function StaffMember({ currentItems, currentPage }) {
   const { setPopUpOpen, darkMode } = useGlobalContext();
   const [openDelete, setOpenDelete] = useState(false);
@@ -21,6 +23,17 @@ export default function StaffMember({ currentItems, currentPage }) {
       return text;
     } else {
       return text.substring(0, maxLength - 2) + '..';
+    }
+  };
+
+  const handleDelete = async () => {
+    if (deletingId) {
+      try {
+        await DeleteStaff(deletingId);
+        setDeleteError('Աշխատողը հաջողությամբ ջնջված է');
+      } catch (error) {
+        setDeleteError('Դուք չեք կարող ջնջել այս աշխատողին');
+      }
     }
   };
 
@@ -47,12 +60,6 @@ export default function StaffMember({ currentItems, currentPage }) {
       )}
       {currentItems &&
         currentItems.map((item, index) => {
-          let nameParts, firstName, lastName;
-          if (item.name) {
-            nameParts = item.name.split(' ');
-            firstName = nameParts[0];
-            lastName = nameParts.slice(1).join(' ');
-          }
           return (
             <div key={index}>
               {item.id === 0 ? (
@@ -79,29 +86,34 @@ export default function StaffMember({ currentItems, currentPage }) {
                     'staffMember' + (darkMode ? ' darkStaffMember' : '')
                   }
                 >
-                  <NavLink to={ROUTE_NAMES.STAFFMEMBER + '1'}>
+                  <NavLink to={ROUTE_NAMES.STAFFMEMBER + item.id}>
                     <img
-                      src={StaffAvatar}
+                      src={
+                        item.employer_image ? item.employer_image : StaffAvatar
+                      }
                       alt='staffAvatar'
-                      className='staffMemberPic'
+                      className={
+                        'staffMemberPic' +
+                        (item.employer_image ? ' staffAvatar' : '')
+                      }
                     />
                   </NavLink>
-                  <NavLink to={ROUTE_NAMES.STAFFMEMBER + '1'}>
+                  <NavLink to={ROUTE_NAMES.STAFFMEMBER + item.id}>
                     <div className='staffMemberInfo'>
-                      <h4>{truncateText(item.division, 14)}</h4>
-                      <h3>{firstName}</h3>
-                      <h3>{lastName}</h3>
-                      <h2>{truncateText(item.position, 12)}</h2>
+                      <h4>{truncateText(item.department_name, 14)}</h4>
+                      <h3>{item.employer_first_name}</h3>
+                      <h3>{item.employer_last_name}</h3>
+                      <h2>{truncateText(item.position_name, 12)}</h2>
                       <h5
                         className={
-                          item.status === 'admin'
+                          item.employer_status === 'Admin'
                             ? 'adminStatus'
-                            : item.status === 'standart'
+                            : item.employer_status === 'Standart'
                             ? 'standartStatus'
                             : 'userStatus'
                         }
                       >
-                        {item.status}
+                        {item.employer_status}
                       </h5>
                     </div>
                   </NavLink>
@@ -134,7 +146,9 @@ export default function StaffMember({ currentItems, currentPage }) {
       </h3>
       {!deleteError ? (
         <div>
-          <button className='save-staff-edit'>Այո</button>
+          <button className='save-staff-edit' onClick={handleDelete}>
+            Այո
+          </button>
           <button
             className='cancel-staff-edit'
             onClick={() => setOpenDelete(false)}

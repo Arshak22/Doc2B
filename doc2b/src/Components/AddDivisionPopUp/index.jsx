@@ -12,17 +12,13 @@ export default function AddDivisionPopUp({ darkMode, close }) {
     const inputValue = e.target.value;
     setDivision(inputValue);
 
-    // Check for empty input
     setError(inputValue.trim() ? '' : 'Դաշտը պարտադիր է');
   };
 
   const handleSubmit = () => {
-    // Check for empty input
     if (!division.trim()) {
       setError('Դաշտը պարտադրի է');
     } else {
-      // If no errors, proceed with form submission
-      console.log('Division:', division);
       setSubmited(true);
     }
   };

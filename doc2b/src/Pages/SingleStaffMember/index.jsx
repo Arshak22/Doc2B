@@ -178,7 +178,7 @@ export default function SingleStaffMember() {
                     >
                       <option value='Admin'>Admin</option>
                       <option value='Standart'>Standart</option>
-                      <option value='User'>User</option>
+                      <option value='Inactive'>Inactive</option>
                     </select>
                   </div>
                 )}
@@ -423,10 +423,10 @@ export default function SingleStaffMember() {
           <div className='singleStaffRow InputsRow'>
             <div
               className={
-                'staffInputSec' + (editMode ? ' editStaffInputSec' : '')
+                'staffInputSec narrowInputSec' + (editMode ? ' editStaffInputSec' : '')
               }
             >
-              <label htmlFor='PassportGivenBy'>
+              <label htmlFor='PassportGivenBy' >
                 Ում կողմից է տրված անձնագիրը
               </label>
               {!editMode ? (
@@ -445,7 +445,26 @@ export default function SingleStaffMember() {
             </div>
             <div
               className={
-                'staffInputSec' + (editMode ? ' editStaffInputSec' : '')
+                'staffInputSec narrowInputSec' + (editMode ? ' editStaffInputSec' : '')
+              }
+            >
+              <label htmlFor='PassportGivenDate'>Տրման ամսաթիվ</label>
+              {!editMode ? (
+                <h3 className={'numbers' + (darkMode ? ' whiteElement' : '')}>
+                  {member.bod}
+                </h3>
+              ) : (
+                <input
+                  type='date'
+                  name='PassportGivenDate'
+                  id='PassportGivenDate'
+                  className={darkMode ? ' darkInpt' : ''}
+                />
+              )}
+            </div>
+            <div
+              className={
+                'staffInputSec narrowInputSec' + (editMode ? ' editStaffInputSec' : '')
               }
             >
               <label htmlFor='PassportType'>Անձնագրի տեսակը</label>
@@ -465,7 +484,7 @@ export default function SingleStaffMember() {
             </div>
             <div
               className={
-                'staffInputSec' + (editMode ? ' editStaffInputSec' : '')
+                'staffInputSec narrowInputSec' + (editMode ? ' editStaffInputSec' : '')
               }
             >
               <label htmlFor='PassportNumber'>Անձնագրի համարը</label>
@@ -485,7 +504,7 @@ export default function SingleStaffMember() {
             </div>
             <div
               className={
-                'staffInputSec' + (editMode ? ' editStaffInputSec' : '')
+                'staffInputSec narrowInputSec' + (editMode ? ' editStaffInputSec' : '')
               }
             >
               <label htmlFor='SocialNumber'>Սոց․ քարտի համարը</label>
