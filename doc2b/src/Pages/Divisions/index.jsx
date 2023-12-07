@@ -4,6 +4,7 @@ import { useGlobalContext } from '../../Context/Context';
 import Popup from 'reactjs-popup';
 import AddDivisionPopUp from '../../Components/AddDivisionPopUp';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
+import PreLoader from '../../Components/PreLoader';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
 import Division from '../../Components/Division';
@@ -20,6 +21,7 @@ import { ImSearch } from 'react-icons/im';
 
 export default function Divisions() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -33,6 +35,9 @@ export default function Divisions() {
     const result = await GetAllDepartments(id);
     if (result) {
       setDivisions(result.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -42,6 +47,9 @@ export default function Divisions() {
       if (result.data.length > 1) {
         setHasCompnaies(true);
       }
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -95,12 +103,14 @@ export default function Divisions() {
         pagination.style.display = 'flex';
       }
     }
-  }, [darkMode, currentItems, currentPage]);
+  }, [darkMode, currentItems, currentPage, loading]);
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {divisions.length > 1 ? (
+        {loading ? (
+          <PreLoader />
+        ) : divisions.length > 1 ? (
           <>
             <div className='InputContainer'>
               <Popup

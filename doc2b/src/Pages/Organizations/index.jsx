@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { useGlobalContext } from '../../Context/Context';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
 import Popup from 'reactjs-popup';
+import PreLoader from '../../Components/PreLoader';
 import './style.css';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
@@ -18,6 +19,7 @@ import { GetAllCompanies } from '../../Platform/CompanyRequests';
 
 export default function Organization() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -30,6 +32,9 @@ export default function Organization() {
     const result = await GetAllCompanies();
     if (result) {
       setCompanies(result.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -58,9 +63,9 @@ export default function Organization() {
   useEffect(() => {
     if (darkMode) {
       document.querySelectorAll('.page-item .page-link').forEach((item) => {
-        item.style.backgroundColor = '#262626';
-        item.style.border = '1px solid #393939';
-        item.style.color = '#ffffff';
+        item.style.backgroundColor = '#262626 !important';
+        item.style.border = '1px solid #393939 !important';
+        item.style.color = '#ffffff !important';
       });
     } else {
       document.querySelectorAll('.page-item .page-link').forEach((item) => {
@@ -78,12 +83,14 @@ export default function Organization() {
         pagination.style.display = 'flex';
       }
     }
-  }, [darkMode, currentItems, currentPage]);
+  }, [darkMode, currentItems, currentPage, loading]);
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {companies.length > 1 ? (
+        {loading ? (
+          <PreLoader />
+        ) : companies.length > 1 ? (
           <>
             <div className='InputContainer'>
               <Popup

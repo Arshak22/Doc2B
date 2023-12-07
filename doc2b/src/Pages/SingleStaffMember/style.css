@@ -68,8 +68,19 @@
   letter-spacing: 1px;
   font-weight: 600;
   font-size: 20px;
-  color: var(--red);
   margin-top: 5px;
+}
+
+.adminStatus {
+  color: var(--red);
+}
+
+.standartStatus {
+  color: var(--light-green);
+}
+
+.inactiveStatus {
+  color: var(--orange);
 }
 
 .staff-edit-button,

@@ -6,6 +6,8 @@ import { useGlobalContext } from '../../Context/Context';
 import MyEventCalendar from '../../Components/MyEventCalendar';
 import CompanyAvatar from '../../assets/Images/CompanyAvatar.png';
 
+import PreLoader from '../../Components/PreLoader';
+
 import { AiFillEdit } from 'react-icons/ai';
 import { ImCheckmark } from 'react-icons/im';
 import { ImCross } from 'react-icons/im';
@@ -21,6 +23,7 @@ export default function SingleComany() {
   const { darkMode } = useGlobalContext();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const [inputs, setInputs] = useState({
     company_image: '',
@@ -60,9 +63,10 @@ export default function SingleComany() {
     try {
       const result = await GetSingleCompany(id);
       if (result) {
-        console.log(result.data);
         setCompany(result.data);
-        // Extracting information from company_gov_register_address
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
         const govRegisterAddressWords =
           result.data.company_gov_register_address.split(' ');
         setInputs((prevInputs) => ({
@@ -189,7 +193,9 @@ export default function SingleComany() {
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {!openDelete ? (
+        {loading ? (
+          <PreLoader />
+        ) : !openDelete ? (
           <>
             <div className='singleStaffRow'>
               <div className='singleStaffNameSection'>
@@ -264,7 +270,7 @@ export default function SingleComany() {
                         (editMode ? ' editStaffInputSec' : '')
                       }
                     >
-                      <label htmlFor='DirectorName'>
+                      <label htmlFor='DirectorName' className={editMode ? 'companyLeaderLabel' : null}>
                         Կազմակերպության ղեկավար
                       </label>
                       {!editMode ? (

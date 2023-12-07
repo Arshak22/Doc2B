@@ -4,6 +4,7 @@ import { useGlobalContext } from '../../Context/Context';
 import Popup from 'reactjs-popup';
 import AddPositionPopUp from '../../Components/AddPositionPopUp';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
+import PreLoader from '../../Components/PreLoader';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
 import Position from '../../Components/Position';
@@ -18,6 +19,7 @@ import { ImSearch } from 'react-icons/im';
 
 export default function Positions() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -30,6 +32,9 @@ export default function Positions() {
     const result = await GetAllPositions();
     if (result) {
       setPositions(result.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -78,12 +83,14 @@ export default function Positions() {
         pagination.style.display = 'flex';
       }
     }
-  }, [darkMode, currentItems, currentPage]);
+  }, [darkMode, currentItems, currentPage, loading]);
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {positions.length > 1 ? (
+        {loading ? (
+          <PreLoader />
+        ) : positions.length > 1 ? (
           <>
             <div className='InputContainer'>
               <div>

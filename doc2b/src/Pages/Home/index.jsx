@@ -4,6 +4,7 @@ import { useGlobalContext } from '../../Context/Context';
 import DocumentSlider from '../../Components/DocumentsSlider';
 import MyEventCalendar from '../../Components/MyEventCalendar';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
+import PreLoader from '../../Components/PreLoader';
 import Popup from 'reactjs-popup';
 import { NavLink } from 'react-router-dom';
 import { ROUTE_NAMES } from '../../Routes';
@@ -17,6 +18,7 @@ export default function Home() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
   const canvasRef = useRef(null);
   const [hasCompanies, setHasCompnaies] = useState(false);
+  const [loading, setLoading] = useState(true);
   let firstPerc = 60;
   let secondPerc = 30;
   let thirdPerc = 10;
@@ -47,51 +49,15 @@ export default function Home() {
 
   const applications = [];
 
-  // const applications = [
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 1',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 2',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 3',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 4',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Accepted',
-  //   },
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 5',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'Declined',
-  //   },
-  //   {
-  //     name: 'Աշխատակցի ազատման ծանուցում 6',
-  //     person: 'Անուն Ազգանուն',
-  //     date: '13 Հուլ 2023',
-  //     category: 'In Process',
-  //   },
-  // ];
-
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();
     if (result) {
       if (result.data.length > 1) {
         setHasCompnaies(true);
       }
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 

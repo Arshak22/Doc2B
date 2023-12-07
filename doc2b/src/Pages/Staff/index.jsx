@@ -4,6 +4,7 @@ import Popup from 'reactjs-popup';
 import { useGlobalContext } from '../../Context/Context';
 import AddStaffPopUp from '../../Components/AddStaffPopUp';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
+import PreLoader from '../../Components/PreLoader';
 import './style.css';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
@@ -20,6 +21,7 @@ import { ImSearch } from 'react-icons/im';
 
 export default function Staff() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -29,209 +31,14 @@ export default function Staff() {
   const [hasCompanies, setHasCompnaies] = useState(false);
 
   const [staff, setStaff] = useState([]);
-  // const staff = [
-  //   {
-  //     id: 0,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 7,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 8,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 9,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 10,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 11,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 12,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 13,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 14,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 15,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 16,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 17,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 18,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 19,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 20,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 21,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 22,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'user',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 23,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'standart',
-  //     image: '',
-  //   },
-  //   {
-  //     id: 24,
-  //     name: 'Անուն Ազգանուն',
-  //     division: 'Ստորաբաժանում',
-  //     position: 'Պաշտոն',
-  //     status: 'admin',
-  //     image: '',
-  //   },
-  // ];
 
   const getStaffList = async (id) => {
     const result = await GetAllStaff(id);
     if (result) {
-      console.log(result.data);
       setStaff(result.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -241,6 +48,9 @@ export default function Staff() {
       if (result.data.length > 1) {
         setHasCompnaies(true);
       }
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -303,12 +113,14 @@ export default function Staff() {
         pagination.style.display = 'flex';
       }
     }
-  }, [darkMode, currentItems, currentPage]);
+  }, [darkMode, currentItems, currentPage, loading]);
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {staff.length > 1 ? (
+        {loading ? (
+          <PreLoader />
+        ) : staff.length > 1 ? (
           <>
             <div className='InputContainer'>
               <Popup
@@ -342,10 +154,10 @@ export default function Staff() {
                     <input
                       type='checkbox'
                       value='inactive'
-                      checked={selectedStatus.includes('standart')}
+                      checked={selectedStatus.includes('standard')}
                       onChange={handleCheckboxChange}
                     />
-                    Standart
+                    Standard
                   </label>
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input

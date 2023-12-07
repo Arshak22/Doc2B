@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { useGlobalContext } from '../../Context/Context';
 import AddCompanyPopUp from '../../Components/AddCompanyPopUp';
 import Popup from 'reactjs-popup';
+import PreLoader from '../../Components/PreLoader';
 import './style.css';
 
 import DocumentSlider from '../../Components/DocumentsSlider';
@@ -21,6 +22,7 @@ import { ROUTE_NAMES } from '../../Routes';
 
 export default function Activities() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -37,6 +39,9 @@ export default function Activities() {
       if (result.data.length > 1) {
         setHasCompnaies(true);
       }
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -100,7 +105,9 @@ export default function Activities() {
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {applications.length > 1 ? (
+        {loading ? (
+          <PreLoader />
+        ) : applications.length > 1 ? (
           <>
             <div className='InputContainer'>
               <div></div>

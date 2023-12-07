@@ -26,32 +26,32 @@ export default function AddStaffPopUp({ darkMode, close }) {
   const [divisions, setDivisions] = useState([]);
 
   const [inputs, setInputs] = useState({
-    Name: '',
-    Surname: '',
-    FathersName: '',
+    Name: null,
+    Surname: null,
+    FathersName: null,
     role: 'Admin',
-    position: '',
-    division: '',
-    BOT: '',
-    nationality: '',
+    position: null,
+    division: null,
+    BOT: null,
+    nationality: null,
     sex: 'Արական',
-    telephone: '',
-    email: '',
-    country: '',
-    city: '',
-    address: '',
-    PassportGivenBy: '',
-    PassportGivenDate: '',
-    PassportType: '',
-    PassportNumber: '',
-    SocialNumber: '',
-    WorkingDaysWeek: '',
-    HoursPerWeek: '',
-    WorkStartTime: '',
-    WorkEndTime: '',
-    WorkStartDate: '',
-    WorkEndDate: '',
-    salary: '',
+    telephone: null,
+    email: null,
+    country: null,
+    city: null,
+    address: null,
+    PassportGivenBy: null,
+    PassportGivenDate: null,
+    PassportType: null,
+    PassportNumber: null,
+    SocialNumber: null,
+    WorkingDaysWeek: null,
+    HoursPerWeek: null,
+    WorkStartTime: null,
+    WorkEndTime: null,
+    WorkStartDate: null,
+    WorkEndDate: null,
+    salary: null,
     currency: 'AMD',
   });
 
@@ -209,6 +209,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
         weekly_working_days: inputs.WorkingDaysWeek,
         employer_job_start_day: inputs.WorkStartDate,
         employer_job_start_time: inputs.WorkStartTime,
+        employer_job_end_time: inputs.WorkEndTime,
         employer_salary: inputs.salary,
         employer_salary_currency: inputs.currency,
         employer_status: inputs.role,
@@ -220,7 +221,6 @@ export default function AddStaffPopUp({ darkMode, close }) {
       if (inputs.WorkEndDate !== '') {
         employee.employer_job_end_day = inputs.WorkEndDate;
       }
-      console.log(employee);
       await AddNewStaff(employee);
       setSubmited(true);
       setSelectedFiles([]);
@@ -647,7 +647,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 name='PassportGivenDate'
                 id='PassportGivenDate'
                 className={`${darkMode ? 'darkInpt' : ''} ${
-                  errors.BOT ? 'inptError' : ''
+                  errors.PassportGivenDate ? 'inptError' : ''
                 }`}
                 onChange={(e) => handleInputChange(e, 'PassportGivenDate')}
               />

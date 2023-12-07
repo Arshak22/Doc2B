@@ -10,7 +10,7 @@ import { FaFacebookF } from 'react-icons/fa';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { FaLinkedinIn } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
-import { ImArrowRight2 } from 'react-icons/im';
+import { FaGlobe } from "react-icons/fa";
 import { ImAttachment } from 'react-icons/im';
 import { ImCheckmark } from 'react-icons/im';
 
@@ -180,10 +180,12 @@ export default function ContactUs() {
           >
             <FaYoutube className='icon' />
           </a>
-          <a href='https://doc2b.am/' target='_blank' rel='noopener noreferrer'>
-            <button>
-              Դեպի Կայք <ImArrowRight2 />
-            </button>
+          <a
+            href='https://doc2b.am/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <FaGlobe className='icon' />
           </a>
         </div>
         <hr
