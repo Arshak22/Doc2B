@@ -21,8 +21,14 @@ export default function Division({ currentItems, currentPage }) {
       try {
         await DeleteDepartment(deletingId);
         setDeleteError('Ստորաբաժանումը հաջողությամբ ջնջված է');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         setDeleteError('Դուք չեք կարող ջնջել այս ստորաբաժանումը');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     }
   };

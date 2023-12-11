@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
+import './style.css';
 import { ImCross } from 'react-icons/im';
 import { RxCross2 } from 'react-icons/rx';
-import './style.css';
+import { UpdatePositionInfo } from '../../Platform/PositionRequests';
 
-import { AddNewPosition } from '../../Platform/PositionRequests';
-
-export default function AddPositionPopUp({ darkMode, close }) {
-  const defaultGorcaruytBlocks = Array.from({ length: 3 }, (_, index) => ({
+export default function AddFunctioalitiesPopUp({
+  darkMode,
+  close,
+  id,
+  positionName,
+  functionalities,
+}) {
+  const defaultGorcaruytBlocks = Array.from({ length: 1 }, (_, index) => ({
     id: index + 1,
     content: '',
   }));
 
-  const [position, setPosition] = useState('');
   const [gorcaruytBlocks, setGorcaruytBlocks] = useState(
     defaultGorcaruytBlocks
   );
@@ -46,16 +50,6 @@ export default function AddPositionPopUp({ darkMode, close }) {
     }));
   };
 
-  const handlePositionChange = (e) => {
-    const inputValue = e.target.value;
-    setPosition(inputValue);
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      position: inputValue.trim() ? '' : 'Դաշտը պարտադրի է',
-    }));
-  };
-
   const handleSubmit = async () => {
     setErrors({});
 
@@ -84,23 +78,33 @@ export default function AddPositionPopUp({ darkMode, close }) {
       setErrors({ ...newErrors, gorcaruyt: gorcaruytErrors });
     } else {
       const newPosition = {
-        name: position,
+        name: positionName,
         functional: {},
       };
 
-      gorcaruytBlocks.forEach((value, index) => {
-        const propName = `additionalProp${index + 1}`;
+      if (functionalities.length > 0) {
+        functionalities.forEach((value, index) => {
+          const propName = `additionalProp${index + 1}`;
+          newPosition.functional[propName] = value;
+        });
+      }
+
+      let totalIndex = functionalities.length;
+      gorcaruytBlocks.forEach((value) => {
+        const propName = `additionalProp${totalIndex + 1}`;
         newPosition.functional[propName] = value.content;
+        totalIndex++;
       });
-      await AddNewPosition(newPosition);
-      setSubmited(true);
+
+      await UpdatePositionInfo(id, newPosition);
+      window.location.reload();
     }
   };
 
   return (
     <div
       className={
-        'AddPopUp AddPositionPopUp' + (darkMode ? ' Dark DarkPopUp' : '')
+        'AddPopUp AddPositionPopUp AddFunctionalityPopUp' + (darkMode ? ' Dark DarkPopUp' : '')
       }
     >
       <button
@@ -111,22 +115,6 @@ export default function AddPositionPopUp({ darkMode, close }) {
       </button>
       {!submited ? (
         <>
-          <div className='singleStaffRow'>
-            <div className='staffInputSec NameInptSec'>
-              <div>
-                <label htmlFor='Position'>Պաշտոնը</label>
-                <input
-                  type='text'
-                  name='Position'
-                  id='Position'
-                  className={`${darkMode ? ' darkInpt' : ''} ${
-                    errors.position ? ' inptError' : ''
-                  }`}
-                  onChange={handlePositionChange}
-                />
-              </div>
-            </div>
-          </div>
           <div className='gorcaruyt-popup-section'>
             {gorcaruytBlocks.map((block) => (
               <div
@@ -181,7 +169,7 @@ export default function AddPositionPopUp({ darkMode, close }) {
             'submited-succesfully-popup' + (darkMode ? ' whiteElement' : '')
           }
         >
-          Պաշտոնն ավելացված է
+          Գործառությներն ավելացված են
         </h3>
       )}
     </div>

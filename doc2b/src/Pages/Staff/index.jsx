@@ -231,11 +231,7 @@ export default function Staff() {
               </h5>
             </div>
             <Popup
-              trigger={
-                <div>
-                  <button className='welcome-btn'>Ավելացնել</button>
-                </div>
-              }
+              trigger={<button className='welcome-btn'>Ավելացնել</button>}
               position='top center'
               onOpen={() => setPopUpOpen(true)}
               onClose={() => setPopUpOpen(false)}

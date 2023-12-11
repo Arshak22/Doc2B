@@ -31,8 +31,14 @@ export default function StaffMember({ currentItems, currentPage }) {
       try {
         await DeleteStaff(deletingId);
         setDeleteError('Աշխատողը հաջողությամբ ջնջված է');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         setDeleteError('Դուք չեք կարող ջնջել այս աշխատողին');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     }
   };

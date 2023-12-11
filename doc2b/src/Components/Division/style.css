@@ -1,6 +1,7 @@
 .singleDivision {
   padding-bottom: 39px;
-  padding-right: 82px;
+  padding-right: 0;
+  width: 240px;
 }
 
 .DivisionIcon {
@@ -12,8 +13,8 @@
 
 .DivisionName {
   position: relative;
-  top: 25px;
-  left: 45px;
+  top: 21px;
+  left: 53px;
   font-size: 14px !important;
 }
 
@@ -40,5 +41,8 @@
   .DivisionName {
     left: 56px;
     font-size: 18px !important;
+  }
+  .singleDivision {
+    width: 95%;
   }
 }

@@ -1,27 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
+
+import { GetAllStaff } from '../../Platform/StaffRequests';
+import { AddNewDepartment } from '../../Platform/DepartmentRequests';
 
 import { RxCross2 } from 'react-icons/rx';
 
 export default function AddDivisionPopUp({ darkMode, close }) {
-  const [division, setDivision] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [adminsList, setAdminsList] = useState([]);
   const [submited, setSubmited] = useState(false);
+  const [inputs, setInputs] = useState({
+    division: null,
+    adminID: null,
+  });
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    setDivision(inputValue);
-
-    setError(inputValue.trim() ? '' : 'Դաշտը պարտադիր է');
+  const getAdminsList = async (id) => {
+    const result = await GetAllStaff(id);
+    if (result) {
+      setAdminsList(result.data);
+      if (result.data[1]) {
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          adminID: result.data[1].id,
+        }));
+      }
+    }
   };
 
-  const handleSubmit = () => {
-    if (!division.trim()) {
-      setError('Դաշտը պարտադրի է');
+  useEffect(() => {
+    const id = localStorage.getItem('companyID');
+    getAdminsList(id);
+  }, []);
+
+  const handleInputChange = (e, inputName) => {
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [inputName]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    setErrors({});
+
+    const requiredFields = ['division'];
+
+    const newInputs = { ...inputs };
+    const newErrors = {};
+    requiredFields.forEach((field) => {
+      if (!newInputs[field]) {
+        newErrors[field] = 'Դաշտը պարտադիր է';
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
     } else {
+      const newDivision = {
+        "name": inputs.division,
+        "company": parseInt(localStorage.getItem('companyID'), 10),
+        "admin": inputs.adminID
+      };
+      console.log(newDivision);
+      await AddNewDepartment(newDivision);
       setSubmited(true);
     }
   };
+
+  useEffect(() => {
+    setErrors([]);
+  }, [adminsList]);
 
   return (
     <div
@@ -46,28 +94,34 @@ export default function AddDivisionPopUp({ darkMode, close }) {
                 name='Division'
                 id='Division'
                 className={`${darkMode ? ' darkInpt' : ''} ${
-                  error ? ' inptError' : ''
+                  errors.division ? ' inptError' : ''
                 }`}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e, 'division')}
               />
             </div>
           </div>
-          <div className='staffInputSec NameInptSec'>
-            <div>
-              <label htmlFor='Division'>Ադմինիստրատորը</label>
-              <select
-                name='Division'
-                id='Division'
-                className={`${darkMode ? 'darkInpt' : ''}`}
-                onChange={(e) => handleInputChange(e, 'division')}
-              >
-                <option value='Ստորաբաժանում 1'>Ադմինիստրատոր 1</option>
-                <option value='Ստորաբաժանում 2'>Ադմինիստրատոր 2</option>
-                <option value='Ստորաբաժանում 3'>Ադմինիստրատոր 3</option>
-                <option value='Ստորաբաժանում 4'>Ադմինիստրատոր 4</option>
-              </select>
+          {adminsList.length > 1 && (
+            <div className='staffInputSec NameInptSec'>
+              <div>
+                <label htmlFor='Administrator'>Ադմինիստրատորը</label>
+                <select
+                  name='Administrator'
+                  id='Division'
+                  className={`${darkMode ? ' darkInpt' : ''} ${
+                    errors.adminID ? ' inptError' : ''
+                  }`}
+                  onChange={(e) => handleInputChange(e, 'adminID')}
+                >
+                  {adminsList.slice(1).map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.employer_first_name} {item.employer_last_name}{' '}
+                      {item.employer_middle_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
+          )}
           <div className='add-divison-btn'>
             <button className='welcome-btn' onClick={handleSubmit}>
               Ավելացնել

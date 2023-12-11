@@ -188,7 +188,7 @@ export default function Divisions() {
             >
               <img src={DivisionIcon} alt='DivisionIcon' />
               <h5>
-                Ավելացրեք Ստորաբաժանումներ, և կարգավորեք դրանք համակարգում
+                Ավելացրեք ստորաբաժանումներ, և կարգավորեք դրանք համակարգում
               </h5>
             </div>
             <Popup

@@ -31,8 +31,14 @@ export default function Company({ currentItems, currentPage }) {
       try {
         await DeleteCompnay(deletingId);
         setDeleteError('Կազմակերպությունը հաջողությամբ ջնջված է');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         setDeleteError('Դուք չեք կարող ջնջել այս կազմակերպությունը');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     }
   };

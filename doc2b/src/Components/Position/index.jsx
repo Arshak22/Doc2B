@@ -10,6 +10,8 @@ import { ImCross } from 'react-icons/im';
 
 import PositionIcon from '../../assets/Icons/PositionIcon.png';
 
+import { DeletePosition } from '../../Platform/PositionRequests';
+
 export default function Position({ currentItems, currentPage }) {
   const { darkMode, setPopUpOpen } = useGlobalContext();
   const [openDelete, setOpenDelete] = useState(false);
@@ -23,6 +25,23 @@ export default function Position({ currentItems, currentPage }) {
       return text;
     } else {
       return text.substring(0, maxLength - 2) + '..';
+    }
+  };
+
+  const handleDelete = async () => {
+    if (deletingId) {
+      try {
+        await DeletePosition(deletingId);
+        setDeleteError('Պաշտոնը հաջողությամբ ջնջված է');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        setDeleteError('Դուք չեք կարող ջնջել այս պաշտոնը');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
     }
   };
 
@@ -82,7 +101,7 @@ export default function Position({ currentItems, currentPage }) {
                     />
                     <div className='staffMemberInfo comanyInfo'>
                       <h3 className='positionName'>
-                        {truncateText(item.name, 8)}
+                        {truncateText(item.name, 18)}
                       </h3>
                     </div>
                   </NavLink>
@@ -115,7 +134,9 @@ export default function Position({ currentItems, currentPage }) {
       </h3>
       {!deleteError ? (
         <div>
-          <button className='save-staff-edit'>Այո</button>
+          <button className='save-staff-edit' onClick={handleDelete}>
+            Այո
+          </button>
           <button
             className='cancel-staff-edit'
             onClick={() => setOpenDelete(false)}

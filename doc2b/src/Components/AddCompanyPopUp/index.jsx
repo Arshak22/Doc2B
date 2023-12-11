@@ -90,7 +90,7 @@ export default function AddCompanyPopUp({ darkMode, close }) {
       'companyName',
       'directorName',
       'directorSurname',
-      // 'directorFathersName',
+      'directorFathersName',
       'HVHHNumber',
       // 'businessCountry',
       // 'businessCity',
@@ -147,7 +147,7 @@ export default function AddCompanyPopUp({ darkMode, close }) {
         company_phone_number: newInputs.telephone,
         company_mail: newInputs.email,
         company_gov_register: newInputs.petRegisterNumber,
-        company_gov_register_address: `${newInputs.legalCountry} ${newInputs.legalCity} ${newInputs.legalAddress}`,
+        company_gov_register_address: (newInputs.legalCountry && newInputs.legalCity && newInputs.legalAddress) ? `${newInputs.legalCountry} ${newInputs.legalCity} ${newInputs.legalAddress}` : null,
         company_live_address: `${newInputs.businessCountry} ${newInputs.businessCity} ${newInputs.businessAddress}`,
         company_image: selectedImage,
       };

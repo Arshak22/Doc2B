@@ -23,7 +23,7 @@ export default function Positions() {
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
-  const [itemsPerPage] = useState(20);
+  const [itemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
 
   const [positions, setPositions] = useState([]);

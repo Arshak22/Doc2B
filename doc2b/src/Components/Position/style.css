@@ -1,5 +1,8 @@
 .AddPosition {
-  padding: 16px 17px;
+  padding: 16px 15px;
+  width: 240px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .AddPosition h3 {
@@ -10,7 +13,7 @@
 .singlePosition {
   overflow: hidden;
   padding: 25px 30px;
-  width: 178px;
+  width: 240px;
 }
 
 .PositionIcon {
@@ -38,6 +41,7 @@
     width: 95%;
   }
   .AddPosition {
+    width: 92%;
     display: flex;
     justify-content: space-between;
   }

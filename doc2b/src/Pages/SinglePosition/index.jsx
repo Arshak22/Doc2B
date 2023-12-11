@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import './style.css';
 import Popup from 'reactjs-popup';
-import AddPositionPopUp from '../../Components/AddPositionPopUp';
+// import AddPositionPopUp from '../../Components/AddPositionPopUp';
+import AddFunctioalitiesPopUp from '../../Components/AddFunctionalitiesPopUp';
 import { useGlobalContext } from '../../Context/Context';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
+import PreLoader from '../../Components/PreLoader';
+
+import {
+  GetSinglePosition,
+  UpdatePositionInfo,
+  DeletePosition,
+} from '../../Platform/PositionRequests';
 
 import { AiFillEdit } from 'react-icons/ai';
 import { ImCheckmark } from 'react-icons/im';
@@ -12,6 +21,9 @@ import { ImCross } from 'react-icons/im';
 
 export default function SinglePosition() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteError, setDeleteError] = useState('');
@@ -20,45 +32,107 @@ export default function SinglePosition() {
     setEditMode(!editMode);
   };
 
-  const Գործառույթներ = [
-    {
-      description: 'Մարքեթինգային ռազմավարության նախագծում և մշակում',
-    },
-    {
-      description: 'Գովազդատուների հետ կապերի ուսումնասիրություն',
-    },
-    {
-      description:
-        'ԶԼՄ-ների, վեբ-կայքերի և այլ գովազդների տեղադրման համար նախատեսված, տեղեկատվական հարթակների վերլուծության իրականացում և ընտրություն',
-    },
-    {
-      description: 'Պաշտոնից բխող այլ պարտականությունների իրականացում',
-    },
-    {
-      description: 'Մարքեթինգային ռազմավարության նախագծում և մշակում',
-    },
-    {
-      description: 'Գովազդատուների հետ կապերի ուսումնասիրություն',
-    },
-    {
-      description:
-        'ԶԼՄ-ների, վեբ-կայքերի և այլ գովազդների տեղադրման համար նախատեսված, տեղեկատվական հարթակների վերլուծության իրականացում և ընտրություն',
-    },
-    {
-      description: 'Պաշտոնից բխող այլ պարտականությունների իրականացում',
-    },
-    {
-      description: 'Մարքեթինգային ռազմավարության նախագծում և մշակում',
-    },
-    {
-      description: 'Գովազդատուների հետ կապերի ուսումնասիրություն',
-    },
-  ];
+  const [positionName, setPositionName] = useState(null);
+  const [functionalities, setFunctionalities] = useState([]);
+
+  const getPositionInfo = async (id) => {
+    try {
+      const result = await GetSinglePosition(id);
+      if (result) {
+        setPositionName(result.data.name);
+        const functionalitiesArray = Object.values(result.data.functional);
+        setFunctionalities(functionalitiesArray);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      }
+    } catch (error) {
+      navigate('/');
+    }
+  };
+
+  useEffect(() => {
+    getPositionInfo(id);
+  }, [id, editMode]);
+
+  const handleDelete = async () => {
+    try {
+      await DeletePosition(id);
+      setDeleteError('Պաշտոնը հաջողությամբ ջնջված է');
+    } catch (error) {
+      setDeleteError('Դուք չեք կարող ջնջել այս պաշտոնը');
+    }
+  };
+
+  const handlePositionNameChange = (e) => {
+    if (e.target.value && e.target.value !== '') {
+      setPositionName(e.target.value);
+    }
+  };
+
+  const handleTextareaChange = (index, event) => {
+    const updatedFunctionalities = [...functionalities];
+    updatedFunctionalities[index] = event.target.value;
+    setFunctionalities(updatedFunctionalities);
+  };
+
+  const handleDeleteFunctional = async (index) => {
+    setFunctionalities((prevFunctionalities) => {
+      const updatedFunctionalities = [...prevFunctionalities];
+      updatedFunctionalities.splice(index, 1);
+
+      const newPosition = {
+        name: positionName,
+        functional: {},
+      };
+
+      updatedFunctionalities.forEach((value, index) => {
+        const propName = `additionalProp${index + 1}`;
+        newPosition.functional[propName] = value;
+      });
+
+      setFunctionalities(updatedFunctionalities);
+      setLoading(true);
+      UpdatePositionInfo(id, newPosition).then(() => { 
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      });
+
+      return updatedFunctionalities;
+    });
+  };
+
+  useEffect(() => {
+    console.log(
+      'Component re-rendered with updated functionalities:',
+      functionalities
+    );
+  }, [functionalities]);
+
+  const handleSubmit = async () => {
+    const newPosition = {
+      name: positionName,
+      functional: {},
+    };
+
+    functionalities.forEach((value, index) => {
+      const propName = `additionalProp${index + 1}`;
+      newPosition.functional[propName] = value;
+    });
+    try {
+      console.log(id, newPosition);
+      await UpdatePositionInfo(id, newPosition);
+      setEditMode(false);
+    } catch (error) {}
+  };
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        {!openDelete ? (
+        {loading ? (
+          <PreLoader />
+        ) : !openDelete ? (
           <>
             <div className='singleStaffRow'>
               {!editMode ? (
@@ -67,7 +141,7 @@ export default function SinglePosition() {
                     'SinglePositionName' + (darkMode ? ' whiteElement' : '')
                   }
                 >
-                  Պաշտոնի անվանումը
+                  {positionName}
                 </h3>
               ) : (
                 <div className='staffInputSec NameInptSec'>
@@ -77,7 +151,9 @@ export default function SinglePosition() {
                       type='text'
                       name='Position'
                       id='Position'
+                      defaultValue={positionName}
                       className={darkMode ? ' darkInpt' : ''}
+                      onChange={(e) => handlePositionNameChange(e)}
                     />
                   </div>
                 </div>
@@ -92,10 +168,7 @@ export default function SinglePosition() {
                   </button>
                 ) : (
                   <div className='staff-edit-group-btns'>
-                    <button
-                      className='save-staff-edit'
-                      onClick={handleEditMode}
-                    >
+                    <button className='save-staff-edit' onClick={handleSubmit}>
                       <ImCheckmark />
                     </button>
                     <button
@@ -121,7 +194,7 @@ export default function SinglePosition() {
                   onClose={() => setPopUpOpen(false)}
                 >
                   {(close) => (
-                    <AddPositionPopUp darkMode={darkMode} close={close} />
+                    <AddFunctioalitiesPopUp darkMode={darkMode} close={close} id={id} positionName={positionName} functionalities={functionalities}/>
                   )}
                 </Popup>
               ) : null}
@@ -133,95 +206,107 @@ export default function SinglePosition() {
             </div>
             <div className='AllTheStaffSection'>
               <div className='staff-col'>
-                {Գործառույթներ
-                  .slice(0, Math.ceil(Գործառույթներ.length / 2))
-                  .map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={
-                          'gorcaruyt-block' +
-                          (editMode ? ' edit-gorcaruyt' : '') +
-                          (darkMode ? ' darkInpt' : '')
-                        }
-                      >
-                        <h3>
-                          Գործառույթ{' '}
-                          <span className='numbers'>
-                            {Գործառույթներ.indexOf(item) + 1}
-                          </span>
-                        </h3>
-                        {!editMode ? (
-                          <p>{item.description}</p>
-                        ) : (
-                          <>
-                            <textarea
-                              name=''
-                              id=''
-                              rows='2'
-                              defaultValue={item.description}
-                              className={darkMode ? ' darkInpt2' : ''}
-                            ></textarea>
-                            <button className='delete-gorcaruyt'>
-                              <ImCross />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
+                {functionalities &&
+                  functionalities
+                    .slice(0, Math.ceil(functionalities.length / 2))
+                    .map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className={
+                            'gorcaruyt-block' +
+                            (editMode ? ' edit-gorcaruyt' : '') +
+                            (darkMode ? ' darkInpt' : '')
+                          }
+                        >
+                          <h3>
+                            Գործառույթ{' '}
+                            <span className='numbers'>{index + 1}</span>
+                          </h3>
+                          {!editMode ? (
+                            <p>{item}</p>
+                          ) : (
+                            <>
+                              <textarea
+                                name=''
+                                id=''
+                                rows='2'
+                                defaultValue={item}
+                                onChange={(event) =>
+                                  handleTextareaChange(index, event)
+                                }
+                                className={darkMode ? ' darkInpt2' : ''}
+                              ></textarea>
+                              <button
+                                className='delete-gorcaruyt'
+                                onClick={() => handleDeleteFunctional(index)}
+                              >
+                                <ImCross />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
               </div>
               <div className='staff-col'>
-                {Գործառույթներ
-                  .slice(Math.ceil(Գործառույթներ.length / 2))
-                  .map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={
-                          'gorcaruyt-block' +
-                          (editMode ? ' edit-gorcaruyt' : '') +
-                          (darkMode ? ' darkInpt' : '')
-                        }
-                      >
-                        <h3>
-                          Գործառույթ{' '}
-                          <span className='numbers'>
-                            {Գործառույթներ.indexOf(item) + 1}
-                          </span>
-                        </h3>
-                        {!editMode ? (
-                          <p>{item.description}</p>
-                        ) : (
-                          <>
-                            <textarea
-                              name=''
-                              id=''
-                              rows='2'
-                              defaultValue={item.description}
-                              className={darkMode ? ' darkInpt2' : ''}
-                            ></textarea>
-                            <button className='delete-gorcaruyt'>
-                              <ImCross />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
+                {functionalities &&
+                  functionalities
+                    .slice(Math.ceil(functionalities.length / 2))
+                    .map((item, index) => {
+                      const actualIndex =
+                        index + Math.ceil(functionalities.length / 2);
+                      return (
+                        <div
+                          key={actualIndex}
+                          className={
+                            'gorcaruyt-block' +
+                            (editMode ? ' edit-gorcaruyt' : '') +
+                            (darkMode ? ' darkInpt' : '')
+                          }
+                        >
+                          <h3>
+                            Գործառույթ{' '}
+                            <span className='numbers'>{actualIndex + 1}</span>
+                          </h3>
+                          {!editMode ? (
+                            <p>{item}</p>
+                          ) : (
+                            <>
+                              <textarea
+                                name=''
+                                id=''
+                                rows='2'
+                                defaultValue={item}
+                                onChange={(event) =>
+                                  handleTextareaChange(actualIndex, event)
+                                }
+                                className={darkMode ? ' darkInpt2' : ''}
+                              ></textarea>
+                              <button
+                                className='delete-gorcaruyt'
+                                onClick={() =>
+                                  handleDeleteFunctional(actualIndex)
+                                }
+                              >
+                                <ImCross />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
               </div>
             </div>
           </>
         ) : (
           <div className='delete-confirm-section'>
             <h3 className={darkMode ? ' whiteElement' : ''}>
-              {!deleteError
-                ? 'Ցանկանու՞մ եք ջնջել տվյալ պաշտոնը'
-                : deleteError}
+              {!deleteError ? 'Ցանկանու՞մ եք ջնջել տվյալ պաշտոնը' : deleteError}
             </h3>
             {!deleteError ? (
               <div>
-                <button className='save-staff-edit'>
+                <button className='save-staff-edit' onClick={handleDelete}>
                   Այո
                 </button>
                 <button
