@@ -1,4 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import hy from 'date-fns/locale/hy';
 import { useNavigate, useParams } from 'react-router-dom';
 import './style.css';
 import { useGlobalContext } from '../../Context/Context';
@@ -23,6 +27,9 @@ import { BsFillCloudUploadFill } from 'react-icons/bs';
 import { BsInfoLg } from 'react-icons/bs';
 import { ImCross } from 'react-icons/im';
 import { HiCamera } from 'react-icons/hi';
+
+registerLocale('hy', hy);
+setDefaultLocale('hy');
 
 export default function SingleStaffMember() {
   const { darkMode } = useGlobalContext();
@@ -76,7 +83,10 @@ export default function SingleStaffMember() {
 
   const getMemberInfo = async (id) => {
     try {
-      const result = await GetSingleStaff(id);
+      const result = await GetSingleStaff(
+        id,
+        localStorage.getItem('companyID')
+      );
       if (result) {
         setMember(result.data);
         setTimeout(() => {
@@ -144,15 +154,29 @@ export default function SingleStaffMember() {
   }, [editMode]);
 
   const handleInputChange = (e, inputName) => {
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      [inputName]: e.target.value,
-    }));
+    if (e.target) {
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [inputName]: e.target.value,
+      }));
+    } else if (e) {
+      const parsedDate = new Date(e);
+      const formattedDate = `${parsedDate.getFullYear()}-${(
+        parsedDate.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, '0')}-${parsedDate.getDate().toString().padStart(2, '0')}`;
+
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [inputName]: formattedDate,
+      }));
+    }
   };
 
   const handleDelete = async () => {
     try {
-      await DeleteStaff(id);
+      await DeleteStaff(id, localStorage.getItem('companyID'));
       setDeleteError('Աշխատողը հաջողությամբ ջնջված է');
     } catch (error) {
       setDeleteError('Դուք չեք կարող ջնջել այս աշխատողին');
@@ -327,7 +351,7 @@ export default function SingleStaffMember() {
       if (inputs.WorkEndDate !== '') {
         NewEmployee.employer_job_end_day = inputs.WorkEndDate;
       }
-      await UpdateStaffInfo(id, NewEmployee);
+      await UpdateStaffInfo(id, NewEmployee, localStorage.getItem('companyID'));
       setSelectedFiles([]);
       setEditMode(false);
       setSelectedImage(null);
@@ -571,10 +595,13 @@ export default function SingleStaffMember() {
                       : '-'}
                   </h3>
                 ) : (
-                  <input
-                    type='date'
+                  <DatePicker
+                    dateFormat='dd.MM.yyyy'
+                    locale='hy'
                     name='BirthDate'
                     id='BirthDate'
+                    placeholderText='օր/ամիս/տարի'
+                    value={inputs.BOT}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.BOT ? 'inptError' : ''
                     }`}
@@ -700,8 +727,9 @@ export default function SingleStaffMember() {
                 <label htmlFor='Country'>Երկիր</label>
                 {!editMode ? (
                   <h3 className={darkMode ? ' whiteElement' : ''}>
-                    {member.employer_register_address &&
-                      parseAddress(member.employer_register_address).country}
+                    {member.employer_register_address === 'null null null'
+                      ? '-'
+                      : parseAddress(member.employer_register_address).country}
                   </h3>
                 ) : (
                   <input
@@ -709,7 +737,9 @@ export default function SingleStaffMember() {
                     name='Country'
                     id='Country'
                     defaultValue={
-                      parseAddress(member.employer_register_address).country
+                      member.employer_register_address === 'null null null'
+                      ? null
+                      : parseAddress(member.employer_register_address).country
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.country ? 'inptError' : ''
@@ -726,8 +756,9 @@ export default function SingleStaffMember() {
                 <label htmlFor='City'>Քաղաք</label>
                 {!editMode ? (
                   <h3 className={darkMode ? ' whiteElement' : ''}>
-                    {member.employer_register_address &&
-                      parseAddress(member.employer_register_address).city}
+                    {member.employer_register_address === 'null null null'
+                      ? '-'
+                      : parseAddress(member.employer_register_address).city}
                   </h3>
                 ) : (
                   <input
@@ -735,7 +766,9 @@ export default function SingleStaffMember() {
                     name='City'
                     id='City'
                     defaultValue={
-                      parseAddress(member.employer_register_address).city
+                      member.employer_register_address === 'null null null'
+                      ? null
+                      : parseAddress(member.employer_register_address).city
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.city ? 'inptError' : ''
@@ -752,8 +785,9 @@ export default function SingleStaffMember() {
                 <label htmlFor='Address'>Հասցե</label>
                 {!editMode ? (
                   <h3 className={darkMode ? ' whiteElement' : ''}>
-                    {member.employer_register_address &&
-                      parseAddress(member.employer_register_address).address}
+                    {member.employer_register_address === 'null null null'
+                      ? '-'
+                      : parseAddress(member.employer_register_address).address}
                   </h3>
                 ) : (
                   <input
@@ -761,7 +795,9 @@ export default function SingleStaffMember() {
                     name='Address'
                     id='Address'
                     defaultValue={
-                      parseAddress(member.employer_register_address).address
+                      member.employer_register_address === 'null null null'
+                      ? null
+                      : parseAddress(member.employer_register_address).address
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.address ? 'inptError' : ''
@@ -814,10 +850,13 @@ export default function SingleStaffMember() {
                       : '-'}
                   </h3>
                 ) : (
-                  <input
-                    type='date'
+                  <DatePicker
+                    dateFormat='dd.MM.yyyy'
+                    locale='hy'
                     name='PassportGivenDate'
                     id='PassportGivenDate'
+                    placeholderText='օր/ամիս/տարի'
+                    value={inputs.PassportGivenDate}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportGivenDate ? 'inptError' : ''
                     }`}
@@ -1028,10 +1067,13 @@ export default function SingleStaffMember() {
                       : '-'}
                   </h3>
                 ) : (
-                  <input
-                    type='date'
+                  <DatePicker
+                    dateFormat='dd.MM.yyyy'
+                    locale='hy'
                     name='WorkStartDate'
                     id='WorkStartDate'
+                    placeholderText='օր/ամիս/տարի'
+                    value={inputs.WorkStartDate}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.WorkStartDate ? 'inptError' : ''
                     }`}
@@ -1053,10 +1095,13 @@ export default function SingleStaffMember() {
                       : '-'}
                   </h3>
                 ) : (
-                  <input
-                    type='date'
+                  <DatePicker
+                    dateFormat='dd.MM.yyyy'
+                    locale='hy'
                     name='WorkEndDate'
                     id='WorkEndDate'
+                    placeholderText='օր/ամիս/տարի'
+                    value={inputs.WorkEndDate}
                     className={`${darkMode ? 'darkInpt' : ''}`}
                     onChange={(e) => handleInputChange(e, 'WorkEndDate')}
                   />

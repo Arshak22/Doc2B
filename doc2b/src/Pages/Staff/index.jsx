@@ -13,7 +13,11 @@ import StaffIcon from '../../assets/Icons/StaffIcon.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
-import { GetAllStaff } from '../../Platform/StaffRequests';
+import {
+  GetAllStaff,
+  SearchStaff,
+  FilterStaff,
+} from '../../Platform/StaffRequests';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -29,6 +33,8 @@ export default function Staff() {
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasCompanies, setHasCompnaies] = useState(false);
+  const [searchAtribute, setSearchAtribute] = useState(null);
+  const [searchResultEmpty, setSearchResultEmpty] = useState(false);
 
   const [staff, setStaff] = useState([]);
 
@@ -62,6 +68,39 @@ export default function Staff() {
     const id = localStorage.getItem('companyID');
     getStaffList(id);
   }, []);
+
+  const handleSearch = async () => {
+    if (searchAtribute && searchAtribute !== '') {
+      try {
+        setLoading(true);
+        const result = await SearchStaff(
+          localStorage.getItem('companyID'),
+          searchAtribute
+        );
+        if (result) {
+          if (result.data.length <= 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setStaff(result.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    } else {
+      setLoading(true);
+      getStaffList(localStorage.getItem('companyID'));
+      setSearchResultEmpty(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage;
@@ -120,7 +159,7 @@ export default function Staff() {
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
         {loading ? (
           <PreLoader />
-        ) : staff.length > 1 ? (
+        ) : staff.length > 1 && !searchResultEmpty ? (
           <>
             <div className='InputContainer'>
               <Popup
@@ -153,7 +192,7 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='inactive'
+                      value='standard'
                       checked={selectedStatus.includes('standard')}
                       onChange={handleCheckboxChange}
                     />
@@ -162,7 +201,7 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='standart'
+                      value='inactive'
                       checked={selectedStatus.includes('inactive')}
                       onChange={handleCheckboxChange}
                     />
@@ -174,14 +213,18 @@ export default function Staff() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
                   <ImSearch
                     className={
                       'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
                     }
+                    onClick={handleSearch}
                   />
                 </div>
               </div>
@@ -212,6 +255,66 @@ export default function Staff() {
                 renderOnZeroPageCount={null}
               />
             </>
+          </>
+        ) : searchResultEmpty ? (
+          <>
+            <div className='InputContainer InputContainerRight'>
+              <div className='staff-filter-section'>
+                <div className='StatusFilter'>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='admin'
+                      checked={selectedStatus.includes('admin')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Admin
+                  </label>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='standard'
+                      checked={selectedStatus.includes('standard')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Standard
+                  </label>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='inactive'
+                      checked={selectedStatus.includes('inactive')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Inactive
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Փնտրել'
+                    name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
+                    className={
+                      'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
+                    }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <ImSearch
+                    className={
+                      'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
+                    }
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='delete-confirm-section'>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Որոնման արդյունքը դատարկ է
+              </h3>
+            </div>
           </>
         ) : hasCompanies ? (
           <div className='no-staff-content'>

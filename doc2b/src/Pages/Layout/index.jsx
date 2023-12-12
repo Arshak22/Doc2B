@@ -110,14 +110,16 @@ export default function Layout() {
   ];
 
   const getCompaniesList = async () => {
-    const result = await GetAllCompanies();
-    if (result) {
-      setOptions(result.data);
-      if (result.data[1]) {
-        setSelectedOption(result.data[1].company_name);
-        localStorage.setItem('companyID', result.data[1].id);
+    try {
+      const result = await GetAllCompanies();
+      if (result) {
+        setOptions(result.data);
+        if (result.data[1] && localStorage.getItem('token')) {
+          setSelectedOption(result.data[1].company_name);
+          localStorage.setItem('companyID', result.data[1].id);
+        }
       }
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -260,6 +262,7 @@ export default function Layout() {
     localStorage.removeItem('logedIn');
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('companyID');
     navigate(ROUTE_NAMES.HOME);
   };
 

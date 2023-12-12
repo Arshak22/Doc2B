@@ -1,4 +1,8 @@
 import React, { useState, useRef } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import hy from 'date-fns/locale/hy';
 import Slider from 'react-slick';
 import { NavLink } from 'react-router-dom';
 import { ROUTE_NAMES } from '../../Routes';
@@ -15,6 +19,9 @@ import { AiFillEdit } from 'react-icons/ai';
 import { ImCheckmark } from 'react-icons/im';
 import { ImCross } from 'react-icons/im';
 import { HiCamera } from 'react-icons/hi';
+
+registerLocale('hy', hy);
+setDefaultLocale('hy');
 
 export default function Profile() {
   const { darkMode } = useGlobalContext();
@@ -245,11 +252,13 @@ export default function Profile() {
                 {profile.bod}
               </h3>
             ) : (
-              <input
-                type='date'
+              <DatePicker
+                dateFormat='dd.MM.yyyy'
+                locale='hy'
                 name='BirthDate'
                 id='BirthDate'
-                defaultValue={profile.bod}
+                placeholderText='օր/ամիս/տարի'
+                value={profile.bod}
                 className={darkMode ? ' darkInpt' : ''}
               />
             )}

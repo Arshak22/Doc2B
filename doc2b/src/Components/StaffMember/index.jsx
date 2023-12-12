@@ -29,7 +29,7 @@ export default function StaffMember({ currentItems, currentPage }) {
   const handleDelete = async () => {
     if (deletingId) {
       try {
-        await DeleteStaff(deletingId);
+        await DeleteStaff(deletingId, localStorage.getItem('companyID'));
         setDeleteError('Աշխատողը հաջողությամբ ջնջված է');
         setTimeout(() => {
           window.location.reload();

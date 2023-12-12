@@ -15,7 +15,10 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
 
-import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import {
+  GetAllCompanies,
+  SearchCompanies,
+} from '../../Platform/CompanyRequests';
 
 export default function Organization() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
@@ -25,22 +28,56 @@ export default function Organization() {
   const [itemOffset, setItemOffset] = useState(0);
   const [itemsPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchAtribute, setSearchAtribute] = useState(null);
+  const [searchResultEmpty, setSearchResultEmpty] = useState(false);
 
   const [companies, setCompanies] = useState([]);
 
   const getCompaniesList = async () => {
-    const result = await GetAllCompanies();
-    if (result) {
-      setCompanies(result.data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
+    try {
+      const result = await GetAllCompanies();
+      if (result) {
+        setCompanies(result.data);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      }
+    } catch (error) {}
   };
 
   useEffect(() => {
     getCompaniesList();
   }, []);
+
+  const handleSearch = async () => {
+    if (searchAtribute && searchAtribute !== '') {
+      try {
+        setLoading(true);
+        const result = await SearchCompanies(searchAtribute);
+        if (result) {
+          if (result.data.length <= 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setCompanies(result.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    } else {
+      setLoading(true);
+      getCompaniesList();
+      setSearchResultEmpty(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage;
@@ -90,7 +127,7 @@ export default function Organization() {
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
         {loading ? (
           <PreLoader />
-        ) : companies.length > 1 ? (
+        ) : companies.length > 1 && !searchResultEmpty ? (
           <>
             <div className='InputContainer'>
               <Popup
@@ -117,14 +154,18 @@ export default function Organization() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
                   <ImSearch
                     className={
                       'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
                     }
+                    onClick={handleSearch}
                   />
                 </div>
               </div>
@@ -152,6 +193,38 @@ export default function Organization() {
                 renderOnZeroPageCount={null}
               />
             </>
+          </>
+        ) : searchResultEmpty ? (
+          <>
+            <div className='InputContainer InputContainerRight'>
+              <div className='staff-filter-section'>
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Փնտրել'
+                    name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
+                    className={
+                      'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
+                    }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <ImSearch
+                    className={
+                      'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
+                    }
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className='delete-confirm-section'>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Որոնման արդյունքը դատարկ է
+              </h3>
+            </div>
           </>
         ) : (
           <div className='no-staff-content'>

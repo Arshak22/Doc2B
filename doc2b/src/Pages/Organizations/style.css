@@ -4,3 +4,7 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.LeftBlockSection .InputContainer.InputContainerRight {
+  justify-content: flex-end !important;
+}

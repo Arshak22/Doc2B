@@ -50,15 +50,17 @@ export default function Home() {
   const applications = [];
 
   const getCompaniesList = async () => {
-    const result = await GetAllCompanies();
-    if (result) {
-      if (result.data.length > 1) {
-        setHasCompnaies(true);
+    try {
+      const result = await GetAllCompanies();
+      if (result) {
+        if (result.data.length > 1) {
+          setHasCompnaies(true);
+        }
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -196,7 +198,9 @@ export default function Home() {
             <div className={'empty-content' + (darkMode ? ' Dark' : '')}>
               <div className='welcome-section'>
                 <h5>Բարի գալուստ,</h5>
-                <h3 className={darkMode ? ' whiteElement' : ''}>Անուն Ազգանուն</h3>
+                <h3 className={darkMode ? ' whiteElement' : ''}>
+                  Անուն Ազգանուն
+                </h3>
               </div>
               <div
                 className={

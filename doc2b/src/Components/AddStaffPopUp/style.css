@@ -1,3 +1,42 @@
+.react-datepicker__navigation {
+  top: 18px !important;
+  height: 20px !important;
+  width: 20px !important;
+  background: transparent !important;
+}
+
+.circle {
+  position: relative;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  border: solid 4px rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background: linear-gradient(
+    80deg,
+    var(--dark-green) 0%,
+    #009da9 40%,
+    #00cedc 100%
+  ) !important;
+  background-color: none !important;
+  color: #ffffff !important;
+}
+
 select#Role,
 select#Currency,
 input#Salary,
@@ -138,7 +177,7 @@ input#PassportGivenDate {
     --ab: var(--active-inner);
     --x: 29px;
   }
-  .mySwitchSection input[type='checkbox'].switch:checked::after{
+  .mySwitchSection input[type='checkbox'].switch:checked::after {
     top: 3.5px;
   }
   .mySwitchSection input[type='checkbox'].switch:disabled:not(:checked):after {

@@ -16,6 +16,10 @@ export const GetAllCompanies = () => {
   return axios.get(`${API}/main/my-companies/`, options);
 };
 
+export const SearchCompanies = (search) => {
+  return axios.get(`${API}/main/my-companies/?search=${search}`, options);
+};
+
 export const GetSingleCompany = (id) => {
   return axios.get(`${API}/main/my-companies/${id}/`, options);
 };

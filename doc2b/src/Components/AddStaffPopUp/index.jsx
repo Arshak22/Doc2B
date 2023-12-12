@@ -1,12 +1,15 @@
-import { React, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import hy from 'date-fns/locale/hy';
 import StaffAvatar from '../../assets/Images/StaffAvatar.png';
-
 import { AddNewStaff } from '../../Platform/StaffRequests';
 import { GetAllPositions } from '../../Platform/PositionRequests';
 import { GetAllDepartments } from '../../Platform/DepartmentRequests';
-
+import { SendPassportScan } from '../../Platform/PassportScanRequests';
+import { SendIdCardScan } from '../../Platform/IDCardScanRequests';
 import { RxCross2 } from 'react-icons/rx';
 import { HiCamera } from 'react-icons/hi';
 import { ImCheckmark } from 'react-icons/im';
@@ -14,7 +17,11 @@ import { BsFillCloudUploadFill } from 'react-icons/bs';
 import { ImCross } from 'react-icons/im';
 import { BsInfoLg } from 'react-icons/bs';
 
+registerLocale('hy', hy);
+setDefaultLocale('hy');
+
 export default function AddStaffPopUp({ darkMode, close }) {
+  const [documentLoading, setDocumentLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [selectedRadio, setSelectedRadio] = useState('Անձնագիր');
@@ -92,7 +99,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
 
   useEffect(() => {
     setErrors([]);
-  }, [positions, divisions]);
+  }, [positions, divisions, inputs]);
 
   const [errors, setErrors] = useState({});
 
@@ -125,21 +132,96 @@ export default function AddStaffPopUp({ darkMode, close }) {
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
+    setSelectedFiles([]);
+    setFileUploadError(null);
     const files = e.target.files;
     if (files.length === 2) {
-      setSelectedFiles(files);
-      setFileUploadError(null);
+      const formData = new FormData();
+      formData.append('social_card', files[0]);
+      formData.append('passport', files[1]);
+      if (selectedRadio === 'Անձնագիր') {
+        try {
+          setDocumentLoading(true);
+          const response = await SendPassportScan(formData);
+          setInputs((prevInputs) => ({
+            ...prevInputs,
+            Name: response.data.data.employer_first_name,
+            Surname: response.data.data.employer_last_name,
+            FathersName: response.data.data.employer_middle_name,
+            sex: response.data.data.employer_sex,
+            BOT: response.data.data.employer_birth_date,
+            PassportGivenBy: response.data.data.employer_passport_authority,
+            PassportGivenDate:
+              response.data.data.employer_passport_date_of_issue,
+            PassportNumber: response.data.data.employer_passport,
+            SocialNumber: response.data.data.employer_social_card,
+          }));
+          setSelectedFiles(files);
+          setFileUploadError(null);
+          setTimeout(() => {
+            setDocumentLoading(false);
+          }, 500);
+        } catch (error) {
+          setDocumentLoading(false);
+          setFileUploadError('Ներբեռնել լավ որակի ֆայլ');
+        }
+      } else if (selectedRadio === 'քարտ') {
+        try {
+          setDocumentLoading(true);
+          const response = await SendIdCardScan(formData);
+          setInputs((prevInputs) => ({
+            ...prevInputs,
+            Name: response.data.data.employer_first_name,
+            Surname: response.data.data.employer_last_name,
+            FathersName: response.data.data.employer_middle_name,
+            sex: response.data.data.employer_sex,
+            BOT: response.data.data.employer_birth_date,
+            nationality: response.data.data.employer_nationality,
+            PassportGivenBy: response.data.data.employer_passport_authority,
+            PassportGivenDate:
+              response.data.data.employer_passport_date_of_issue,
+            PassportNumber: response.data.data.employer_passport,
+            SocialNumber: response.data.data.employer_social_card,
+          }));
+          setSelectedFiles(files);
+          setFileUploadError(null);
+          setTimeout(() => {
+            setDocumentLoading(false);
+          }, 500);
+        } catch (error) {
+          setFileUploadError('Ներբեռնել լավ որակի ֆայլ');
+          setDocumentLoading(false);
+        }
+      }
     } else {
+      setDocumentLoading(false);
       setFileUploadError('Ներբեռնել 2 ֆայլ');
     }
   };
 
+  useEffect(() => {
+  }, [documentLoading]);
+
   const handleInputChange = (e, inputName) => {
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      [inputName]: e.target.value,
-    }));
+    if (e.target) {
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [inputName]: e.target.value,
+      }));
+    } else if (e) {
+      const parsedDate = new Date(e);
+      const formattedDate = `${parsedDate.getFullYear()}-${(
+        parsedDate.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, '0')}-${parsedDate.getDate().toString().padStart(2, '0')}`;
+
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [inputName]: formattedDate,
+      }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -266,6 +348,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                       type='text'
                       name='Name'
                       id='Name'
+                      value={inputs.Name ? inputs.Name : ''}
                       className={`${darkMode ? 'darkInpt' : ''} ${
                         errors.Name ? 'inptError' : ''
                       }`}
@@ -278,6 +361,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                       type='text'
                       name='Surname'
                       id='Surname'
+                      value={inputs.Surname ? inputs.Surname : ''}
                       className={`${darkMode ? 'darkInpt' : ''} ${
                         errors.Surname ? 'inptError' : ''
                       }`}
@@ -290,6 +374,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                       type='text'
                       name='FatersName'
                       id='FatersName'
+                      value={inputs.FathersName ? inputs.FathersName : ''}
                       className={`${darkMode ? 'darkInpt' : ''} ${
                         errors.FathersName ? 'inptError' : ''
                       }`}
@@ -380,7 +465,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                         type='file'
                         id='uploadButton'
                         ref={fileInputRef}
-                        accept='.pdf, .doc, .docx'
+                        accept='.pdf, .jpg, .png, .jpeg, .webp'
                         style={{ display: 'none' }}
                         multiple
                         onChange={handleFileChange}
@@ -393,7 +478,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                               onClick={handleUploadButtonClick}
                             >
                               {selectedFiles[0].name}
-                              <BsFillCloudUploadFill />
+                              {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
                             </button>
                           ) : (
                             <button
@@ -401,7 +486,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                               onClick={handleUploadButtonClick}
                             >
                               {selectedFiles[0].name}
-                              <BsFillCloudUploadFill />
+                              {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
                             </button>
                           )
                         ) : selectedFiles.length === 2 ? (
@@ -428,7 +513,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                             onClick={handleUploadButtonClick}
                           >
                             Ներբեռնել Անձնագիր
-                            <BsFillCloudUploadFill />
+                            {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
                           </button>
                         ) : (
                           <button
@@ -436,7 +521,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                             onClick={handleUploadButtonClick}
                           >
                             Ներբեռնել ID Քարտ
-                            <BsFillCloudUploadFill />
+                            {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
                           </button>
                         )
                       ) : (
@@ -445,7 +530,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                           onClick={handleUploadButtonClick}
                         >
                           {fileUploadError}
-                          <ImCross />
+                          {!documentLoading ? <ImCross /> : <div class="circle"></div>}
                         </button>
                       )}
                     </div>
@@ -524,10 +609,13 @@ export default function AddStaffPopUp({ darkMode, close }) {
           <div className='singleStaffRow InputsRow'>
             <div className={'staffInputSec editStaffInputSec'}>
               <label htmlFor='BirthDate'>Ծննդյան տարեթիվ</label>
-              <input
-                type='date'
+              <DatePicker
+                dateFormat='dd.MM.yyyy'
+                locale='hy'
                 name='BirthDate'
                 id='BirthDate'
+                placeholderText='օր/ամիս/տարի'
+                value={inputs.BOT ? inputs.BOT : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.BOT ? 'inptError' : ''
                 }`}
@@ -540,6 +628,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 type='text'
                 name='Nationality'
                 id='Nationality'
+                value={inputs.nationality ? inputs.nationality : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.nationality ? 'inptError' : ''
                 }`}
@@ -551,6 +640,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
               <select
                 name='Sex'
                 id='Sex'
+                value={inputs.sex ? inputs.sex : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.sex ? 'inptError' : ''
                 }`}
@@ -634,6 +724,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 type='text'
                 name='PassportGivenBy'
                 id='PassportGivenBy'
+                value={inputs.PassportGivenBy ? inputs.PassportGivenBy : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.PassportGivenBy ? 'inptError' : ''
                 }`}
@@ -642,26 +733,17 @@ export default function AddStaffPopUp({ darkMode, close }) {
             </div>
             <div className={'staffInputSec editStaffInputSec'}>
               <label htmlFor='PassportGivenDate'>Անձնագրի տրման ամսաթիվը</label>
-              <input
-                type='date'
+              <DatePicker
+                dateFormat='dd.MM.yyyy'
+                locale='hy'
                 name='PassportGivenDate'
                 id='PassportGivenDate'
+                placeholderText='օր/ամիս/տարի'
+                value={inputs.PassportGivenDate ? inputs.PassportGivenDate : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.PassportGivenDate ? 'inptError' : ''
                 }`}
                 onChange={(e) => handleInputChange(e, 'PassportGivenDate')}
-              />
-            </div>
-            <div className={'staffInputSec editStaffInputSec'}>
-              <label htmlFor='PassportType'>Անձնագրի տեսակը</label>
-              <input
-                type='text'
-                name='PassportType'
-                id='PassportType'
-                className={`${darkMode ? 'darkInpt' : ''} ${
-                  errors.PassportType ? 'inptError' : ''
-                }`}
-                onChange={(e) => handleInputChange(e, 'PassportType')}
               />
             </div>
             <div className={'staffInputSec editStaffInputSec'}>
@@ -670,6 +752,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 type='text'
                 name='PassportNumber'
                 id='PassportNumber'
+                value={inputs.PassportNumber ? inputs.PassportNumber : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.PassportNumber ? 'inptError' : ''
                 }`}
@@ -682,6 +765,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                 type='text'
                 name='SocialNumber'
                 id='SocialNumber'
+                value={inputs.SocialNumber ? inputs.SocialNumber : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.SocialNumber ? 'inptError' : ''
                 }`}
@@ -747,10 +831,13 @@ export default function AddStaffPopUp({ darkMode, close }) {
             </div>
             <div className={'staffInputSec DateInputSec editStaffInputSec'}>
               <label htmlFor='WorkStartDate'>Աշխատանքի ընդունման օր</label>
-              <input
-                type='date'
+              <DatePicker
+                dateFormat='dd.MM.yyyy'
+                locale='hy'
                 name='WorkStartDate'
                 id='WorkStartDate'
+                placeholderText='օր/ամիս/տարի'
+                value={inputs.WorkStartDate}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.WorkStartDate ? 'inptError' : ''
                 }`}
@@ -759,10 +846,13 @@ export default function AddStaffPopUp({ darkMode, close }) {
             </div>
             <div className={'staffInputSec DateInputSec editStaffInputSec'}>
               <label htmlFor='WorkEndDate'>Աշխատանքի ավարտ</label>
-              <input
-                type='date'
+              <DatePicker
+                dateFormat='dd.MM.yyyy'
+                locale='hy'
                 name='WorkEndDate'
                 id='WorkEndDate'
+                placeholderText='օր/ամիս/տարի'
+                value={inputs.WorkEndDate}
                 className={`${darkMode ? 'darkInpt' : ''}`}
                 onChange={(e) => handleInputChange(e, 'WorkEndDate')}
               />
