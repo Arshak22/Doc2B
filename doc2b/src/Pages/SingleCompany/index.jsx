@@ -124,13 +124,6 @@ export default function SingleComany() {
     setDirectorPositionOption('');
   };
 
-  const avatarStyle = {
-    backgroundImage: selectedImage
-      ? `url(${selectedImage})`
-      : `url(${CompanyAvatar})`,
-    backgroundSize: selectedImage ? 'contain' : '50%',
-  };
-
   const handleDirectorPositionOptionChange = (e) => {
     const value = e.target.value;
     setInputs((prevInputs) => ({
@@ -190,6 +183,32 @@ export default function SingleComany() {
     }
   };
 
+  const closeEdit = () => {
+    setEditMode(false);
+    const clearedInputes = {
+      company_image: '',
+      company_name: '',
+      company_director_first_name: '',
+      company_director_last_name: '',
+      company_director_middle_name: '',
+      company_director_position: '',
+      company_type: '',
+      company_tax_code: '',
+      company_phone_number: '',
+      company_mail: '',
+      company_gov_register: '',
+      company_gov_register_address: '',
+      company_live_address: '',
+      legalCountry: '',
+      legalCity: '',
+      legalAddress: '',
+      businessCountry: '',
+      businessCity: '',
+      businessAddress: '',
+    };
+    setInputs(clearedInputes);
+  };
+
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
@@ -202,7 +221,17 @@ export default function SingleComany() {
                 {editMode ? (
                   <div
                     className='userAvatar StaffAvatarEdit'
-                    style={avatarStyle}
+                    style={
+                      company && company.company_image
+                        ? {
+                            backgroundImage: `url(${company.company_image})`,
+                            backgroundSize: 'contain',
+                          }
+                        : {
+                            backgroundImage: `url(${CompanyAvatar})`,
+                            backgroundSize: '50%',
+                          }
+                    }
                   >
                     <div
                       className='uploadStaffAvatarSec'
@@ -270,7 +299,10 @@ export default function SingleComany() {
                         (editMode ? ' editStaffInputSec' : '')
                       }
                     >
-                      <label htmlFor='DirectorName' className={editMode ? 'companyLeaderLabel' : null}>
+                      <label
+                        htmlFor='DirectorName'
+                        className={editMode ? 'companyLeaderLabel' : null}
+                      >
                         Կազմակերպության ղեկավար
                       </label>
                       {!editMode ? (
@@ -397,7 +429,7 @@ export default function SingleComany() {
                     </button>
                     <button
                       className='cancel-staff-edit'
-                      onClick={() => setOpenDelete(true)}
+                      onClick={closeEdit}
                     >
                       <ImCross />
                     </button>
@@ -706,6 +738,16 @@ export default function SingleComany() {
                   />
                 </div>
               )}
+              {editMode ? (
+                <div style={{ position: 'relative', top: '7px' }}>
+                  <button
+                    className='delete-button'
+                    onClick={() => setOpenDelete(true)}
+                  >
+                    Ջնջել
+                  </button>
+                </div>
+              ) : null}
             </div>
           </>
         ) : (

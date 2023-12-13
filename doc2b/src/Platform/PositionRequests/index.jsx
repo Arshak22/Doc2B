@@ -16,6 +16,10 @@ export const GetAllPositions = () => {
   return axios.get(`${API}/main/positions/`, options);
 };
 
+export const SearchPosition = (search) => {
+  return axios.get(`${API}/main/positions/?&search=${search}`, options);
+};
+
 export const GetSinglePosition = (id) => {
   return axios.get(`${API}/main/positions/${id}/`, options);
 };

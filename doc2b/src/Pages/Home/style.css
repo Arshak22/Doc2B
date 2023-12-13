@@ -364,6 +364,9 @@ input[type='radio']:checked::before {
     padding: 15px;
     width: 100%;
   }
+  .chartFilters {
+    right: 0;
+  }
   .Chart {
     display: block;
   }
@@ -371,7 +374,7 @@ input[type='radio']:checked::before {
     padding-right: 2em;
   }
   .pieChart {
-    left: 25%;
+    left: 27%;
   }
   .GroupedBlocksTwo {
     width: 100%;

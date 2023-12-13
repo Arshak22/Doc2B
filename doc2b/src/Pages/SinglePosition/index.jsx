@@ -127,6 +127,13 @@ export default function SinglePosition() {
     } catch (error) {}
   };
 
+  const closeEdit = () => {
+    setPositionName(null);
+    setFunctionalities([]);
+    setEditMode(false);
+
+  };
+
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
@@ -173,7 +180,7 @@ export default function SinglePosition() {
                     </button>
                     <button
                       className='cancel-staff-edit'
-                      onClick={() => setOpenDelete(true)}
+                      onClick={closeEdit}
                     >
                       <ImCross />
                     </button>
@@ -298,6 +305,16 @@ export default function SinglePosition() {
                     })}
               </div>
             </div>
+            {editMode ? (
+              <div style={{marginLeft: '-10px'}}>
+                <button
+                  className='delete-button'
+                  onClick={() => setOpenDelete(true)}
+                >
+                  Ջնջել
+                </button>
+              </div>
+            ) : null}
           </>
         ) : (
           <div className='delete-confirm-section'>

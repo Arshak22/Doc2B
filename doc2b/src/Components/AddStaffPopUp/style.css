@@ -58,8 +58,8 @@ input#PassportGivenDate {
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  left: 35px;
-  top: -10px;
+  left: 10px;
+  top: -20px;
 }
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {

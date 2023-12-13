@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
+import { parseISO } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import hy from 'date-fns/locale/hy';
@@ -18,6 +19,8 @@ import {
 
 import { GetAllPositions } from '../../Platform/PositionRequests';
 import { GetAllDepartments } from '../../Platform/DepartmentRequests';
+import { SendPassportScan } from '../../Platform/PassportScanRequests';
+import { SendIdCardScan } from '../../Platform/IDCardScanRequests';
 
 import PreLoader from '../../Components/PreLoader';
 
@@ -35,6 +38,7 @@ export default function SingleStaffMember() {
   const { darkMode } = useGlobalContext();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [documentLoading, setDocumentLoading] = useState(false);
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     Name: null,
@@ -65,6 +69,10 @@ export default function SingleStaffMember() {
     salary: null,
     currency: null,
   });
+  const [birthday, setBirthDay] = useState(null);
+  const [passportDate, setPassportDate] = useState(null);
+  const [workStartDate, setWorkStartDate] = useState(null);
+  const [workEndDate, setWorkEndDate] = useState(null);
   const [member, setMember] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -92,6 +100,26 @@ export default function SingleStaffMember() {
         setTimeout(() => {
           setLoading(false);
         }, 500);
+        setBirthDay(
+          result.data.employer_birth_date
+            ? parseISO(result.data.employer_birth_date)
+            : null
+        );
+        setPassportDate(
+          result.data.employer_passport_date_of_issue
+            ? parseISO(result.data.employer_passport_date_of_issue)
+            : null
+        );
+        setWorkStartDate(
+          result.data.employer_job_start_day
+            ? parseISO(result.data.employer_job_start_day)
+            : null
+        );
+        setWorkEndDate(
+          result.data.employer_job_end_day
+            ? parseISO(result.data.employer_job_end_day)
+            : null
+        );
         const Address = result.data.employer_register_address.split(' ');
         setInputs((prevInputs) => ({
           ...prevInputs,
@@ -154,24 +182,29 @@ export default function SingleStaffMember() {
   }, [editMode]);
 
   const handleInputChange = (e, inputName) => {
-    if (e.target) {
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        [inputName]: e.target.value,
-      }));
-    } else if (e) {
-      const parsedDate = new Date(e);
-      const formattedDate = `${parsedDate.getFullYear()}-${(
-        parsedDate.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, '0')}-${parsedDate.getDate().toString().padStart(2, '0')}`;
+    try {
+      if (e.target) {
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          [inputName]: e.target.value,
+        }));
+      } else if (e) {
+        const parsedDate = new Date(e);
+        const formattedDate = `${parsedDate.getFullYear()}-${(
+          parsedDate.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, '0')}-${parsedDate
+          .getDate()
+          .toString()
+          .padStart(2, '0')}`;
 
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        [inputName]: formattedDate,
-      }));
-    }
+        setInputs((prevInputs) => ({
+          ...prevInputs,
+          [inputName]: formattedDate,
+        }));
+      }
+    } catch (error) {}
   };
 
   const handleDelete = async () => {
@@ -217,22 +250,124 @@ export default function SingleStaffMember() {
     setSelectedFiles([]);
   };
 
-  const avatarStyle = {
-    backgroundImage: selectedImage
-      ? `url(${selectedImage})`
-      : `url(${StaffAvatar})`,
-    backgroundSize: selectedImage ? 'cover' : '50%',
-  };
-
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
+    setSelectedFiles([]);
+    setFileUploadError(null);
     const files = e.target.files;
     if (files.length === 2) {
-      setSelectedFiles(files);
-      setFileUploadError(null);
+      const formData = new FormData();
+      formData.append('social_card', files[0]);
+      formData.append('passport', files[1]);
+      if (selectedRadio === 'Անձնագիր') {
+        try {
+          setDocumentLoading(true);
+          const response = await SendPassportScan(formData);
+          setMember((prevInputs) => ({
+            ...prevInputs,
+            employer_first_name: response.data.data.employer_first_name,
+            employer_last_name: response.data.data.employer_last_name,
+            employer_middle_name: response.data.data.employer_middle_name,
+            employer_birth_date: response.data.data.employer_birth_date,
+            employer_sex: response.data.data.employer_sex,
+            employer_passport_authority:
+              response.data.data.employer_passport_authority,
+            employer_passport_date_of_issue:
+              response.data.data.employer_passport_date_of_issue,
+            employer_passport: response.data.data.employer_passport,
+            employer_social_card: response.data.data.employer_social_card,
+          }));
+          setBirthDay(
+            response.data.data.employer_birth_date
+              ? parseISO(response.data.data.employer_birth_date)
+              : null
+          );
+          setPassportDate(
+            response.data.data.employer_passport_date_of_issue
+              ? parseISO(response.data.data.employer_passport_date_of_issue)
+              : null
+          );
+          setInputs((prevInputs) => ({
+            ...prevInputs,
+            Name: response.data.data.employer_first_name,
+            Surname: response.data.data.employer_last_name,
+            FathersName: response.data.data.employer_middle_name,
+            sex: response.data.data.employer_sex,
+            BOT: response.data.data.employer_birth_date,
+            PassportGivenBy: response.data.data.employer_passport_authority,
+            PassportGivenDate:
+              response.data.data.employer_passport_date_of_issue,
+            PassportNumber: response.data.data.employer_passport,
+            SocialNumber: response.data.data.employer_social_card,
+          }));
+          setSelectedFiles(files);
+          setFileUploadError(null);
+          setTimeout(() => {
+            setDocumentLoading(false);
+          }, 500);
+        } catch (error) {
+          setDocumentLoading(false);
+          setFileUploadError('Ներբեռնել լավ որակի ֆայլ');
+        }
+      } else if (selectedRadio === 'քարտ') {
+        try {
+          setDocumentLoading(true);
+          const response = await SendIdCardScan(formData);
+          setMember((prevInputs) => ({
+            ...prevInputs,
+            employer_first_name: response.data.data.employer_first_name,
+            employer_last_name: response.data.data.employer_last_name,
+            employer_middle_name: response.data.data.employer_middle_name,
+            employer_sex: response.data.data.employer_sex,
+            employer_nationality: response.data.data.employer_nationality,
+            employer_birth_date: response.data.data.employer_birth_date,
+            employer_passport_authority:
+              response.data.data.employer_passport_authority,
+            employer_passport_date_of_issue:
+              response.data.data.employer_passport_date_of_issue,
+            employer_passport: response.data.data.employer_passport,
+            employer_social_card: response.data.data.employer_social_card,
+          }));
+          setBirthDay(
+            response.data.data.employer_birth_date
+              ? parseISO(response.data.data.employer_birth_date)
+              : null
+          );
+          setPassportDate(
+            response.data.data.employer_passport_date_of_issue
+              ? parseISO(response.data.data.employer_passport_date_of_issue)
+              : null
+          );
+          setInputs((prevInputs) => ({
+            ...prevInputs,
+            Name: response.data.data.employer_first_name,
+            Surname: response.data.data.employer_last_name,
+            FathersName: response.data.data.employer_middle_name,
+            sex: response.data.data.employer_sex,
+            BOT: response.data.data.employer_birth_date,
+            nationality: response.data.data.employer_nationality,
+            PassportGivenBy: response.data.data.employer_passport_authority,
+            PassportGivenDate:
+              response.data.data.employer_passport_date_of_issue,
+            PassportNumber: response.data.data.employer_passport,
+            SocialNumber: response.data.data.employer_social_card,
+          }));
+          setSelectedFiles(files);
+          setFileUploadError(null);
+          setTimeout(() => {
+            setDocumentLoading(false);
+          }, 500);
+        } catch (error) {
+          setFileUploadError('Ներբեռնել լավ որակի ֆայլ');
+          setDocumentLoading(false);
+        }
+      }
     } else {
+      setDocumentLoading(false);
       setFileUploadError('Ներբեռնել 2 ֆայլ');
     }
   };
+
+  useEffect(() => {}, [documentLoading]);
 
   const handleSubmit = async () => {
     setErrors({});
@@ -358,6 +493,40 @@ export default function SingleStaffMember() {
     }
   };
 
+  const closeEdit = () => {
+    setEditMode(false);
+    const clearedInputes = {
+      Name: null,
+      Surname: null,
+      FathersName: null,
+      role: null,
+      position: null,
+      division: null,
+      BOT: null,
+      nationality: null,
+      sex: null,
+      telephone: null,
+      email: null,
+      country: null,
+      city: null,
+      address: null,
+      PassportGivenBy: null,
+      PassportGivenDate: null,
+      PassportType: null,
+      PassportNumber: null,
+      SocialNumber: null,
+      WorkingDaysWeek: null,
+      HoursPerWeek: null,
+      WorkStartTime: null,
+      WorkEndTime: null,
+      WorkStartDate: null,
+      WorkEndDate: null,
+      salary: null,
+      currency: null,
+    };
+    setInputs(clearedInputes);
+  };
+
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
@@ -370,7 +539,17 @@ export default function SingleStaffMember() {
                 {editMode ? (
                   <div
                     className='userAvatar StaffAvatarEdit'
-                    style={avatarStyle}
+                    style={
+                      member && member.employer_image
+                        ? {
+                            backgroundImage: `url(${member.employer_image})`,
+                            backgroundSize: 'cover',
+                          }
+                        : {
+                            backgroundImage: `url(${StaffAvatar})`,
+                            backgroundSize: '50%',
+                          }
+                    }
                   >
                     <div
                       className='uploadStaffAvatarSec'
@@ -423,7 +602,16 @@ export default function SingleStaffMember() {
                           type='text'
                           name='Name'
                           id='Name'
-                          defaultValue={member.employer_first_name}
+                          defaultValue={
+                            inputs.Name
+                              ? inputs.Name
+                              : member.employer_first_name
+                          }
+                          value={
+                            inputs.Name
+                              ? inputs.Name
+                              : member.employer_first_name
+                          }
                           className={`${darkMode ? 'darkInpt' : ''} ${
                             errors.Name ? 'inptError' : ''
                           }`}
@@ -436,7 +624,16 @@ export default function SingleStaffMember() {
                           type='text'
                           name='Surname'
                           id='Surname'
-                          defaultValue={member.employer_last_name}
+                          defaultValue={
+                            inputs.Surname
+                              ? inputs.Surname
+                              : member.employer_last_name
+                          }
+                          value={
+                            inputs.Surname
+                              ? inputs.Surname
+                              : member.employer_last_name
+                          }
                           className={`${darkMode ? 'darkInpt' : ''} ${
                             errors.Surname ? 'inptError' : ''
                           }`}
@@ -449,7 +646,16 @@ export default function SingleStaffMember() {
                           type='text'
                           name='FatersName'
                           id='FatersName'
-                          defaultValue={member.employer_middle_name}
+                          defaultValue={
+                            inputs.FathersName
+                              ? inputs.FathersName
+                              : member.employer_middle_name
+                          }
+                          value={
+                            inputs.FathersName
+                              ? inputs.FathersName
+                              : member.employer_middle_name
+                          }
                           className={`${darkMode ? 'darkInpt' : ''} ${
                             errors.FathersName ? 'inptError' : ''
                           }`}
@@ -487,21 +693,59 @@ export default function SingleStaffMember() {
                       {member.employer_status}
                     </h3>
                   ) : (
-                    <div className='staffInputSec RoleInptSec'>
-                      <label htmlFor='Role'>Դերը</label>
-                      <select
-                        name='Role'
-                        id='Role'
-                        defaultValue={member.employer_status}
-                        className={`${darkMode ? 'darkInpt' : ''} ${
-                          errors.role ? 'inptError' : ''
-                        }`}
-                        onChange={(e) => handleInputChange(e, 'role')}
-                      >
-                        <option value='Admin'>Admin</option>
-                        <option value='Standard'>Standard</option>
-                        <option value='Inactive'>Inactive</option>
-                      </select>
+                    <div className='singleStaffRow staffRowEdit'>
+                      <div className='staffInputSec RoleInptSec'>
+                        <label htmlFor='Role'>Դերը</label>
+                        <select
+                          name='Role'
+                          id='Role'
+                          defaultValue={member.employer_status}
+                          className={`${darkMode ? 'darkInpt' : ''} ${
+                            errors.role ? 'inptError' : ''
+                          }`}
+                          onChange={(e) => handleInputChange(e, 'role')}
+                        >
+                          <option value='Admin'>Admin</option>
+                          <option value='Standard'>Standard</option>
+                          <option value='Inactive'>Inactive</option>
+                        </select>
+                      </div>
+                      <div className='staffInputSec editStaffInputSec'>
+                        <label htmlFor='Position'>Պաշտոն</label>
+                        <select
+                          name='Position'
+                          id='Position'
+                          defaultValue={member.position_name}
+                          className={`${darkMode ? 'darkInpt' : ''} ${
+                            errors.position ? 'inptError' : ''
+                          }`}
+                          onChange={(e) => handleInputChange(e, 'position')}
+                        >
+                          {positions.slice(1).map((item, index) => (
+                            <option key={index} value={item.id}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className='staffInputSec editStaffInputSec'>
+                        <label htmlFor='Division'>Ստորաբաժանում</label>
+                        <select
+                          name='Division'
+                          id='Division'
+                          defaultValue={member.department_name}
+                          className={`${darkMode ? 'darkInpt' : ''} ${
+                            errors.division ? 'inptError' : ''
+                          }`}
+                          onChange={(e) => handleInputChange(e, 'division')}
+                        >
+                          {divisions.slice(1).map((item, index) => (
+                            <option key={index} value={item.id}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -519,10 +763,7 @@ export default function SingleStaffMember() {
                     <button className='save-staff-edit' onClick={handleSubmit}>
                       <ImCheckmark />
                     </button>
-                    <button
-                      className='cancel-staff-edit'
-                      onClick={() => setOpenDelete(true)}
-                    >
+                    <button className='cancel-staff-edit' onClick={closeEdit}>
                       <ImCross />
                     </button>
                   </div>
@@ -535,50 +776,12 @@ export default function SingleStaffMember() {
                   <h3 className={darkMode ? ' whiteElement' : ''}>
                     {member.position_name}
                   </h3>
-                ) : (
-                  <div className='staffInputSec editStaffInputSec'>
-                    <label htmlFor='Position'>Պաշտոն</label>
-                    <select
-                      name='Position'
-                      id='Position'
-                      defaultValue={member.position_name}
-                      className={`${darkMode ? 'darkInpt' : ''} ${
-                        errors.position ? 'inptError' : ''
-                      }`}
-                      onChange={(e) => handleInputChange(e, 'position')}
-                    >
-                      {positions.slice(1).map((item, index) => (
-                        <option key={index} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+                ) : null}
                 {!editMode ? (
                   <h3 className={darkMode ? ' whiteElement' : ''}>
                     {member.department_name}
                   </h3>
-                ) : (
-                  <div className='staffInputSec editStaffInputSec'>
-                    <label htmlFor='Division'>Ստորաբաժանում</label>
-                    <select
-                      name='Division'
-                      id='Division'
-                      defaultValue={member.department_name}
-                      className={`${darkMode ? 'darkInpt' : ''} ${
-                        errors.division ? 'inptError' : ''
-                      }`}
-                      onChange={(e) => handleInputChange(e, 'division')}
-                    >
-                      {divisions.slice(1).map((item, index) => (
-                        <option key={index} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+                ) : null}
               </div>
             </div>
             <div className='singleStaffRow InputsRow'>
@@ -596,16 +799,20 @@ export default function SingleStaffMember() {
                   </h3>
                 ) : (
                   <DatePicker
-                    dateFormat='dd.MM.yyyy'
+                    dateFormat='dd/MM/yyyy'
                     locale='hy'
                     name='BirthDate'
                     id='BirthDate'
                     placeholderText='օր/ամիս/տարի'
-                    value={inputs.BOT}
+                    value={birthday}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.BOT ? 'inptError' : ''
                     }`}
-                    onChange={(e) => handleInputChange(e, 'BOT')}
+                    selected={birthday}
+                    onChange={(date) => {
+                      handleInputChange(date, 'BOT');
+                      setBirthDay(date);
+                    }}
                   />
                 )}
               </div>
@@ -648,7 +855,8 @@ export default function SingleStaffMember() {
                   <select
                     name='Sex'
                     id='Sex'
-                    defaultValue={member.employer_sex}
+                    defaultValue={inputs.sex ? inputs.sex : member.employer_sex}
+                    value={inputs.sex ? inputs.sex : member.employer_sex}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.sex ? 'inptError' : ''
                     }`}
@@ -738,8 +946,8 @@ export default function SingleStaffMember() {
                     id='Country'
                     defaultValue={
                       member.employer_register_address === 'null null null'
-                      ? null
-                      : parseAddress(member.employer_register_address).country
+                        ? null
+                        : parseAddress(member.employer_register_address).country
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.country ? 'inptError' : ''
@@ -767,8 +975,8 @@ export default function SingleStaffMember() {
                     id='City'
                     defaultValue={
                       member.employer_register_address === 'null null null'
-                      ? null
-                      : parseAddress(member.employer_register_address).city
+                        ? null
+                        : parseAddress(member.employer_register_address).city
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.city ? 'inptError' : ''
@@ -796,8 +1004,8 @@ export default function SingleStaffMember() {
                     id='Address'
                     defaultValue={
                       member.employer_register_address === 'null null null'
-                      ? null
-                      : parseAddress(member.employer_register_address).address
+                        ? null
+                        : parseAddress(member.employer_register_address).address
                     }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.address ? 'inptError' : ''
@@ -828,7 +1036,8 @@ export default function SingleStaffMember() {
                     type='text'
                     name='PassportGivenBy'
                     id='PassportGivenBy'
-                    defaultValue={member.employer_passport_authority}
+                    defaultValue={inputs.PassportGivenBy ? inputs.PassportGivenBy: member.employer_passport_authority}
+                    value={inputs.PassportGivenBy ? inputs.PassportGivenBy: member.employer_passport_authority}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportGivenBy ? 'inptError' : ''
                     }`}
@@ -851,42 +1060,20 @@ export default function SingleStaffMember() {
                   </h3>
                 ) : (
                   <DatePicker
-                    dateFormat='dd.MM.yyyy'
+                    dateFormat='dd/MM/yyyy'
                     locale='hy'
                     name='PassportGivenDate'
                     id='PassportGivenDate'
                     placeholderText='օր/ամիս/տարի'
-                    value={inputs.PassportGivenDate}
+                    value={passportDate}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportGivenDate ? 'inptError' : ''
                     }`}
-                    onChange={(e) => handleInputChange(e, 'PassportGivenDate')}
-                  />
-                )}
-              </div>
-              <div
-                className={
-                  'staffInputSec narrowInputSec' +
-                  (editMode ? ' editStaffInputSec' : '')
-                }
-              >
-                <label htmlFor='PassportType'>Անձնագրի տեսակը</label>
-                {!editMode ? (
-                  <h3 className={darkMode ? ' whiteElement' : ''}>
-                    {member && member.employer_passport_type
-                      ? member.employer_passport_type
-                      : '-'}
-                  </h3>
-                ) : (
-                  <input
-                    type='text'
-                    name='PassportType'
-                    id='PassportType'
-                    defaultValue={member.employer_passport_type}
-                    className={`${darkMode ? 'darkInpt' : ''} ${
-                      errors.PassportType ? 'inptError' : ''
-                    }`}
-                    onChange={(e) => handleInputChange(e, 'PassportType')}
+                    selected={passportDate}
+                    onChange={(date) => {
+                      handleInputChange(date, 'PassportGivenDate');
+                      setPassportDate(date);
+                    }}
                   />
                 )}
               </div>
@@ -899,8 +1086,8 @@ export default function SingleStaffMember() {
                 <label htmlFor='PassportNumber'>Անձնագրի համարը</label>
                 {!editMode ? (
                   <h3 className={'numbers' + (darkMode ? ' whiteElement' : '')}>
-                    {member && member.employer_phone_number
-                      ? member.employer_phone_number
+                    {member && member.employer_passport
+                      ? member.employer_passport
                       : '-'}
                   </h3>
                 ) : (
@@ -908,7 +1095,8 @@ export default function SingleStaffMember() {
                     type='text'
                     name='PassportNumber'
                     id='PassportNumber'
-                    defaultValue={member.employer_phone_number}
+                    defaultValue={inputs.PassportNumber ? inputs.PassportNumber : member.employer_passport}
+                    value={inputs.PassportNumber ? inputs.PassportNumber : member.employer_passport}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportNumber ? 'inptError' : ''
                     }`}
@@ -934,7 +1122,8 @@ export default function SingleStaffMember() {
                     type='text'
                     name='SocialNumber'
                     id='SocialNumber'
-                    defaultValue={member.employer_social_card}
+                    defaultValue={inputs.SocialNumber ? inputs.SocialNumber : member.employer_social_card}
+                    value={inputs.SocialNumber ? inputs.SocialNumber : member.employer_social_card}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.SocialNumber ? 'inptError' : ''
                     }`}
@@ -1068,16 +1257,20 @@ export default function SingleStaffMember() {
                   </h3>
                 ) : (
                   <DatePicker
-                    dateFormat='dd.MM.yyyy'
+                    dateFormat='dd/MM/yyyy'
                     locale='hy'
                     name='WorkStartDate'
                     id='WorkStartDate'
                     placeholderText='օր/ամիս/տարի'
-                    value={inputs.WorkStartDate}
+                    value={workStartDate}
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.WorkStartDate ? 'inptError' : ''
                     }`}
-                    onChange={(e) => handleInputChange(e, 'WorkStartDate')}
+                    selected={workStartDate}
+                    onChange={(date) => {
+                      handleInputChange(date, 'WorkStartDate');
+                      setWorkStartDate(date);
+                    }}
                   />
                 )}
               </div>
@@ -1096,14 +1289,18 @@ export default function SingleStaffMember() {
                   </h3>
                 ) : (
                   <DatePicker
-                    dateFormat='dd.MM.yyyy'
+                    dateFormat='dd/MM/yyyy'
                     locale='hy'
                     name='WorkEndDate'
                     id='WorkEndDate'
                     placeholderText='օր/ամիս/տարի'
-                    value={inputs.WorkEndDate}
+                    value={workEndDate}
                     className={`${darkMode ? 'darkInpt' : ''}`}
-                    onChange={(e) => handleInputChange(e, 'WorkEndDate')}
+                    selected={workEndDate}
+                    onChange={(date) => {
+                      handleInputChange(date, 'WorkEndDate');
+                      setWorkEndDate(date);
+                    }}
                   />
                 )}
               </div>
@@ -1198,7 +1395,7 @@ export default function SingleStaffMember() {
                       type='file'
                       id='uploadButton'
                       ref={fileInputRef}
-                      accept='.pdf, .doc, .docx'
+                      accept='.pdf, .jpg, .png, .jpeg, .webp'
                       style={{ display: 'none' }}
                       multiple
                       onChange={handleFileChange}
@@ -1211,7 +1408,11 @@ export default function SingleStaffMember() {
                             onClick={handleUploadButtonClick}
                           >
                             {selectedFiles[0].name}
-                            <BsFillCloudUploadFill />
+                            {!documentLoading ? (
+                              <BsFillCloudUploadFill />
+                            ) : (
+                              <div class='circle'></div>
+                            )}
                           </button>
                         ) : (
                           <button
@@ -1219,7 +1420,11 @@ export default function SingleStaffMember() {
                             onClick={handleUploadButtonClick}
                           >
                             {selectedFiles[0].name}
-                            <BsFillCloudUploadFill />
+                            {!documentLoading ? (
+                              <BsFillCloudUploadFill />
+                            ) : (
+                              <div class='circle'></div>
+                            )}
                           </button>
                         )
                       ) : selectedFiles.length === 2 ? (
@@ -1246,7 +1451,11 @@ export default function SingleStaffMember() {
                           onClick={handleUploadButtonClick}
                         >
                           Ներբեռնել Անձնագիր
-                          <BsFillCloudUploadFill />
+                          {!documentLoading ? (
+                            <BsFillCloudUploadFill />
+                          ) : (
+                            <div class='circle'></div>
+                          )}
                         </button>
                       ) : (
                         <button
@@ -1254,16 +1463,24 @@ export default function SingleStaffMember() {
                           onClick={handleUploadButtonClick}
                         >
                           Ներբեռնել ID Քարտ
-                          <BsFillCloudUploadFill />
+                          {!documentLoading ? (
+                            <BsFillCloudUploadFill />
+                          ) : (
+                            <div class='circle'></div>
+                          )}
                         </button>
                       )
                     ) : (
                       <button
-                        className='edit-upload-btn'
+                        className='edit-upload-btn upload-error-btn'
                         onClick={handleUploadButtonClick}
                       >
                         {fileUploadError}
-                        <ImCross />
+                        {!documentLoading ? (
+                          <ImCross />
+                        ) : (
+                          <div class='circle'></div>
+                        )}
                       </button>
                     )}
                   </div>
@@ -1278,21 +1495,18 @@ export default function SingleStaffMember() {
                       }
                     >
                       <p>
-                        Անձնագրային տվյալների հաստատման համար անհրաժեշտ է կցել
-                        Ձեր անձնագրի հիմնական (2-3) էջերի միասնական
-                        լուսանկարը/սկանը կամ նույնականացման քարտի (ID քարտ)
-                        դիմանկարով կողմի լուսանկարը/սկանը, ինչպես նաև Ձեր
-                        ինքնանկարը (սելֆի)` անձը հաստատող փաստաթղթի կամ
-                        նույնականացման քարտի (ID քարտ) դիմանկարով էջը ձեռքում
-                        պահած: Խնդրում ենք լինել ուշադիր, որպեսզի
-                        լուսանկարներում ամբողջությամբ տեսանելի լինեն փաստաթղթի
-                        եզրերը: Լուսանկարները վերբեռնելիս համոզվեք, որ դրանք
-                        համապատասխանում են հետևյալ չափանիշներին. Ֆայլը JPG, PNG
-                        կամ GIF ձևաչափով է և չի գերազանցում 15 mb-ը: Փաստաթղթի
-                        վավերականության ժամկետն անցած չէ։ Պատկերը պետք է լինի
-                        իրական գույներով, ոչ թե սև-սպիտակ: Սկանը/լուսանկարը պետք
-                        է կատարված լինի փաստաթղթի բնօրինակից, չի թույլատրվում
-                        որևէ թվային մոնտաժ:
+                        Անձնագրային տվյալների ճիշտ լրացման համար հետևեք նշված
+                        քայլերին. Անհրաժեշտ է կցել՝ Անձնագրի հիմնական (2-3)
+                        էջերի լուսանկարները/սկանավորած տարբերակները + ՀԾՀ (սոց
+                        քարտը) 2 ֆայլով, կամ նույնականացման քարտի (ID քարտ)
+                        առջևի (դիմանկարով կողմի լուսանկարը/սկանը) և հետևի էջերը
+                        2 ֆայլով։ Խնդրում ենք ուշադիր լինել, որպեսզի փաստաթղթի
+                        եզրերը ամբողջությամբ տեսանելի լինեն լուսանկարներում:
+                        Վերբեռնելիս համոզվեք, որ դրանք համապատասխանում են
+                        հետևյալ չափանիշներին`JPG, PNG կամ PDF և չեն գերազանցում
+                        15 MB-ը: Զգուշացնում ենք, որ ֆայլերը պետք է կցել միասին
+                        (2 ֆայլ)։ Մեկ ֆայլ կցելու դեպքում համակրգը չի կարող
+                        ճանաչել Ձեր քայլերը։
                       </p>
                     </div>
                   </div>
@@ -1302,6 +1516,16 @@ export default function SingleStaffMember() {
             {!editMode ? (
               <div className='singleStaffRow InputsRow'>
                 <button>Դիտել բոլոր փաստաթղթերը</button>
+              </div>
+            ) : null}
+            {editMode ? (
+              <div>
+                <button
+                  className='delete-button'
+                  onClick={() => setOpenDelete(true)}
+                >
+                  Ջնջել
+                </button>
               </div>
             ) : null}
           </>

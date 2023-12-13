@@ -61,8 +61,7 @@ export default function AddDivisionPopUp({ darkMode, close }) {
         "company": parseInt(localStorage.getItem('companyID'), 10),
         "admin": inputs.adminID
       };
-      console.log(newDivision);
-      await AddNewDepartment(newDivision);
+      await AddNewDepartment(localStorage.getItem('companyID'), newDivision);
       setSubmited(true);
     }
   };

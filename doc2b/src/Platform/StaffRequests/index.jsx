@@ -21,8 +21,10 @@ export const SearchStaff = (companyID, search) => {
 };
 
 export const FilterStaff = (companyID, status) => {
-  return axios.get(`${API}/main/employers/?company=${companyID}&status=${status}`, options);
+  const formattedStatus = status.join(', ');
+  return axios.get(`${API}/main/employers/?company=${companyID}&status=[${formattedStatus}]`, options);
 };
+
 
 export const GetSingleStaff = (id, companyID) => {
   return axios.get(`${API}/main/employers/${id}/?company=${companyID}`, options);

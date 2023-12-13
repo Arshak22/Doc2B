@@ -115,12 +115,39 @@ export default function Staff() {
 
   const handleCheckboxChange = (event) => {
     const status = event.target.value;
-    if (selectedStatus.includes(status)) {
-      setSelectedStatus(selectedStatus.filter((s) => s !== status));
-    } else {
-      setSelectedStatus([...selectedStatus, status]);
-    }
+
+    setSelectedStatus((prevSelectedStatus) => {
+      if (prevSelectedStatus.includes(status)) {
+        return prevSelectedStatus.filter((s) => s !== status);
+      } else {
+        return [...prevSelectedStatus, status];
+      }
+    });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedStatus.length > 0) {
+        try {
+          const result = await FilterStaff(
+            localStorage.getItem('companyID'),
+            selectedStatus
+          );
+          if (result.data.length <= 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setStaff(result.data);
+        } catch (error) {}
+      } else {
+        setLoading(true);
+        getStaffList(localStorage.getItem('companyID'));
+        setSearchResultEmpty(false);
+      }
+    };
+    fetchData();
+  }, [selectedStatus]);
 
   useEffect(() => {
     const current = staff.slice(0, itemsPerPage);
@@ -183,8 +210,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='admin'
-                      checked={selectedStatus.includes('admin')}
+                      value='Admin'
+                      checked={selectedStatus.includes('Admin')}
                       onChange={handleCheckboxChange}
                     />
                     Admin
@@ -192,8 +219,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='standard'
-                      checked={selectedStatus.includes('standard')}
+                      value='Standard'
+                      checked={selectedStatus.includes('Standard')}
                       onChange={handleCheckboxChange}
                     />
                     Standard
@@ -201,8 +228,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='inactive'
-                      checked={selectedStatus.includes('inactive')}
+                      value='Inactive'
+                      checked={selectedStatus.includes('Inactive')}
                       onChange={handleCheckboxChange}
                     />
                     Inactive
@@ -264,8 +291,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='admin'
-                      checked={selectedStatus.includes('admin')}
+                      value='Admin'
+                      checked={selectedStatus.includes('Admin')}
                       onChange={handleCheckboxChange}
                     />
                     Admin
@@ -273,8 +300,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='standard'
-                      checked={selectedStatus.includes('standard')}
+                      value='Standard'
+                      checked={selectedStatus.includes('Standard')}
                       onChange={handleCheckboxChange}
                     />
                     Standard
@@ -282,8 +309,8 @@ export default function Staff() {
                   <label className={darkMode ? 'whiteElement' : ''}>
                     <input
                       type='checkbox'
-                      value='inactive'
-                      checked={selectedStatus.includes('inactive')}
+                      value='Inactive'
+                      checked={selectedStatus.includes('Inactive')}
                       onChange={handleCheckboxChange}
                     />
                     Inactive

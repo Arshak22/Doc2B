@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
+import { parseISO } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
@@ -31,6 +32,10 @@ export default function AddStaffPopUp({ darkMode, close }) {
   const [addNewAccount, setAddNewAccount] = useState(false);
   const [positions, setPositions] = useState([]);
   const [divisions, setDivisions] = useState([]);
+  const [birthday, setBirthDay] = useState(null);
+  const [passportDate, setPassportDate] = useState(null);
+  const [workStartDate, setWorkStartDate] = useState(null);
+  const [workEndDate, setWorkEndDate] = useState(null);
 
   const [inputs, setInputs] = useState({
     Name: null,
@@ -144,6 +149,16 @@ export default function AddStaffPopUp({ darkMode, close }) {
         try {
           setDocumentLoading(true);
           const response = await SendPassportScan(formData);
+          setBirthDay(
+            response.data.data.employer_birth_date
+              ? parseISO(response.data.data.employer_birth_date)
+              : null
+          );
+          setPassportDate(
+            response.data.data.employer_passport_date_of_issue
+              ? parseISO(response.data.data.employer_passport_date_of_issue)
+              : null
+          );
           setInputs((prevInputs) => ({
             ...prevInputs,
             Name: response.data.data.employer_first_name,
@@ -170,6 +185,16 @@ export default function AddStaffPopUp({ darkMode, close }) {
         try {
           setDocumentLoading(true);
           const response = await SendIdCardScan(formData);
+          setBirthDay(
+            response.data.data.employer_birth_date
+              ? parseISO(response.data.data.employer_birth_date)
+              : null
+          );
+          setPassportDate(
+            response.data.data.employer_passport_date_of_issue
+              ? parseISO(response.data.data.employer_passport_date_of_issue)
+              : null
+          );
           setInputs((prevInputs) => ({
             ...prevInputs,
             Name: response.data.data.employer_first_name,
@@ -200,8 +225,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
     }
   };
 
-  useEffect(() => {
-  }, [documentLoading]);
+  useEffect(() => {}, [documentLoading]);
 
   const handleInputChange = (e, inputName) => {
     if (e.target) {
@@ -416,7 +440,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
                       onChange={(e) => handleInputChange(e, 'role')}
                     >
                       <option value='Admin'>Admin</option>
-                      <option value='Standart'>Standart</option>
+                      <option value='Standard'>Standard</option>
                       <option value='Inactive'>Inactive</option>
                     </select>
                   </div>
@@ -478,7 +502,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                               onClick={handleUploadButtonClick}
                             >
                               {selectedFiles[0].name}
-                              {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
+                              {!documentLoading ? (
+                                <BsFillCloudUploadFill />
+                              ) : (
+                                <div class='circle'></div>
+                              )}
                             </button>
                           ) : (
                             <button
@@ -486,7 +514,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                               onClick={handleUploadButtonClick}
                             >
                               {selectedFiles[0].name}
-                              {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
+                              {!documentLoading ? (
+                                <BsFillCloudUploadFill />
+                              ) : (
+                                <div class='circle'></div>
+                              )}
                             </button>
                           )
                         ) : selectedFiles.length === 2 ? (
@@ -513,7 +545,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                             onClick={handleUploadButtonClick}
                           >
                             Ներբեռնել Անձնագիր
-                            {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
+                            {!documentLoading ? (
+                              <BsFillCloudUploadFill />
+                            ) : (
+                              <div class='circle'></div>
+                            )}
                           </button>
                         ) : (
                           <button
@@ -521,7 +557,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                             onClick={handleUploadButtonClick}
                           >
                             Ներբեռնել ID Քարտ
-                            {!documentLoading ? <BsFillCloudUploadFill /> : <div class="circle"></div>}
+                            {!documentLoading ? (
+                              <BsFillCloudUploadFill />
+                            ) : (
+                              <div class='circle'></div>
+                            )}
                           </button>
                         )
                       ) : (
@@ -530,7 +570,11 @@ export default function AddStaffPopUp({ darkMode, close }) {
                           onClick={handleUploadButtonClick}
                         >
                           {fileUploadError}
-                          {!documentLoading ? <ImCross /> : <div class="circle"></div>}
+                          {!documentLoading ? (
+                            <ImCross />
+                          ) : (
+                            <div class='circle'></div>
+                          )}
                         </button>
                       )}
                     </div>
@@ -545,21 +589,18 @@ export default function AddStaffPopUp({ darkMode, close }) {
                         }
                       >
                         <p>
-                          Անձնագրային տվյալների հաստատման համար անհրաժեշտ է կցել
-                          Ձեր անձնագրի հիմնական (2-3) էջերի միասնական
-                          լուսանկարը/սկանը կամ նույնականացման քարտի (ID քարտ)
-                          դիմանկարով կողմի լուսանկարը/սկանը, ինչպես նաև Ձեր
-                          ինքնանկարը (սելֆի)` անձը հաստատող փաստաթղթի կամ
-                          նույնականացման քարտի (ID քարտ) դիմանկարով էջը ձեռքում
-                          պահած: Խնդրում ենք լինել ուշադիր, որպեսզի
-                          լուսանկարներում ամբողջությամբ տեսանելի լինեն փաստաթղթի
-                          եզրերը: Լուսանկարները վերբեռնելիս համոզվեք, որ դրանք
-                          համապատասխանում են հետևյալ չափանիշներին. Ֆայլը JPG,
-                          PNG կամ GIF ձևաչափով է և չի գերազանցում 15 mb-ը:
-                          Փաստաթղթի վավերականության ժամկետն անցած չէ։ Պատկերը
-                          պետք է լինի իրական գույներով, ոչ թե սև-սպիտակ:
-                          Սկանը/լուսանկարը պետք է կատարված լինի փաստաթղթի
-                          բնօրինակից, չի թույլատրվում որևէ թվային մոնտաժ:
+                          Անձնագրային տվյալների ճիշտ լրացման համար հետևեք նշված
+                          քայլերին. Անհրաժեշտ է կցել՝ Անձնագրի հիմնական (2-3)
+                          էջերի լուսանկարները/սկանավորած տարբերակները + ՀԾՀ (սոց
+                          քարտը) 2 ֆայլով, կամ նույնականացման քարտի (ID քարտ)
+                          առջևի (դիմանկարով կողմի լուսանկարը/սկանը) և հետևի
+                          էջերը 2 ֆայլով։ Խնդրում ենք ուշադիր լինել, որպեսզի
+                          փաստաթղթի եզրերը ամբողջությամբ տեսանելի լինեն
+                          լուսանկարներում: Վերբեռնելիս համոզվեք, որ դրանք
+                          համապատասխանում են հետևյալ չափանիշներին`JPG, PNG կամ
+                          PDF և չեն գերազանցում 15 MB-ը: Զգուշացնում ենք, որ
+                          ֆայլերը պետք է կցել միասին (2 ֆայլ)։ Մեկ ֆայլ կցելու
+                          դեպքում համակրգը չի կարող ճանաչել Ձեր քայլերը։
                         </p>
                       </div>
                     </div>
@@ -610,16 +651,20 @@ export default function AddStaffPopUp({ darkMode, close }) {
             <div className={'staffInputSec editStaffInputSec'}>
               <label htmlFor='BirthDate'>Ծննդյան տարեթիվ</label>
               <DatePicker
-                dateFormat='dd.MM.yyyy'
+                dateFormat='dd/MM/yyyy'
                 locale='hy'
                 name='BirthDate'
                 id='BirthDate'
                 placeholderText='օր/ամիս/տարի'
-                value={inputs.BOT ? inputs.BOT : ''}
+                value={birthday ? birthday : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.BOT ? 'inptError' : ''
                 }`}
-                onChange={(e) => handleInputChange(e, 'BOT')}
+                selected={birthday}
+                onChange={(date) => {
+                  handleInputChange(date, 'BOT');
+                  setBirthDay(date);
+                }}
               />
             </div>
             <div className={'staffInputSec editStaffInputSec'}>
@@ -734,16 +779,20 @@ export default function AddStaffPopUp({ darkMode, close }) {
             <div className={'staffInputSec editStaffInputSec'}>
               <label htmlFor='PassportGivenDate'>Անձնագրի տրման ամսաթիվը</label>
               <DatePicker
-                dateFormat='dd.MM.yyyy'
+                dateFormat='dd/MM/yyyy'
                 locale='hy'
                 name='PassportGivenDate'
                 id='PassportGivenDate'
                 placeholderText='օր/ամիս/տարի'
-                value={inputs.PassportGivenDate ? inputs.PassportGivenDate : ''}
+                value={passportDate ? passportDate : ''}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.PassportGivenDate ? 'inptError' : ''
                 }`}
-                onChange={(e) => handleInputChange(e, 'PassportGivenDate')}
+                selected={passportDate}
+                onChange={(date) => {
+                  handleInputChange(date, 'PassportGivenDate');
+                  setPassportDate(date);
+                }}
               />
             </div>
             <div className={'staffInputSec editStaffInputSec'}>
@@ -832,29 +881,36 @@ export default function AddStaffPopUp({ darkMode, close }) {
             <div className={'staffInputSec DateInputSec editStaffInputSec'}>
               <label htmlFor='WorkStartDate'>Աշխատանքի ընդունման օր</label>
               <DatePicker
-                dateFormat='dd.MM.yyyy'
+                dateFormat='dd/MM/yyyy'
                 locale='hy'
                 name='WorkStartDate'
                 id='WorkStartDate'
                 placeholderText='օր/ամիս/տարի'
-                value={inputs.WorkStartDate}
+                value={workStartDate}
                 className={`${darkMode ? 'darkInpt' : ''} ${
                   errors.WorkStartDate ? 'inptError' : ''
                 }`}
-                onChange={(e) => handleInputChange(e, 'WorkStartDate')}
+                selected={workStartDate}
+                onChange={(date) => {
+                  handleInputChange(date, 'WorkStartDate');
+                  setWorkStartDate(date);
+                }}
               />
             </div>
             <div className={'staffInputSec DateInputSec editStaffInputSec'}>
               <label htmlFor='WorkEndDate'>Աշխատանքի ավարտ</label>
               <DatePicker
-                dateFormat='dd.MM.yyyy'
+                dateFormat='dd/MM/yyyy'
                 locale='hy'
                 name='WorkEndDate'
                 id='WorkEndDate'
                 placeholderText='օր/ամիս/տարի'
-                value={inputs.WorkEndDate}
+                value={workEndDate}
                 className={`${darkMode ? 'darkInpt' : ''}`}
-                onChange={(e) => handleInputChange(e, 'WorkEndDate')}
+                onChange={(date) => {
+                  handleInputChange(date, 'WorkEndDate');
+                  setWorkEndDate(date);
+                }}
               />
             </div>
           </div>

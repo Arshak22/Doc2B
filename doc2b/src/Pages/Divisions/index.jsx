@@ -13,7 +13,10 @@ import DivisionIcon from '../../assets/Icons/DivisionIcon.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
-import { GetAllDepartments } from '../../Platform/DepartmentRequests';
+import {
+  GetAllDepartments,
+  SearchDepartment,
+} from '../../Platform/DepartmentRequests';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -28,6 +31,8 @@ export default function Divisions() {
   const [itemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasCompanies, setHasCompnaies] = useState(false);
+  const [searchAtribute, setSearchAtribute] = useState(null);
+  const [searchResultEmpty, setSearchResultEmpty] = useState(false);
 
   const [divisions, setDivisions] = useState([]);
 
@@ -61,6 +66,39 @@ export default function Divisions() {
   useEffect(() => {
     getCompaniesList();
   }, []);
+
+  const handleSearch = async () => {
+    if (searchAtribute && searchAtribute !== '') {
+      try {
+        setLoading(true);
+        const result = await SearchDepartment(
+          localStorage.getItem('companyID'),
+          searchAtribute
+        );
+        if (result) {
+          if (result.data.length <= 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setDivisions(result.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    } else {
+      setLoading(true);
+      getDivisonsList(localStorage.getItem('companyID'));
+      setSearchResultEmpty(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage;
@@ -110,7 +148,7 @@ export default function Divisions() {
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
         {loading ? (
           <PreLoader />
-        ) : divisions.length > 1 ? (
+        ) : divisions.length > 1 && !searchResultEmpty ? (
           <>
             <div className='InputContainer'>
               <Popup
@@ -137,14 +175,18 @@ export default function Divisions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
                   <ImSearch
                     className={
                       'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
                     }
+                    onClick={handleSearch}
                   />
                 </div>
               </div>
@@ -172,6 +214,37 @@ export default function Divisions() {
                 renderOnZeroPageCount={null}
               />
             </>
+          </>
+        ) : searchResultEmpty ? (
+          <>
+            <div className='InputContainer InputContainerRight'>
+              <div className='staff-filter-section'>
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Փնտրել'
+                    name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
+                    className={
+                      'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
+                    }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <ImSearch
+                    className={
+                      'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
+                    }
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='delete-confirm-section'>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Որոնման արդյունքը դատարկ է
+              </h3>
+            </div>
           </>
         ) : hasCompanies ? (
           <div className='no-staff-content'>

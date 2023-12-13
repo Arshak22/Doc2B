@@ -19,10 +19,12 @@ export default function StaffMember({ currentItems, currentPage }) {
   const [deletingId, setDeletingId] = useState(null);
 
   const truncateText = (text, maxLength) => {
-    if (text.length <= maxLength) {
-      return text;
-    } else {
-      return text.substring(0, maxLength - 2) + '..';
+    if (text) {
+      if (text.length <= maxLength) {
+        return text;
+      } else {
+        return text.substring(0, maxLength - 2) + '..';
+      }
     }
   };
 

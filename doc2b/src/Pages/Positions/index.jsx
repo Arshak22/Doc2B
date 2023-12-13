@@ -11,7 +11,10 @@ import Position from '../../Components/Position';
 
 import PositionIcon from '../../assets/Icons/PositionIcon.png';
 
-import { GetAllPositions } from '../../Platform/PositionRequests';
+import {
+  GetAllPositions,
+  SearchPosition,
+} from '../../Platform/PositionRequests';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -25,6 +28,8 @@ export default function Positions() {
   const [itemOffset, setItemOffset] = useState(0);
   const [itemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchAtribute, setSearchAtribute] = useState(null);
+  const [searchResultEmpty, setSearchResultEmpty] = useState(false);
 
   const [positions, setPositions] = useState([]);
 
@@ -41,6 +46,36 @@ export default function Positions() {
   useEffect(() => {
     getPositionsList();
   }, []);
+
+  const handleSearch = async () => {
+    if (searchAtribute && searchAtribute !== '') {
+      try {
+        setLoading(true);
+        const result = await SearchPosition(searchAtribute);
+        if (result) {
+          if (result.data.length <= 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setPositions(result.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    } else {
+      setLoading(true);
+      getPositionsList();
+      setSearchResultEmpty(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage;
@@ -90,7 +125,7 @@ export default function Positions() {
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
         {loading ? (
           <PreLoader />
-        ) : positions.length > 1 ? (
+        ) : positions.length > 1 && !searchResultEmpty ? (
           <>
             <div className='InputContainer'>
               <div>
@@ -119,14 +154,18 @@ export default function Positions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
                   <ImSearch
                     className={
                       'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
                     }
+                    onClick={handleSearch}
                   />
                 </div>
               </div>
@@ -154,6 +193,37 @@ export default function Positions() {
                 renderOnZeroPageCount={null}
               />
             </>
+          </>
+        ) : searchResultEmpty ? (
+          <>
+            <div className='InputContainer InputContainerRight'>
+              <div className='staff-filter-section'>
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Փնտրել'
+                    name='Փնտրել'
+                    value={searchAtribute ? searchAtribute : null}
+                    className={
+                      'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
+                    }
+                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <ImSearch
+                    className={
+                      'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
+                    }
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='delete-confirm-section'>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Որոնման արդյունքը դատարկ է
+              </h3>
+            </div>
           </>
         ) : (
           <div className='no-staff-content'>
