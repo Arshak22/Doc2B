@@ -7,6 +7,13 @@ import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import './style.css';
 
+import {
+  GetCalendarEvents,
+  AddNewCalendarEvent,
+  UpdateSingleCalendarEvent,
+  DeleteCalendarEvent,
+} from '../../Platform/CalendarRequest';
+
 import { RxCross2 } from 'react-icons/rx';
 import { AiFillEdit } from 'react-icons/ai';
 import { ImCheckmark } from 'react-icons/im';
@@ -15,16 +22,31 @@ import { ImCross } from 'react-icons/im';
 export default function MyEventCalendar() {
   const { darkMode } = useGlobalContext();
   const [date, setDate] = useState(new Date());
-  const [events, setEvents] = useState({});
+  const [events, setEvents] = useState([]);
+
+  const formatDate = (inputDateString) => {
+    const parsedDate = new Date(inputDateString);
+
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  };
+
   const [newEvent, setNewEvent] = useState({
     name: '',
     description: '',
     time: '00:00',
+    date: formatDate(date.toDateString()),
   });
   const [showPopup, setShowPopup] = useState(false);
   const [hidePopUp, setHidePopUp] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [editingEvent, setEditingEvent] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   const [buttonClass, setButtonClass] = useState('');
 
@@ -45,14 +67,34 @@ export default function MyEventCalendar() {
 
   const armenianWeekdays = ['Կիր', 'Երկ', 'Երք', 'Չոր', 'Հնգ', 'Ուրբ', 'Շաբ'];
 
-  // Function to handle the next month navigation button click
+  const GetEventsList = async () => {
+    try {
+      const result = await GetCalendarEvents();
+      setEvents(result.data);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    GetEventsList();
+  }, [showPopup, hidePopUp]);
+
+  useEffect(() => {
+    if (Array.isArray(events)) {
+      const selectedDate = formatDate(date.toDateString());
+      const matchingDateEvents = events.find(
+        (eventObject) => eventObject.date === selectedDate
+      );
+
+      setFilteredEvents(matchingDateEvents ? matchingDateEvents.events : []);
+    }
+  }, [events, date]);
+
   const handleNextMonthClick = () => {
     setActiveStartDate(
       new Date(activeStartDate.getFullYear(), activeStartDate.getMonth() + 1, 1)
     );
   };
 
-  // Function to handle the previous month navigation button click
   const handlePrevMonthClick = () => {
     setActiveStartDate(
       new Date(activeStartDate.getFullYear(), activeStartDate.getMonth() - 1, 1)
@@ -83,12 +125,26 @@ export default function MyEventCalendar() {
     };
   }, [activeStartDate]);
 
-  // Filter events for the currently displayed month
-  const filteredEvents = events[date.toDateString()] || [];
+  useEffect(() => {
+    if (newEvent.date !== formatDate(date.toDateString())) {
+      setNewEvent((prevNewEvent) => ({
+        ...prevNewEvent,
+        date: formatDate(date.toDateString()),
+      }));
+    }
+  }, [newEvent, date]);
 
-  // Function to save a new event from the popup
-  const saveEvent = () => {
-    // Check if both name and time are not empty
+  const handleAddNewEvent = async (addEvent, shouldAdd) => {
+    try {
+      if (shouldAdd) {
+        await AddNewCalendarEvent(addEvent);
+        GetEventsList();
+        setButtonClass('shrink-button');
+      }
+    } catch (error) {}
+  };
+
+  const saveEvent = async () => {
     if (newEvent.name.trim() !== '' && newEvent.time.trim() !== '') {
       const updatedEvents = { ...events };
       if (!updatedEvents[date.toDateString()]) {
@@ -97,13 +153,15 @@ export default function MyEventCalendar() {
       updatedEvents[date.toDateString()].push(newEvent);
       setEvents(updatedEvents);
 
-      // Clear the input fields
+      const eventDate = formatDate(date.toDateString());
+
       setNewEvent({
         name: '',
         description: '',
         time: '00:00',
+        date: eventDate,
       });
-      setButtonClass('shrink-button');
+      handleAddNewEvent(newEvent, true);
     }
   };
 
@@ -113,12 +171,10 @@ export default function MyEventCalendar() {
         setButtonClass('');
       }, 200);
 
-      // Clear the timeout when the component unmounts
       return () => clearTimeout(timeoutId);
     }
   }, [buttonClass]);
 
-  // Function to toggle the edit mode for an event
   const toggleEditMode = (event, index) => {
     if (editingEvent === null) {
       setEditingEvent({ ...event, index });
@@ -127,28 +183,37 @@ export default function MyEventCalendar() {
     }
   };
 
-  // Function to update an event in edit mode
-  const updateEvent = () => {
+  const updateEvent = async (id) => {
     if (
       editingEvent.name !== null &&
       editingEvent.time !== null &&
       editingEvent.name.trim() !== '' &&
       editingEvent.time.trim() !== ''
     ) {
-      const updatedEvents = { ...events };
-      updatedEvents[date.toDateString()][editingEvent.index] = editingEvent;
-      setEvents(updatedEvents);
-      setEditingEvent(null);
+      const updatingEvent = {
+        name: editingEvent.name,
+        description: editingEvent.description ? editingEvent.description : '',
+        date: editingEvent.date,
+        time: editingEvent.time,
+      };
+      try {
+        await UpdateSingleCalendarEvent(id, updatingEvent);
+        GetEventsList();
+        setEditingEvent(null);
+      } catch (error) {}
     }
   };
 
-  const deleteEvent = (index) => {
-    const updatedEvents = { ...events };
-    updatedEvents[date.toDateString()].splice(index, 1);
-    if (updatedEvents[date.toDateString()].length === 0) {
-      delete updatedEvents[date.toDateString()];
-    }
-    setEvents(updatedEvents);
+  const deleteEvent = async (index) => {
+    try {
+      await DeleteCalendarEvent(index);
+      GetEventsList();
+      const updatedEvents = { ...events };
+      updatedEvents[date.toDateString()].splice(index, 1);
+      if (updatedEvents[date.toDateString()].length === 0) {
+        delete updatedEvents[date.toDateString()];
+      }
+    } catch (error) {}
   };
 
   const HidePopUp = () => {
@@ -254,11 +319,19 @@ export default function MyEventCalendar() {
             }
             activeStartDate={activeStartDate}
             tileClassName={({ date }) => {
-              const dateKey = date.toDateString();
-              return events[dateKey] && events[dateKey].length > 0
-                ? 'has-events'
-                : '';
+              const selectedDate = formatDate(date.toDateString());
+              const hasEvents =
+                Array.isArray(events) &&
+                events.some &&
+                events.some(
+                  (eventObject) =>
+                    eventObject.date === selectedDate &&
+                    Array.isArray(eventObject.events) &&
+                    eventObject.events.length > 0
+                );
+              return hasEvents ? 'has-events' : '';
             }}
+            allEvents={filteredEvents}
           />
         </div>
       </div>
@@ -297,7 +370,7 @@ export default function MyEventCalendar() {
                   key={index}
                   className={'my-event' + (darkMode ? ' lightDark' : '')}
                 >
-                  {editingEvent !== null && editingEvent.index === index ? (
+                  {editingEvent !== null && editingEvent.index === event.id ? (
                     <div className='event-details edit-details'>
                       <div className='edit-inpts-grouped'>
                         <div className='event-time'>
@@ -355,35 +428,39 @@ export default function MyEventCalendar() {
                     </div>
                   ) : (
                     <div key={index} className='event-details'>
-                      <div className='event-time'>{event.time}</div>
+                      <div className='event-time'>{editingEvent && editingEvent.time ? editingEvent.time : event.time}</div>
                       <div
                         className={
                           'event-information' +
                           (darkMode ? ' whiteElement' : '')
                         }
                       >
-                        <div className='event-name'>{event.name}</div>
+                        <div className='event-name'>{editingEvent && editingEvent.name ? editingEvent.name : event.name}</div>
                         <div className='event-description'>
-                          {event.description}
+                          {editingEvent && editingEvent.description ? editingEvent.description : event.description}
                         </div>
                       </div>
                     </div>
                   )}
                   <div className='event-actions'>
-                    {editingEvent === null || editingEvent.index !== index ? (
+                    {editingEvent === null ||
+                    editingEvent.index !== event.id ? (
                       <button
                         className='edit-event'
-                        onClick={() => toggleEditMode(event, index)}
+                        onClick={() => toggleEditMode(event, event.id)}
                       >
                         <AiFillEdit />
                       </button>
                     ) : (
-                      <button className='save-event' onClick={updateEvent}>
+                      <button
+                        className='save-event'
+                        onClick={() => updateEvent(event.id)}
+                      >
                         <ImCheckmark />
                       </button>
                     )}
 
-                    <button onClick={() => deleteEvent(index)}>
+                    <button onClick={() => deleteEvent(event.id)}>
                       <ImCross />
                     </button>
                   </div>
@@ -393,7 +470,6 @@ export default function MyEventCalendar() {
           )}
         </div>
         <div className='addEventSection'>
-          {/* <h3 className='new-event-title'>Ավելացնել նոր իրադարձություն</h3> */}
           <div className='grouped-event-inpts'>
             <TimePicker
               className={'time-picker' + (darkMode ? ' darkTime' : '')}

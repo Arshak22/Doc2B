@@ -13,12 +13,15 @@ import Document from '../../assets/Images/Document.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import { GetBasicUserInfo } from '../../Platform/UserInfoRequests';
 
 export default function Home() {
   const { darkMode, setPopUpOpen } = useGlobalContext();
   const canvasRef = useRef(null);
   const [hasCompanies, setHasCompnaies] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
   let firstPerc = 60;
   let secondPerc = 30;
   let thirdPerc = 10;
@@ -49,6 +52,20 @@ export default function Home() {
 
   const applications = [];
 
+  const getBasicUserInfo = async () => {
+    try {
+      const result = await GetBasicUserInfo();
+      if (result) {
+        setFirstName(result.data.user_info.first_name);
+        setLastName(result.data.user_info.last_name);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getBasicUserInfo();
+  }, []);
+  
   const getCompaniesList = async () => {
     try {
       const result = await GetAllCompanies();
@@ -199,7 +216,7 @@ export default function Home() {
               <div className='welcome-section'>
                 <h5>Բարի գալուստ,</h5>
                 <h3 className={darkMode ? ' whiteElement' : ''}>
-                  Անուն Ազգանուն
+                  {firstName} {lastName}
                 </h3>
               </div>
               <div

@@ -24,7 +24,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
 
 export default function Staff() {
-  const { darkMode, setPopUpOpen } = useGlobalContext();
+  const { darkMode, setPopUpOpen, companyID } = useGlobalContext();
   const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
@@ -61,13 +61,16 @@ export default function Staff() {
   };
 
   useEffect(() => {
-    getCompaniesList();
-  }, []);
+    if (companyID) {
+      getCompaniesList();
+    }
+  }, [companyID]);
 
   useEffect(() => {
-    const id = localStorage.getItem('companyID');
-    getStaffList(id);
-  }, []);
+    if (companyID && companyID !== 'companyID') {
+      getStaffList(companyID);
+    }
+  }, [companyID]);
 
   const handleSearch = async () => {
     if (searchAtribute && searchAtribute !== '') {
@@ -147,14 +150,14 @@ export default function Staff() {
       }
     };
     fetchData();
-  }, [selectedStatus]);
+  }, [selectedStatus, companyID]);
 
   useEffect(() => {
     const current = staff.slice(0, itemsPerPage);
     const count = Math.ceil(staff.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, [staff]);
+  }, [staff, companyID]);
 
   useEffect(() => {
     if (darkMode) {

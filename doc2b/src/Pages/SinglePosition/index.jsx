@@ -104,10 +104,6 @@ export default function SinglePosition() {
   };
 
   useEffect(() => {
-    console.log(
-      'Component re-rendered with updated functionalities:',
-      functionalities
-    );
   }, [functionalities]);
 
   const handleSubmit = async () => {
@@ -121,7 +117,6 @@ export default function SinglePosition() {
       newPosition.functional[propName] = value;
     });
     try {
-      console.log(id, newPosition);
       await UpdatePositionInfo(id, newPosition);
       setEditMode(false);
     } catch (error) {}

@@ -11,6 +11,7 @@ import { GetAllPositions } from '../../Platform/PositionRequests';
 import { GetAllDepartments } from '../../Platform/DepartmentRequests';
 import { SendPassportScan } from '../../Platform/PassportScanRequests';
 import { SendIdCardScan } from '../../Platform/IDCardScanRequests';
+import { GetBasicUserInfo } from '../../Platform/UserInfoRequests';
 import { RxCross2 } from 'react-icons/rx';
 import { HiCamera } from 'react-icons/hi';
 import { ImCheckmark } from 'react-icons/im';
@@ -24,6 +25,7 @@ setDefaultLocale('hy');
 export default function AddStaffPopUp({ darkMode, close }) {
   const [documentLoading, setDocumentLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [userEmail, setUserEmail] = useState(null);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [selectedRadio, setSelectedRadio] = useState('Անձնագիր');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -100,6 +102,19 @@ export default function AddStaffPopUp({ darkMode, close }) {
   useEffect(() => {
     const id = localStorage.getItem('companyID');
     getDivisionList(id);
+  }, []);
+
+  const getBasicUserInfo = async () => {
+    try {
+      const result = await GetBasicUserInfo();
+      if (result) {
+        setUserEmail(result.data.user_info.email);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getBasicUserInfo();
   }, []);
 
   useEffect(() => {
@@ -309,7 +324,7 @@ export default function AddStaffPopUp({ darkMode, close }) {
         employer_passport_authority: inputs.PassportGivenBy,
         employer_register_address: `${inputs.country} ${inputs.city} ${inputs.address}`,
         employer_phone_number: inputs.telephone,
-        employer_email: inputs.email,
+        employer_email: !addMeInstead ? inputs.email : userEmail,
         employer_nationality: inputs.nationality,
         weekly_working_hours: inputs.HoursPerWeek,
         weekly_working_days: inputs.WorkingDaysWeek,

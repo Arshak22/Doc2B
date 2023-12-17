@@ -4,7 +4,8 @@ import { useGlobalContext } from '../../Context/Context';
 import { ROUTE_NAMES } from '../../Routes';
 import './style.css';
 
-import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import { GetBasicUserInfo } from '../../Platform/UserInfoRequests';
+import { RefreshTokenRequest } from '../../Platform/RefreshToken';
 
 import Logo from '../../assets/Images/Logo.png';
 import LogoWhite from '../../assets/Images/LogoWhite.png';
@@ -66,8 +67,18 @@ export default function Layout() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { popUpOpen, setPopUpOpen, darkMode, setDarkMode } = useGlobalContext();
+  const {
+    popUpOpen,
+    setPopUpOpen,
+    darkMode,
+    setDarkMode,
+    companyID,
+    setCompanyID,
+  } = useGlobalContext();
   const isLoggedIn = localStorage.getItem('logedIn') === 'true';
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [userAvatar, setUserAvatar] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [CompDropdownOpen, setCompDropdownOpen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -109,22 +120,54 @@ export default function Layout() {
     },
   ];
 
-  const getCompaniesList = async () => {
+  const getBasicUserInfo = async () => {
     try {
-      const result = await GetAllCompanies();
+      const result = await GetBasicUserInfo();
       if (result) {
-        setOptions(result.data);
-        if (result.data[1] && localStorage.getItem('token')) {
-          setSelectedOption(result.data[1].company_name);
-          localStorage.setItem('companyID', result.data[1].id);
+        setFirstName(result.data.user_info.first_name.charAt(0) + '.');
+        setLastName(result.data.user_info.last_name);
+        setOptions(result.data.companies);
+        if (result.data.companies[0] && localStorage.getItem('token')) {
+          if (localStorage.getItem('companyID')) {
+            result.data.companies.forEach((item) => {
+              if (item.id == localStorage.getItem('companyID')) {
+                setSelectedOption(item.company_name);
+                setCompanyID('companyID', item.id);
+                setUserAvatar(item.employer_image);
+              }
+            });
+          } else {
+            setSelectedOption(result.data.companies[0].company_name);
+            localStorage.setItem('companyID', result.data.companies[0].id);
+            setCompanyID('companyID', result.data.companies[0].id);
+            setUserAvatar(result.data.companies[0].employer_image);
+          }
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      if (
+        error.response.data &&
+        error.response.data.detail ===
+          'Given token not valid for any token type' &&
+        error.response.data.code === 'token_not_valid'
+      ) {
+        try {
+          const result = await RefreshTokenRequest(
+            {
+              refresh: localStorage.getItem('refreshToken')
+            }
+          );
+          window.location.reload();
+          localStorage.setItem('token', result.data.access);
+        } catch (error) {}
+      }
+    }
   };
 
   useEffect(() => {
-    getCompaniesList();
-  }, []);
+    getBasicUserInfo();
+  }, [companyID]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -142,8 +185,12 @@ export default function Layout() {
     setSideMenu(!sideMenu);
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (newCompanyID, option) => {
     setSelectedOption(option);
+    if (localStorage.getItem('companyID')) {
+      localStorage.setItem('companyID', newCompanyID);
+      setCompanyID(newCompanyID);
+    }
     setDropdownOpen(false);
     setCompDropdownOpen(false);
   };
@@ -406,7 +453,7 @@ export default function Layout() {
                       }`}
                       onClick={toggleDropdown}
                     />
-                    {dropdownOpen && options && options.length > 2 ? (
+                    {dropdownOpen && options && options.length > 1 ? (
                       <div
                         className={
                           'CompanyDropdownOptions' +
@@ -414,12 +461,12 @@ export default function Layout() {
                         }
                         ref={dropdownRef}
                       >
-                        {options.slice(1).map((option, index) => (
+                        {options.map((option, index) => (
                           <div
                             key={index}
                             className='CompanyDropdownOption'
                             onClick={() =>
-                              handleOptionClick(option.company_name)
+                              handleOptionClick(option.id, option.company_name)
                             }
                           >
                             {option.company_name}
@@ -502,7 +549,7 @@ export default function Layout() {
                   <div className='userBlock'>
                     <div className='userAvatar'>
                       <img
-                        src={User}
+                        src={userAvatar ? userAvatar : User}
                         alt='user'
                         className='userAvatarImage'
                         onClick={toggleUserDropdown}
@@ -514,7 +561,7 @@ export default function Layout() {
                       onClick={toggleUserDropdown}
                       ref={userDropdownRef}
                     >
-                      Ա․ Ազգանուն
+                      {firstName} {lastName}
                     </h2>
                     <MdKeyboardArrowDown
                       className={
@@ -655,7 +702,7 @@ export default function Layout() {
                   </div>
                   <div className='userBlock'>
                     <div className='userAvatar' onClick={toggleUserDropdown}>
-                      <img src={User} alt='user' />
+                      <img src={userAvatar ? userAvatar : User} alt='user' />
                     </div>
                   </div>
                   {userDropdownOpen && (
@@ -997,11 +1044,13 @@ export default function Layout() {
                   }
                   ref={dropdownRef}
                 >
-                  {options.slice(1).map((option, index) => (
+                  {options.map((option, index) => (
                     <div
                       key={index}
                       className='CompanyDropdownOption'
-                      onClick={() => handleOptionClick(option.company_name)}
+                      onClick={() =>
+                        handleOptionClick(option.id, option.company_name)
+                      }
                     >
                       {option.company_name}
                     </div>
@@ -1015,11 +1064,13 @@ export default function Layout() {
                   }
                   ref={dropdownRef}
                 >
-                  {options.slice(1).map((option, index) => (
+                  {options.map((option, index) => (
                     <div
                       key={index}
                       className='CompanyDropdownOption'
-                      onClick={() => handleOptionClick(option.company_name)}
+                      onClick={() =>
+                        handleOptionClick(option.id, option.company_name)
+                      }
                     >
                       {option.company_name}
                     </div>

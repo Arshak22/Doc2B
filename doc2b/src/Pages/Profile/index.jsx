@@ -443,7 +443,7 @@ export default function Profile() {
             </div>
           </div>
         ) : null}
-        <div className='staffInputSec'>
+        {/* <div className='staffInputSec'>
           <div className='email-pass-change-sec'>
             <div className='change-email-pass-block'>
               <label htmlFor='ChangeEmail'>Փոխել էլ․ հասցեն</label>
@@ -459,7 +459,7 @@ export default function Profile() {
               Հաստատել
             </button>
           </div>
-        </div>
+        </div> */}
         <div className='staffInputSec'>
           <div>
             <form className='email-pass-change-sec'>

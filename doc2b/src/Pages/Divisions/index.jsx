@@ -23,7 +23,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
 
 export default function Divisions() {
-  const { darkMode, setPopUpOpen } = useGlobalContext();
+  const { darkMode, setPopUpOpen, companyID } = useGlobalContext();
   const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
@@ -59,13 +59,17 @@ export default function Divisions() {
   };
 
   useEffect(() => {
-    const id = localStorage.getItem('companyID');
-    getDivisonsList(id);
-  }, []);
+    if (companyID) {
+      setLoading(true);
+      getDivisonsList(localStorage.getItem('companyID'));
+    }
+  }, [companyID]);
 
   useEffect(() => {
-    getCompaniesList();
-  }, []);
+    if (companyID) {
+      getCompaniesList();
+    }
+  }, [companyID]);
 
   const handleSearch = async () => {
     if (searchAtribute && searchAtribute !== '') {
@@ -116,7 +120,7 @@ export default function Divisions() {
     const count = Math.ceil(divisions.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, [divisions]);
+  }, [divisions, companyID]);
 
   useEffect(() => {
     if (darkMode) {
