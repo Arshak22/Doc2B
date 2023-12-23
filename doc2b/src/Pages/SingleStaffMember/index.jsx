@@ -413,6 +413,7 @@ export default function SingleStaffMember() {
     if (Object.keys(newErrors).length > 0 || fileUploadError) {
       setErrors(newErrors);
     } else {
+      setLoading(true);
       const NewEmployee = {
         employer_image: selectedImage ? selectedImage : member.employer_image,
         employer_first_name: inputs.Name
@@ -487,6 +488,9 @@ export default function SingleStaffMember() {
         NewEmployee.employer_job_end_day = inputs.WorkEndDate;
       }
       await UpdateStaffInfo(id, NewEmployee, localStorage.getItem('companyID'));
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
       setSelectedFiles([]);
       setEditMode(false);
       setSelectedImage(null);
@@ -525,6 +529,7 @@ export default function SingleStaffMember() {
       currency: null,
     };
     setInputs(clearedInputes);
+    setSelectedImage(null);
   };
 
   return (
@@ -540,7 +545,12 @@ export default function SingleStaffMember() {
                   <div
                     className='userAvatar StaffAvatarEdit'
                     style={
-                      member && member.employer_image
+                      selectedImage
+                        ? {
+                            backgroundImage: `url(${selectedImage})`,
+                            backgroundSize: 'cover',
+                          }
+                        : member && member.employer_image
                         ? {
                             backgroundImage: `url(${member.employer_image})`,
                             backgroundSize: 'cover',
@@ -1036,8 +1046,16 @@ export default function SingleStaffMember() {
                     type='text'
                     name='PassportGivenBy'
                     id='PassportGivenBy'
-                    defaultValue={inputs.PassportGivenBy ? inputs.PassportGivenBy: member.employer_passport_authority}
-                    value={inputs.PassportGivenBy ? inputs.PassportGivenBy: member.employer_passport_authority}
+                    defaultValue={
+                      inputs.PassportGivenBy
+                        ? inputs.PassportGivenBy
+                        : member.employer_passport_authority
+                    }
+                    value={
+                      inputs.PassportGivenBy
+                        ? inputs.PassportGivenBy
+                        : member.employer_passport_authority
+                    }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportGivenBy ? 'inptError' : ''
                     }`}
@@ -1095,8 +1113,16 @@ export default function SingleStaffMember() {
                     type='text'
                     name='PassportNumber'
                     id='PassportNumber'
-                    defaultValue={inputs.PassportNumber ? inputs.PassportNumber : member.employer_passport}
-                    value={inputs.PassportNumber ? inputs.PassportNumber : member.employer_passport}
+                    defaultValue={
+                      inputs.PassportNumber
+                        ? inputs.PassportNumber
+                        : member.employer_passport
+                    }
+                    value={
+                      inputs.PassportNumber
+                        ? inputs.PassportNumber
+                        : member.employer_passport
+                    }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.PassportNumber ? 'inptError' : ''
                     }`}
@@ -1122,8 +1148,16 @@ export default function SingleStaffMember() {
                     type='text'
                     name='SocialNumber'
                     id='SocialNumber'
-                    defaultValue={inputs.SocialNumber ? inputs.SocialNumber : member.employer_social_card}
-                    value={inputs.SocialNumber ? inputs.SocialNumber : member.employer_social_card}
+                    defaultValue={
+                      inputs.SocialNumber
+                        ? inputs.SocialNumber
+                        : member.employer_social_card
+                    }
+                    value={
+                      inputs.SocialNumber
+                        ? inputs.SocialNumber
+                        : member.employer_social_card
+                    }
                     className={`${darkMode ? 'darkInpt' : ''} ${
                       errors.SocialNumber ? 'inptError' : ''
                     }`}

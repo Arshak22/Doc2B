@@ -9,7 +9,11 @@ const options = {
 };
 
 export const AddNewDepartment = (companyID, department) => {
-  return axios.post(`${API}/main/departments/?company=${companyID}`, department, options);
+  return axios.post(
+    `${API}/main/departments/?company=${companyID}`,
+    department,
+    options
+  );
 };
 
 export const GetAllDepartments = (id) => {
@@ -17,7 +21,10 @@ export const GetAllDepartments = (id) => {
 };
 
 export const SearchDepartment = (companyID, search) => {
-  return axios.get(`${API}/main/departments/?company=${companyID}&search=${search}`, options);
+  return axios.get(
+    `${API}/main/departments/?company=${companyID}&search=${search}`,
+    options
+  );
 };
 
 export const GetSingleDepartment = (id) => {
@@ -25,9 +32,16 @@ export const GetSingleDepartment = (id) => {
 };
 
 export const UpdateDepartmentInfo = (id, companyID, department) => {
-  return axios.put(`${API}/main/departments/${id}/?company=${companyID}`, department, options);
+  return axios.put(
+    `${API}/main/departments/${id}/?company=${companyID}`,
+    department,
+    options
+  );
 };
 
 export const DeleteDepartment = (id, companyID) => {
-  return axios.delete(`${API}/main/departments/${id}/?company=${companyID}`, options);
+  return axios.delete(
+    `${API}/main/departments/${id}/?company=${companyID}`,
+    options
+  );
 };

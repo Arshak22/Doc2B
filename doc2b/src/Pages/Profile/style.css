@@ -95,6 +95,18 @@
   padding: 7px 15px !important;
 }
 
+.passSuccefullyChanged {
+  margin-top: 30px;
+  font-size: 20px !important;
+}
+
+.passwordChangeError {
+  color: var(--red);
+  font-family: 'Arnamu Medium', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
 @media screen and (max-width: 500px) {
   .ProfilePage .LeftBlockSection {
     margin-right: -100px;

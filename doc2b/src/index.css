@@ -87,7 +87,8 @@ label::selection,
 button::selection,
 abbr::selection,
 .calendarActiveDate::selection,
-.calendarActiveDate span::selection {
+.calendarActiveDate span::selection,
+.notification-count-number::selection {
   background-color: transparent !important;
   color: inherit;
 }

@@ -117,7 +117,11 @@ export default function SinglePosition() {
       newPosition.functional[propName] = value;
     });
     try {
+      setLoading(true);
       await UpdatePositionInfo(id, newPosition);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
       setEditMode(false);
     } catch (error) {}
   };

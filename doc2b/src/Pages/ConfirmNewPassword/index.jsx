@@ -108,7 +108,6 @@ export default function ConfirmNewPassword() {
       } else {
         setPass3Error('Գաղտնաբառը չի կարող պարունակել միայն թվանշաններ');
       }
-      console.log(error.response.data.new_password);
     }
   };
 

@@ -572,6 +572,10 @@ textarea {
   margin-bottom: 10px;
 }
 
+.bigEventsList {
+  height: 270px;
+}
+
 .myEvents::-webkit-scrollbar {
   display: block !important;
   width: 5px;

@@ -17,23 +17,38 @@ export const GetAllStaff = (id) => {
 };
 
 export const SearchStaff = (companyID, search) => {
-  return axios.get(`${API}/main/employers/?company=${companyID}&search=${search}`, options);
+  return axios.get(
+    `${API}/main/employers/?company=${companyID}&search=${search}`,
+    options
+  );
 };
 
 export const FilterStaff = (companyID, status) => {
   const formattedStatus = status.join(', ');
-  return axios.get(`${API}/main/employers/?company=${companyID}&status=[${formattedStatus}]`, options);
+  return axios.get(
+    `${API}/main/employers/?company=${companyID}&status=[${formattedStatus}]`,
+    options
+  );
 };
 
-
 export const GetSingleStaff = (id, companyID) => {
-  return axios.get(`${API}/main/employers/${id}/?company=${companyID}`, options);
+  return axios.get(
+    `${API}/main/employers/${id}/?company=${companyID}`,
+    options
+  );
 };
 
 export const UpdateStaffInfo = (id, employee, companyID) => {
-  return axios.put(`${API}/main/employers/${id}/?company=${companyID}`, employee, options);
+  return axios.put(
+    `${API}/main/employers/${id}/?company=${companyID}`,
+    employee,
+    options
+  );
 };
 
 export const DeleteStaff = (id, companyID) => {
-  return axios.delete(`${API}/main/employers/${id}/?company=${companyID}`, options);
+  return axios.delete(
+    `${API}/main/employers/${id}/?company=${companyID}`,
+    options
+  );
 };

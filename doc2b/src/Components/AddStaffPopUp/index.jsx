@@ -270,29 +270,8 @@ export default function AddStaffPopUp({ darkMode, close }) {
     const requiredFields = [
       'Name',
       'Surname',
-      // 'FathersName',
-      // 'position',
       'division',
-      // 'BOT',
-      // 'nationality',
-      // 'sex',
-      // 'telephone',
-      'email',
-      // 'country',
-      // 'city',
-      // 'address',
-      // 'PassportGivenBy',
-      // 'PassportGivenDate',
-      // 'PassportType',
-      // 'PassportNumber',
-      // 'SocialNumber',
-      // 'WorkingDaysWeek',
-      // 'HoursPerWeek',
-      // 'WorkStartTime',
-      // 'WorkEndTime',
-      // 'WorkStartDate',
-      // 'salary',
-      // 'currency',
+      'email'
     ];
 
     const newInputs = { ...inputs };

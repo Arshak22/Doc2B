@@ -11,7 +11,7 @@ export const ROUTE_NAMES = {
   COMPANY: '/company/',
   ACTIVITY: '/activity/',
   CONTACTUS: '/contact-us',
-  PROFILE: '/profile/',
+  PROFILE: '/profile',
   NEWACTIVITY: '/create-activity',
   ACTIVATEDEMAIL: '/activate/',
   RESETPASSWORD: '/reset-password/',

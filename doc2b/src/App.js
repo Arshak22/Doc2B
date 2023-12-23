@@ -30,7 +30,7 @@ function App() {
             <>
               <Route path={ROUTE_NAMES.HOME} element={<Home />} />
 
-              <Route path={ROUTE_NAMES.PROFILE + ":id"} element={<Profile />} />
+              <Route path={ROUTE_NAMES.PROFILE} element={<Profile />} />
 
               <Route path={ROUTE_NAMES.STAFF} element={<Staff />} />
               <Route path={ROUTE_NAMES.STAFFMEMBER + ":id"} element={<SingleStaffMember />} />

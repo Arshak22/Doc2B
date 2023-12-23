@@ -153,6 +153,7 @@ export default function SingleComany() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const company = {
       company_name: inputs.company_name,
       company_director_first_name: inputs.company_director_first_name,
@@ -170,6 +171,9 @@ export default function SingleComany() {
     };
     try {
       await UpdateCompanyInfo(id, company);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
       setEditMode(false);
     } catch (error) {}
   };
@@ -207,6 +211,7 @@ export default function SingleComany() {
       businessAddress: '',
     };
     setInputs(clearedInputes);
+    setSelectedImage(null);
   };
 
   return (
@@ -222,7 +227,12 @@ export default function SingleComany() {
                   <div
                     className='userAvatar StaffAvatarEdit'
                     style={
-                      company && company.company_image
+                      selectedImage
+                        ? {
+                            backgroundImage: `url(${selectedImage})`,
+                            backgroundSize: 'cover',
+                          }
+                        : company && company.company_image
                         ? {
                             backgroundImage: `url(${company.company_image})`,
                             backgroundSize: 'contain',
@@ -427,10 +437,7 @@ export default function SingleComany() {
                     <button className='save-staff-edit' onClick={handleSubmit}>
                       <ImCheckmark />
                     </button>
-                    <button
-                      className='cancel-staff-edit'
-                      onClick={closeEdit}
-                    >
+                    <button className='cancel-staff-edit' onClick={closeEdit}>
                       <ImCross />
                     </button>
                   </div>

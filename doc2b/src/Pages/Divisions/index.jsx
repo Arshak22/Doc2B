@@ -179,7 +179,7 @@ export default function Divisions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
@@ -228,7 +228,7 @@ export default function Divisions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }

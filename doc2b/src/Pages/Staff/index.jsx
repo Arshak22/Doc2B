@@ -243,7 +243,7 @@ export default function Staff() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
@@ -324,7 +324,7 @@ export default function Staff() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }

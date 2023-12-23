@@ -136,7 +136,7 @@
 
 .AddPopUp {
   position: fixed;
-  top: 6em;
+  top: 5em;
   left: 37%;
   transform: translateX(-25%);
   width: auto;

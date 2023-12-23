@@ -6,6 +6,7 @@ import './style.css';
 
 import { GetBasicUserInfo } from '../../Platform/UserInfoRequests';
 import { RefreshTokenRequest } from '../../Platform/RefreshToken';
+import { SendTimeZone } from '../../Platform/TimeZoneRequest';
 
 import Logo from '../../assets/Images/Logo.png';
 import LogoWhite from '../../assets/Images/LogoWhite.png';
@@ -74,6 +75,7 @@ export default function Layout() {
     setDarkMode,
     companyID,
     setCompanyID,
+    setUserID,
   } = useGlobalContext();
   const isLoggedIn = localStorage.getItem('logedIn') === 'true';
   const [firstName, setFirstName] = useState(null);
@@ -91,34 +93,67 @@ export default function Layout() {
   const dropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
+  const currentPathRef = useRef(location.pathname);
 
-  let notifications = [
-    {
-      message: 'Դուք ստացել եք նոր փաստաթուղթ վավերացման համար',
-      time: '15 րոպե առաջ',
-      status: 'Not read',
-    },
-    {
-      message: 'Դուք ստացել եք նոր փաստաթուղթ վավերացման համար',
-      time: '25 րոպե առաջ',
-      status: 'Not read',
-    },
-    {
-      message: 'Դուք ստացել եք նոր փաստաթուղթ վավերացման համար',
-      time: '30 րոպե առաջ',
-      status: 'Read',
-    },
-    {
-      message: 'Դուք ստացել եք նոր փաստաթուղթ վավերացման համար',
-      time: '1 ժամ առաջ',
-      status: 'Read',
-    },
-    {
-      message: 'Դուք ստացել եք նոր փաստաթուղթ վավերացման համար',
-      time: '2 ժամ առաջ',
-      status: 'Not read',
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const setTimeZone = async () => {
+      try {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        await SendTimeZone(JSON.stringify({ timezone: timezone }));
+      } catch (error) {}
+    };
+    setTimeZone();
+  }, []);
+
+  const sendNotificationRead = (notification) => {
+    if (socket) {
+      const jsonNotification = JSON.stringify(notification);
+      socket.send(jsonNotification);
+    }
+  };
+
+  useEffect(() => {
+    const newSocket = new WebSocket(
+      `ws://192.168.88.3:8002/ws/notify/?token=${localStorage.getItem('token')}`
+    );
+    newSocket.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    newSocket.onmessage = (event) => {
+      setNotificationCount(JSON.parse(event.data).count_false_status);
+      setNotifications(JSON.parse(event.data).data);
+    };
+
+    newSocket.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    currentPathRef.current = location.pathname;
+  }, [location]);
+
+  const handleClickMobileCalendar = (to) => {
+    const currentPath = currentPathRef.current;
+
+    if (currentPath.includes(to)) {
+      navigate(-1);
+    } else {
+      navigate(ROUTE_NAMES.CALENDAR);
+    }
+  };
 
   const getBasicUserInfo = async () => {
     try {
@@ -133,6 +168,8 @@ export default function Layout() {
               if (item.id == localStorage.getItem('companyID')) {
                 setSelectedOption(item.company_name);
                 setCompanyID('companyID', item.id);
+                localStorage.setItem('userID', item.employer_id);
+                setUserID('userID', item.employer_id);
                 setUserAvatar(item.employer_image);
               }
             });
@@ -145,7 +182,6 @@ export default function Layout() {
         }
       }
     } catch (error) {
-      console.log(error);
       if (
         error.response.data &&
         error.response.data.detail ===
@@ -153,11 +189,9 @@ export default function Layout() {
         error.response.data.code === 'token_not_valid'
       ) {
         try {
-          const result = await RefreshTokenRequest(
-            {
-              refresh: localStorage.getItem('refreshToken')
-            }
-          );
+          const result = await RefreshTokenRequest({
+            refresh: localStorage.getItem('refreshToken'),
+          });
           window.location.reload();
           localStorage.setItem('token', result.data.access);
         } catch (error) {}
@@ -252,6 +286,9 @@ export default function Layout() {
         !notificationDropdownRef.current.contains(event.target) &&
         !event.target.classList.contains('notificationBell') &&
         !event.target.classList.contains('notification-list') &&
+        !event.target.classList.contains('notification-count-number') &&
+        !event.target.classList.contains('notification') &&
+        !event.target.closest('.notification') &&
         !event.target.closest('.AddPopUp')
       ) {
         setPopUpOpen(false);
@@ -302,7 +339,7 @@ export default function Layout() {
   };
 
   const goToProfile = () => {
-    navigate(ROUTE_NAMES.PROFILE + '1');
+    navigate(ROUTE_NAMES.PROFILE);
   };
 
   const logOut = () => {
@@ -507,6 +544,14 @@ export default function Layout() {
                       }
                       onClick={toggleNotifications}
                     />
+                    {notificationCount !== 0 ? (
+                      <span
+                        className='notification-count-number'
+                        onClick={toggleNotifications}
+                      >
+                        {notificationCount}
+                      </span>
+                    ) : null}
                     {showNotifications && (
                       <div
                         className={
@@ -520,19 +565,40 @@ export default function Layout() {
                         {notifications.length > 0 ? (
                           notifications.map((notification, index) => {
                             return (
-                              <div key={index} className='notification'>
+                              <div
+                                key={index}
+                                className='notification'
+                                onClick={() =>
+                                  sendNotificationRead({
+                                    id: notification.id,
+                                    status: !notification.status,
+                                  })
+                                }
+                              >
                                 <h3
                                   className={
-                                    notification.status === 'Not read'
+                                    !notification.status
                                       ? 'not-read-message'
                                       : ''
                                   }
                                 >
-                                  {notification.message}
+                                  {!notification.company_id
+                                    ? 'Իրադարձություն'
+                                    : 'Գործառույթ'}
+                                  : {notification.name}
                                 </h3>
-                                <h5>{notification.time}</h5>
+                                <h5
+                                  className={
+                                    !notification.status
+                                      ? 'not-read-message'
+                                      : ''
+                                  }
+                                >
+                                  {notification.description}
+                                </h5>
+                                <h5>{notification.time_since_creation}</h5>
                                 <hr className={darkMode ? ' darkLine' : ''} />
-                                {notification.status === 'Not read' ? (
+                                {!notification.status ? (
                                   <div className='not-read'></div>
                                 ) : null}
                               </div>
@@ -661,6 +727,14 @@ export default function Layout() {
                       className='mobileSearchIcon mobileBellIcon'
                       onClick={toggleNotifications}
                     />
+                    {notificationCount !== 0 ? (
+                      <span
+                        className='notification-count-number mobile-notification-count'
+                        onClick={toggleNotifications}
+                      >
+                        {notificationCount}
+                      </span>
+                    ) : null}
                     {showNotifications && (
                       <div
                         className={
@@ -674,19 +748,40 @@ export default function Layout() {
                         {notifications.length > 0 ? (
                           notifications.map((notification, index) => {
                             return (
-                              <div key={index} className='notification'>
+                              <div
+                                key={index}
+                                className='notification'
+                                onClick={() =>
+                                  sendNotificationRead({
+                                    id: notification.id,
+                                    status: !notification.status,
+                                  })
+                                }
+                              >
                                 <h3
                                   className={
-                                    notification.status === 'Not read'
+                                    !notification.status
                                       ? 'not-read-message'
                                       : ''
                                   }
                                 >
-                                  {notification.message}
+                                  {!notification.company_id
+                                    ? 'Իրադարձություն'
+                                    : 'Գործառույթ'}
+                                  : {notification.name}
                                 </h3>
-                                <h5>{notification.time}</h5>
+                                <h5
+                                  className={
+                                    !notification.status
+                                      ? 'not-read-message'
+                                      : ''
+                                  }
+                                >
+                                  {notification.description}
+                                </h5>
+                                <h5>{notification.time_since_creation}</h5>
                                 <hr />
-                                {notification.status === 'Not read' ? (
+                                {!notification.status ? (
                                   <div className='not-read'></div>
                                 ) : null}
                               </div>
@@ -803,12 +898,7 @@ export default function Layout() {
                           alt='Company'
                           onClick={toggleMobileCompDropdown}
                         />
-                        <h5
-                          className={
-                            'tab-menu-headline-hidden' +
-                            (darkMode ? ' whiteElement' : '')
-                          }
-                        >
+                        <h5 className={darkMode ? ' whiteElement' : ''}>
                           {selectedOption}
                         </h5>
                       </div>
@@ -833,7 +923,12 @@ export default function Layout() {
                 </div>
                 <div className='bottom-menu-grouped-tabs'>
                   <div>
-                    <NavLink to={ROUTE_NAMES.CALENDAR}>
+                    <NavLink
+                      to={ROUTE_NAMES.CALENDAR}
+                      onClick={() =>
+                        handleClickMobileCalendar(ROUTE_NAMES.CALENDAR)
+                      }
+                    >
                       {({ isActive }) =>
                         isActive ? (
                           <>
@@ -1036,7 +1131,7 @@ export default function Layout() {
                   </NavLink>
                 </div>
               )}
-              {CompDropdownOpen && options && options.length > 2 ? (
+              {CompDropdownOpen && options && options.length > 1 ? (
                 <div
                   className={
                     'CompanyDropdownOptions moveRight' +

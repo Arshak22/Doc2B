@@ -65,7 +65,7 @@ export default function Home() {
   useEffect(() => {
     getBasicUserInfo();
   }, []);
-  
+
   const getCompaniesList = async () => {
     try {
       const result = await GetAllCompanies();

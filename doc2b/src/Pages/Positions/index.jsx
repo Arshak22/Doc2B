@@ -154,7 +154,7 @@ export default function Positions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
@@ -203,7 +203,7 @@ export default function Positions() {
                     type='text'
                     placeholder='Փնտրել'
                     name='Փնտրել'
-                    value={searchAtribute ? searchAtribute : null}
+                    value={searchAtribute ? searchAtribute : ''}
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }

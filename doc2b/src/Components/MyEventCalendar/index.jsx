@@ -22,7 +22,24 @@ import { ImCross } from 'react-icons/im';
 export default function MyEventCalendar() {
   const { darkMode } = useGlobalContext();
   const [date, setDate] = useState(new Date());
+  const currentDate = new Date();
   const [events, setEvents] = useState([]);
+
+  let isDateBeforeCurrentDay =
+    date.getFullYear() < currentDate.getFullYear() ||
+    (date.getFullYear() === currentDate.getFullYear() &&
+      (date.getMonth() < currentDate.getMonth() ||
+        (date.getMonth() === currentDate.getMonth() &&
+          date.getDate() < currentDate.getDate())));
+
+  useEffect(() => {
+    isDateBeforeCurrentDay =
+      date.getFullYear() < currentDate.getFullYear() ||
+      (date.getFullYear() === currentDate.getFullYear() &&
+        (date.getMonth() < currentDate.getMonth() ||
+          (date.getMonth() === currentDate.getMonth() &&
+            date.getDate() < currentDate.getDate())));
+  }, [date, currentDate]);
 
   const formatDate = (inputDateString) => {
     const parsedDate = new Date(inputDateString);
@@ -364,7 +381,11 @@ export default function MyEventCalendar() {
               Իրադարձություններ Չկան
             </h3>
           ) : (
-            <div className='myEvents'>
+            <div
+              className={
+                'myEvents' + (isDateBeforeCurrentDay ? ' bigEventsList' : '')
+              }
+            >
               {filteredEvents.map((event, index) => (
                 <div
                   key={index}
@@ -428,16 +449,26 @@ export default function MyEventCalendar() {
                     </div>
                   ) : (
                     <div key={index} className='event-details'>
-                      <div className='event-time'>{editingEvent && editingEvent.time ? editingEvent.time : event.time}</div>
+                      <div className='event-time'>
+                        {editingEvent && editingEvent.time
+                          ? editingEvent.time
+                          : event.time}
+                      </div>
                       <div
                         className={
                           'event-information' +
                           (darkMode ? ' whiteElement' : '')
                         }
                       >
-                        <div className='event-name'>{editingEvent && editingEvent.name ? editingEvent.name : event.name}</div>
+                        <div className='event-name'>
+                          {editingEvent && editingEvent.name
+                            ? editingEvent.name
+                            : event.name}
+                        </div>
                         <div className='event-description'>
-                          {editingEvent && editingEvent.description ? editingEvent.description : event.description}
+                          {editingEvent && editingEvent.description
+                            ? editingEvent.description
+                            : event.description}
                         </div>
                       </div>
                     </div>
@@ -469,45 +500,47 @@ export default function MyEventCalendar() {
             </div>
           )}
         </div>
-        <div className='addEventSection'>
-          <div className='grouped-event-inpts'>
-            <TimePicker
-              className={'time-picker' + (darkMode ? ' darkTime' : '')}
-              value={newEvent.time}
-              onChange={(time) => setNewEvent({ ...newEvent, time })}
-            />
-            <input
-              className={
-                'event-inpts event-name-inpt' + (darkMode ? ' darkInpt' : '')
-              }
-              type='text'
-              placeholder='Անվանում'
-              value={newEvent.name}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, name: e.target.value })
-              }
-            />
+        {isDateBeforeCurrentDay ? null : (
+          <div className='addEventSection'>
+            <div className='grouped-event-inpts'>
+              <TimePicker
+                className={'time-picker' + (darkMode ? ' darkTime' : '')}
+                value={newEvent.time}
+                onChange={(time) => setNewEvent({ ...newEvent, time })}
+              />
+              <input
+                className={
+                  'event-inpts event-name-inpt' + (darkMode ? ' darkInpt' : '')
+                }
+                type='text'
+                placeholder='Անվանում'
+                value={newEvent.name}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, name: e.target.value })
+                }
+              />
+            </div>
+            <div className='grouped-event-inpts'>
+              <textarea
+                className={'event-inpts' + (darkMode ? ' darkInpt' : '')}
+                placeholder='Նկարագրություն'
+                style={{ width: '100%' }}
+                value={newEvent.description}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, description: e.target.value })
+                }
+              />
+            </div>
+            <div className='grouped-event-inpts'>
+              <button
+                className={`add-event-btn ${buttonClass}`}
+                onClick={saveEvent}
+              >
+                Ավելացնել
+              </button>
+            </div>
           </div>
-          <div className='grouped-event-inpts'>
-            <textarea
-              className={'event-inpts' + (darkMode ? ' darkInpt' : '')}
-              placeholder='Նկարագրություն'
-              style={{ width: '100%' }}
-              value={newEvent.description}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, description: e.target.value })
-              }
-            />
-          </div>
-          <div className='grouped-event-inpts'>
-            <button
-              className={`add-event-btn ${buttonClass}`}
-              onClick={saveEvent}
-            >
-              Ավելացնել
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

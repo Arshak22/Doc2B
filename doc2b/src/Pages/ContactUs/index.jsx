@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import './style.css';
 import { useGlobalContext } from '../../Context/Context';
 
+import { SendQuestionToSupport } from '../../Platform/ContactUsRequest';
+
 import ContactUsIcon from '../../assets/Icons/ContactUsIcon.png';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
@@ -10,17 +12,17 @@ import { FaFacebookF } from 'react-icons/fa';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { FaLinkedinIn } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
-import { FaGlobe } from "react-icons/fa";
+import { FaGlobe } from 'react-icons/fa';
 import { ImAttachment } from 'react-icons/im';
 import { ImCheckmark } from 'react-icons/im';
 
 export default function ContactUs() {
   const { darkMode } = useGlobalContext();
-  const [questionTopic, setQuestionTopic] = useState('');
-  const [question, setQuestion] = useState('');
+  const [questionTopic, setQuestionTopic] = useState(null);
+  const [question, setQuestion] = useState(null);
   const [questionTopicError, setQuestionTopicError] = useState(false);
   const [questionError, setQuestionError] = useState(false);
-  const [selectedFile, setSelectedFile] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [sended, setSended] = useState(false);
 
@@ -47,11 +49,14 @@ export default function ContactUs() {
   };
 
   const handleFileChange = (e) => {
+    setSelectedFile(null);
     const file = e.target.files;
-    setSelectedFile(file);
+    setSelectedFile(file[0]);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
+    setQuestionTopicError(false);
+    setQuestionError(false);
     if (!questionTopic) {
       setQuestionTopicError(true);
     }
@@ -59,10 +64,21 @@ export default function ContactUs() {
       setQuestionError(true);
     }
     if (questionTopic && question) {
-      setSended(true);
-      setTimeout(() => {
-        setSended(false);
-      }, 4000);
+      const message = {
+        name: questionTopic,
+        description: question,
+        file: selectedFile,
+      };
+      try {
+        await SendQuestionToSupport(message);
+        setSended(true);
+        setTimeout(() => {
+          setQuestionTopic(null);
+          setQuestion(null);
+          setSelectedFile(null);
+          setSended(false);
+        }, 4000);
+      } catch (error) {}
     }
   };
 
@@ -123,7 +139,7 @@ export default function ContactUs() {
                   className='contact-us-upload-btn'
                   onClick={handleUploadButtonClick}
                 >
-                  {truncateFileName(selectedFile[0].name, 18)}
+                  {truncateFileName(selectedFile.name, 18)}
                   <ImCheckmark />
                 </button>
               ) : (
@@ -180,11 +196,7 @@ export default function ContactUs() {
           >
             <FaYoutube className='icon' />
           </a>
-          <a
-            href='https://doc2b.am/'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
+          <a href='https://doc2b.am/' target='_blank' rel='noopener noreferrer'>
             <FaGlobe className='icon' />
           </a>
         </div>
