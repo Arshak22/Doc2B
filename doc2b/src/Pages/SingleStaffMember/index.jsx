@@ -373,33 +373,7 @@ export default function SingleStaffMember() {
     setErrors({});
     setFileUploadError('');
 
-    const requiredFields = [
-      'Name',
-      'Surname',
-      // 'FathersName',
-      // 'position',
-      'division',
-      // 'BOT',
-      // 'nationality',
-      // 'sex',
-      // 'telephone',
-      'email',
-      // 'country',
-      // 'city',
-      // 'address',
-      // 'PassportGivenBy',
-      // 'PassportGivenDate',
-      // 'PassportType',
-      // 'PassportNumber',
-      // 'SocialNumber',
-      // 'WorkingDaysWeek',
-      // 'HoursPerWeek',
-      // 'WorkStartTime',
-      // 'WorkEndTime',
-      // 'WorkStartDate',
-      // 'salary',
-      // 'currency',
-    ];
+    const requiredFields = ['Name', 'Surname', 'division', 'email'];
 
     const newInputs = { ...inputs };
     const newErrors = {};

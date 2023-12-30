@@ -102,28 +102,41 @@
   overflow-x: hidden;
 }
 
-.template-list::-webkit-scrollbar {
+.small-template-list {
+  height: auto;
+  overflow-x: visible;
+}
+
+.template-list::-webkit-scrollbar,
+.info-from-template::-webkit-scrollbar,
+.staff-short-list::-webkit-scrollbar {
   display: block !important;
   width: 5px;
   border-radius: 20px;
 }
 
-.template-list::-webkit-scrollbar-track {
+.template-list::-webkit-scrollbar-track,
+.info-from-template::-webkit-scrollbar-track,
+.staff-short-list::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.template-list::-webkit-scrollbar-thumb {
+.template-list::-webkit-scrollbar-thumb,
+.info-from-template::-webkit-scrollbar-thumb,
+.staff-short-list::-webkit-scrollbar-thumb {
   background-color: var(--dark-green);
   border-radius: 20px;
   border-right: none;
   border-left: none;
 }
 
-.template-list::-webkit-scrollbar-thumb:hover {
+.template-list::-webkit-scrollbar-thumb:hover,
+.info-from-template::-webkit-scrollbar-thumb:hover {
   background-color: var(--light-green);
 }
 
-.template-list::-webkit-scrollbar-track-piece:end {
+.template-list::-webkit-scrollbar-track-piece:end,
+.info-from-template::-webkit-scrollbar-track-piece:end {
   background: transparent;
   margin-bottom: 5px;
 }
@@ -186,6 +199,7 @@ input.template-check {
   height: 18px;
   color: var(--light-green);
   transform: all 0.3s ease;
+  cursor: pointer;
 }
 
 .look-template:hover {
@@ -206,6 +220,16 @@ input.template-check {
   ) !important;
 }
 
+.create-doc-btn {
+  background: linear-gradient(
+    45deg,
+    var(--light-green) 0%,
+    #00959f 30%,
+    #00cad8 100%
+  ) !important;
+  color: #ffffff;
+}
+
 .next-btn svg {
   margin-right: 0;
   margin-left: 5px;
@@ -224,6 +248,136 @@ input.template-check {
   opacity: 0.5;
 }
 
+.info-from-template {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 28vw;
+  height: 235px;
+  overflow-x: hidden;
+}
+
+.info-from-template-small {
+  height: auto;
+}
+
+.info-from-template input,
+.info-from-template select {
+  width: 100% !important;
+}
+
+.info-from-template label {
+  text-transform: capitalize;
+}
+
+.templateInfoSection {
+  margin-right: 10px;
+}
+
+.templateInfoSection input,
+.templateInfoSection select {
+  width: 100%;
+  margin-right: 5px;
+  padding: 5px 10px;
+  border: 1px solid #d6d6d6;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-family: 'Arnamu', sans-serif;
+  margin-right: 10px;
+}
+
+.templateInfoSection label {
+  font-family: 'Arnamu', sans-serif;
+  letter-spacing: 1px;
+  font-size: 12px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  color: #949494;
+  font-weight: 600;
+}
+
+.templateInfoSection div {
+  display: grid;
+}
+
+.templateInfoSection .react-datepicker__navigation {
+  top: 8px !important;
+}
+
+.filename {
+  margin-left: 10px;
+}
+
+.zipFileBlock {
+  width: 230px;
+}
+
+.short-staff-search-bar {
+  position: relative;
+  right: 20px;
+}
+
+.staff-short-list {
+  position: absolute;
+  visibility: hidden;
+  overflow-x: hidden;
+  width: 300px;
+  height: 130px;
+  background-color: #dfe5f0;
+  border: 1px solid #d6d6d6;
+  right: 0;
+  margin-top: 5px;
+  border-radius: 5px;
+  transition: all 0.1s ease;
+  z-index: 30;
+}
+
+.staff-short-list:hover {
+  visibility: visible;
+}
+
+.short-staff-search-bar:hover .staff-short-list {
+  visibility: visible;
+}
+
+.staff-short-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.staff-short-list li:hover {
+  background: linear-gradient(
+    45deg,
+    var(--light-green) 0%,
+    #00959f 30%,
+    #00cad8 100%
+  );
+  color: #ffffff;
+}
+
+.staff-short-list li h3 {
+  font-family: 'Arnamu Medium', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.shortStaffDivider {
+  color: #d0d0d0;
+  background-color: #d0d0d0;
+  height: 1px;
+  opacity: 0.4;
+  margin: 0 auto;
+  margin-top: -2px;
+  width: 90%;
+}
+
 @media screen and (max-width: 500px) {
   .activity-path-search-panel {
     display: grid;
@@ -232,5 +386,17 @@ input.template-check {
   .activity-path {
     width: 100%;
     margin-top: 10px;
+  }
+  .info-from-template {
+    width: 100%;
+    justify-content: center;
+  }
+  .inpts.headerInpt.activitySearchBar {
+    width: 300px;
+    position: relative;
+    left: 20px;
+  }
+  .staff-short-list {
+    left: 20px;
   }
 }

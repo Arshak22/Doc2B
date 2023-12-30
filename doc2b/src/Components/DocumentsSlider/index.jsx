@@ -6,7 +6,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './style.css';
 
-import Document from '../../assets/Images/Document.png';
+import {
+  DeleteActivity,
+  DownloadDocuments,
+} from '../../Platform/ActivityRequest';
+
 import DocumentAccepted from '../../assets/Images/DocumentAccepted.png';
 import DocumentDeclined from '../../assets/Images/DocumentDeclined.png';
 import DocumentInProcess from '../../assets/Images/DocumentInProcess.png';
@@ -40,17 +44,46 @@ export default function DocumentSlider({ documnets }) {
     }
   };
 
+  const handleDownload = async (id, documentName) => {
+    try {
+      const response = await DownloadDocuments(id);
+      console.log(response.data);
+      const blob = new Blob([response.data], { type: 'application/zip' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${documentName}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {}
+  };
+
+  const handleDelete = async () => {
+    if (deletingId) {
+      try {
+        await DeleteActivity(deletingId, localStorage.getItem('companyID'));
+        setDeleteError('Փաստաթուղթը հաջողությամբ ջնջված է');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        setDeleteError('Դուք չեք կարող ջնջել այս փաստաթուղթը');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    }
+  };
+
   return !openDelete ? (
     <div className='sliderSection'>
       {documnets.map((elem, index) => {
-        const dateParts = elem.date.split(' ');
+        const dateParts = elem.created_at.split('-');
         return (
           <div
-            className={
-              !elem.category
-                ? 'document'
-                : 'document application' + (darkMode ? ' lightDark' : '')
-            }
+            className={'document application' + (darkMode ? ' lightDark' : '')}
             key={index}
           >
             <div className='three-dots'>
@@ -69,7 +102,9 @@ export default function DocumentSlider({ documnets }) {
                     <NavLink to={ROUTE_NAMES.ACTIVITY + elem.id}>
                       <li>Դիտել</li>
                     </NavLink>
-                    <li>Ներբեռնել</li>
+                    <li onClick={() => handleDownload(elem.id, elem.name)}>
+                      Ներբեռնել
+                    </li>
                     <li
                       onClick={() => {
                         setDeletingId(elem.id);
@@ -82,35 +117,37 @@ export default function DocumentSlider({ documnets }) {
                 </div>
               )}
             </div>
-            <NavLink to={ROUTE_NAMES.ACTIVITY + '1'}>
-              <h2>{truncateText(elem.name, 41)}</h2>
+            <NavLink to={ROUTE_NAMES.ACTIVITY + elem.id}>
+              <h2>{truncateText(elem.name, 30)}</h2>
             </NavLink>
-            <NavLink to={ROUTE_NAMES.ACTIVITY + '1'}>
-              <h4>{elem.person}</h4>
+            <NavLink to={ROUTE_NAMES.ACTIVITY + elem.id}>
+              {elem.employer ? (
+                <h4>
+                  {elem.employer.employer_first_name.charAt(0)}.{' '}
+                  {elem.employer.employer_last_name}
+                </h4>
+              ) : null}
             </NavLink>
             <h3>
-              <span>{dateParts[0]}</span> {dateParts[1]}{' '}
               <span>{dateParts[2]}</span>
+              {' - '}
+              {dateParts[1]}
+              {' - '}
+              <span>{dateParts[0]}</span>
             </h3>
-            {!elem.category ? (
-              <img
-                src={Document}
-                alt={`document${index}`}
-                className='documentPic'
-              />
-            ) : elem.category === 'Accepted' ? (
+            {elem.status === true ? (
               <img
                 src={DocumentAccepted}
                 alt={`document${index}`}
                 className='documentPic'
               />
-            ) : elem.category === 'Declined' ? (
+            ) : elem.status === false ? (
               <img
                 src={DocumentDeclined}
                 alt={`document${index}`}
                 className='documentPic'
               />
-            ) : elem.category === 'In Process' ? (
+            ) : elem.status === null ? (
               <img
                 src={DocumentInProcess}
                 alt={`document${index}`}
@@ -128,7 +165,9 @@ export default function DocumentSlider({ documnets }) {
       </h3>
       {!deleteError ? (
         <div>
-          <button className='save-staff-edit'>Այո</button>
+          <button className='save-staff-edit' onClick={handleDelete}>
+            Այո
+          </button>
           <button
             className='cancel-staff-edit'
             onClick={() => setOpenDelete(false)}

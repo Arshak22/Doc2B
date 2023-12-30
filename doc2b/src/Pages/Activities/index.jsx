@@ -13,6 +13,11 @@ import Document from '../../assets/Images/DocumentLook.png';
 import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
+import {
+  GetActivities,
+  SearchActivities,
+  FilterActivities,
+} from '../../Platform/ActivityRequest';
 
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -21,7 +26,7 @@ import { NavLink } from 'react-router-dom';
 import { ROUTE_NAMES } from '../../Routes';
 
 export default function Activities() {
-  const { darkMode, setPopUpOpen } = useGlobalContext();
+  const { darkMode, setPopUpOpen, companyID } = useGlobalContext();
   const [loading, setLoading] = useState(true);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
@@ -30,8 +35,20 @@ export default function Activities() {
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasCompanies, setHasCompnaies] = useState(false);
+  const [searchAtribute, setSearchAtribute] = useState(null);
+  const [searchResultEmpty, setSearchResultEmpty] = useState(false);
 
-  const applications = [];
+  const [applications, setApplications] = useState([]);
+
+  const getActivitiesList = async (id) => {
+    const result = await GetActivities(id);
+    if (result) {
+      setApplications(result.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
 
   const getCompaniesList = async () => {
     const result = await GetAllCompanies();
@@ -46,11 +63,52 @@ export default function Activities() {
   };
 
   useEffect(() => {
-    getCompaniesList();
-  }, []);
+    if (companyID) {
+      getCompaniesList();
+    }
+  }, [companyID]);
+
+  useEffect(() => {
+    if (companyID) {
+      setLoading(true);
+      getActivitiesList(localStorage.getItem('companyID'));
+    }
+  }, [companyID]);
+
+  const handleSearch = async () => {
+    if (searchAtribute && searchAtribute !== '') {
+      try {
+        // setLoading(true);
+        const result = await SearchActivities(
+          localStorage.getItem('companyID'),
+          searchAtribute
+        );
+        if (result) {
+          if (result.data.length < 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setApplications(result.data);
+          setTimeout(() => {
+            // setLoading(false);
+          }, 500);
+        }
+      } catch (error) {}
+    } else {
+      // setLoading(true);
+      getActivitiesList(localStorage.getItem('companyID'));
+      setSearchResultEmpty(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handlePageClick = (event) => {
-    // Calculate the new offset based on the selected page
     const newOffset = event.selected * itemsPerPage;
     const endOffset = newOffset + itemsPerPage;
     const current = applications.slice(newOffset, endOffset);
@@ -62,20 +120,51 @@ export default function Activities() {
   };
 
   const handleCheckboxChange = (event) => {
-    const status = event.target.value;
-    if (selectedStatus.includes(status)) {
-      setSelectedStatus(selectedStatus.filter((s) => s !== status));
-    } else {
-      setSelectedStatus([...selectedStatus, status]);
-    }
+    const status =
+      event.target.value === 'accepted'
+        ? 'True'
+        : event.target.value === 'declined'
+        ? 'False'
+        : 'null';
+    setSelectedStatus((prevSelectedStatus) => {
+      if (prevSelectedStatus.includes(status)) {
+        return prevSelectedStatus.filter((s) => s !== status);
+      } else {
+        return [...prevSelectedStatus, status];
+      }
+    });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedStatus.length > 0) {
+        try {
+          const result = await FilterActivities(
+            localStorage.getItem('companyID'),
+            selectedStatus
+          );
+          if (result.data.length < 1) {
+            setSearchResultEmpty(true);
+          } else {
+            setSearchResultEmpty(false);
+          }
+          setApplications(result.data);
+        } catch (error) {}
+      } else {
+        setLoading(true);
+        getActivitiesList(localStorage.getItem('companyID'));
+        setSearchResultEmpty(false);
+      }
+    };
+    fetchData();
+  }, [selectedStatus, companyID]);
 
   useEffect(() => {
     const current = applications.slice(0, itemsPerPage);
     const count = Math.ceil(applications.length / itemsPerPage);
     setPageCount(count);
     setCurrentItems(current);
-  }, []);
+  }, [applications, companyID]);
 
   useEffect(() => {
     if (darkMode) {
@@ -100,14 +189,14 @@ export default function Activities() {
         pagination.style.display = 'flex';
       }
     }
-  }, [darkMode, currentItems, currentPage]);
+  }, [darkMode, currentItems, currentPage, loading]);
 
   return (
     <div className='StaffPage'>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
         {loading ? (
           <PreLoader />
-        ) : applications.length > 1 ? (
+        ) : applications.length > 0 && !searchResultEmpty ? (
           <>
             <div className='InputContainer'>
               <div></div>
@@ -117,7 +206,7 @@ export default function Activities() {
                     <input
                       type='checkbox'
                       value='accepted'
-                      checked={selectedStatus.includes('accepted')}
+                      checked={selectedStatus.includes('True')}
                       onChange={handleCheckboxChange}
                     />
                     Հաստատված
@@ -126,7 +215,7 @@ export default function Activities() {
                     <input
                       type='checkbox'
                       value='declined'
-                      checked={selectedStatus.includes('declined')}
+                      checked={selectedStatus.includes('False')}
                       onChange={handleCheckboxChange}
                     />
                     Մերժված
@@ -135,7 +224,7 @@ export default function Activities() {
                     <input
                       type='checkbox'
                       value='in process'
-                      checked={selectedStatus.includes('in process')}
+                      checked={selectedStatus.includes('null')}
                       onChange={handleCheckboxChange}
                     />
                     Ընթացքի մեջ
@@ -149,11 +238,18 @@ export default function Activities() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
+                    onKeyDown={handleKeyDown}
                   />
                   <ImSearch
                     className={
-                      'passwordIcon searchIcon' + (darkMode ? ' whiteIcon' : '')
+                      'passwordIcon searchIcon mobileActivitySearchIcon' +
+                      (darkMode ? ' whiteIcon' : '')
                     }
+                    onClick={handleSearch}
                   />
                 </div>
               </div>
@@ -184,6 +280,70 @@ export default function Activities() {
                 renderOnZeroPageCount={null}
               />
             </>
+          </>
+        ) : searchResultEmpty ? (
+          <>
+            <div className='InputContainer InputContainerRight'>
+              <div></div>
+              <div className='staff-filter-section'>
+                <div className='StatusFilter'>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='accepted'
+                      checked={selectedStatus.includes('True')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Հաստատված
+                  </label>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='declined'
+                      checked={selectedStatus.includes('False')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Մերժված
+                  </label>
+                  <label className={darkMode ? 'whiteElement' : ''}>
+                    <input
+                      type='checkbox'
+                      value='in process'
+                      checked={selectedStatus.includes('null')}
+                      onChange={handleCheckboxChange}
+                    />
+                    Ընթացքի մեջ
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Փնտրել'
+                    name='Փնտրել'
+                    className={
+                      'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
+                    }
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <ImSearch
+                    className={
+                      'passwordIcon searchIcon mobileActivitySearchIcon' +
+                      (darkMode ? ' whiteIcon' : '')
+                    }
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='delete-confirm-section'>
+              <h3 className={darkMode ? ' whiteElement' : ''}>
+                Որոնման արդյունքը դատարկ է
+              </h3>
+            </div>
           </>
         ) : hasCompanies ? (
           <div className='no-staff-content'>

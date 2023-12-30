@@ -23,20 +23,6 @@
   }
 }
 
-.react-datepicker__day--keyboard-selected,
-.react-datepicker__month-text--keyboard-selected,
-.react-datepicker__quarter-text--keyboard-selected,
-.react-datepicker__year-text--keyboard-selected {
-  background: linear-gradient(
-    80deg,
-    var(--dark-green) 0%,
-    #009da9 40%,
-    #00cedc 100%
-  ) !important;
-  background-color: none !important;
-  color: #ffffff !important;
-}
-
 select#Role,
 select#Currency,
 input#Salary,

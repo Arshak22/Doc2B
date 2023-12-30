@@ -7,6 +7,7 @@ import { SendQuestionToSupport } from '../../Platform/ContactUsRequest';
 import ContactUsIcon from '../../assets/Icons/ContactUsIcon.png';
 
 import MyEventCalendar from '../../Components/MyEventCalendar';
+import PreLoader from '../../Components/PreLoader';
 
 import { FaFacebookF } from 'react-icons/fa';
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -18,6 +19,7 @@ import { ImCheckmark } from 'react-icons/im';
 
 export default function ContactUs() {
   const { darkMode } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [questionTopic, setQuestionTopic] = useState(null);
   const [question, setQuestion] = useState(null);
   const [questionTopicError, setQuestionTopicError] = useState(false);
@@ -25,6 +27,13 @@ export default function ContactUs() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [sended, setSended] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const handleUploadButtonClick = () => {
     fileInputRef.current.click();
@@ -96,137 +105,149 @@ export default function ContactUs() {
   return (
     <div className='StaffPage '>
       <div className={'LeftBlockSection' + (darkMode ? ' Dark' : '')}>
-        <div
-          className={'contact-us-welcome' + (darkMode ? ' darkWelcome' : '')}
-        >
-          <img src={ContactUsIcon} alt='ContactUsIcon' />
-          <h3>Հետադարձ Կապ</h3>
-        </div>
-        {!sended ? (
-          <div
-            className={
-              'contact-us-form' + (darkMode ? ' dark-contact-us-form' : '')
-            }
-          >
-            <input
-              placeholder='Հարցի նպատակը'
-              type='text'
-              name='QuestionTopic'
-              id='QuestionTopic'
-              onChange={(e) => handleQuestionTopic(e.target.value)}
-            />
-            {questionTopicError ? <span>Դաշտը պարտադիր է</span> : null}
-            <textarea
-              placeholder='Ձեր հարցը'
-              name='Question'
-              id='Question'
-              rows='4'
-              onChange={(e) => handleQuestion(e.target.value)}
-            ></textarea>
-            {questionError ? <span>Դաշտը պարտադիր է</span> : null}
-            <div className='contact-form-btn-sec'>
-              <input
-                type='file'
-                id='uploadButton'
-                ref={fileInputRef}
-                accept='.pdf, .doc, .docx, .jpg, .jpeg, .png'
-                style={{ display: 'none' }}
-                multiple
-                onChange={handleFileChange}
-              />
-              {selectedFile ? (
-                <button
-                  className='contact-us-upload-btn'
-                  onClick={handleUploadButtonClick}
-                >
-                  {truncateFileName(selectedFile.name, 18)}
-                  <ImCheckmark />
-                </button>
-              ) : (
-                <button
-                  className='contact-us-upload-btn'
-                  onClick={handleUploadButtonClick}
-                >
-                  Ավելացնել ֆայլ
-                  <ImAttachment />
-                </button>
-              )}
-              <div>
-                <button onClick={handleSend} className='send-form-btn'>
-                  Ուղղարկել
-                </button>
-              </div>
-            </div>
-          </div>
+        {loading ? (
+          <PreLoader />
         ) : (
-          <h4
-            className={
-              'sended-form-message' + (darkMode ? ' whiteElement' : '')
-            }
-          >
-            Ձեր հայտն ուղղարկված է
-          </h4>
-        )}
-        <div className='contact-us-social-media'>
-          <a
-            href='https://www.facebook.com/doc2b.am'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaFacebookF className='icon' />
-          </a>
-          <a
-            href='https://t.me/doc2bam'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaTelegramPlane className='icon' />
-          </a>
-          <a
-            href='https://www.linkedin.com/company/doc2bam/'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaLinkedinIn className='icon' />
-          </a>
-          <a
-            href='https://www.youtube.com/channel/UCbLU-xAW1nc_GsCbEL5JypA'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaYoutube className='icon' />
-          </a>
-          <a href='https://doc2b.am/' target='_blank' rel='noopener noreferrer'>
-            <FaGlobe className='icon' />
-          </a>
-        </div>
-        <hr
-          className={
-            'contact-us-brake' + (darkMode ? ' dark-contact-us-brake' : '')
-          }
-        />
-        <div
-          className={
-            'contact-information' +
-            (darkMode ? ' dark-contact-information' : '')
-          }
-        >
-          <ul>
-            <a href='tel:+374 11 700 987'>
-              <li className='numbers'>+374 11 700 987</li>
-            </a>
-            <a href='mailto:info.doc2b@gmail.com'>
-              <li className='numbers'>info.doc2b@gmail.com</li>
-            </a>
-            <a
-              href='https://maps.app.goo.gl/UXRtV2E395qdedNu7'
-              target='_blank'
-              rel='noopener noreferrer'
+          <>
+            <div
+              className={
+                'contact-us-welcome' + (darkMode ? ' darkWelcome' : '')
+              }
             >
-              <li className='numbers smallAddress'> Նար-Դոս 2 փ․, Երևան</li>
-            </a>
-          </ul>
-        </div>
+              <img src={ContactUsIcon} alt='ContactUsIcon' />
+              <h3>Հետադարձ Կապ</h3>
+            </div>
+            {!sended ? (
+              <div
+                className={
+                  'contact-us-form' + (darkMode ? ' dark-contact-us-form' : '')
+                }
+              >
+                <input
+                  placeholder='Հարցի նպատակը'
+                  type='text'
+                  name='QuestionTopic'
+                  id='QuestionTopic'
+                  onChange={(e) => handleQuestionTopic(e.target.value)}
+                />
+                {questionTopicError ? <span>Դաշտը պարտադիր է</span> : null}
+                <textarea
+                  placeholder='Ձեր հարցը'
+                  name='Question'
+                  id='Question'
+                  rows='4'
+                  onChange={(e) => handleQuestion(e.target.value)}
+                ></textarea>
+                {questionError ? <span>Դաշտը պարտադիր է</span> : null}
+                <div className='contact-form-btn-sec'>
+                  <input
+                    type='file'
+                    id='uploadButton'
+                    ref={fileInputRef}
+                    accept='.pdf, .doc, .docx, .jpg, .jpeg, .png'
+                    style={{ display: 'none' }}
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                  {selectedFile ? (
+                    <button
+                      className='contact-us-upload-btn'
+                      onClick={handleUploadButtonClick}
+                    >
+                      {truncateFileName(selectedFile.name, 18)}
+                      <ImCheckmark />
+                    </button>
+                  ) : (
+                    <button
+                      className='contact-us-upload-btn'
+                      onClick={handleUploadButtonClick}
+                    >
+                      Ավելացնել ֆայլ
+                      <ImAttachment />
+                    </button>
+                  )}
+                  <div>
+                    <button onClick={handleSend} className='send-form-btn'>
+                      Ուղղարկել
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <h4
+                className={
+                  'sended-form-message' + (darkMode ? ' whiteElement' : '')
+                }
+              >
+                Ձեր հայտն ուղղարկված է
+              </h4>
+            )}
+            <div className='contact-us-social-media'>
+              <a
+                href='https://www.facebook.com/doc2b.am'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <FaFacebookF className='icon' />
+              </a>
+              <a
+                href='https://t.me/doc2bam'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <FaTelegramPlane className='icon' />
+              </a>
+              <a
+                href='https://www.linkedin.com/company/doc2bam/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <FaLinkedinIn className='icon' />
+              </a>
+              <a
+                href='https://www.youtube.com/channel/UCbLU-xAW1nc_GsCbEL5JypA'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <FaYoutube className='icon' />
+              </a>
+              <a
+                href='https://doc2b.am/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <FaGlobe className='icon' />
+              </a>
+            </div>
+            <hr
+              className={
+                'contact-us-brake' + (darkMode ? ' dark-contact-us-brake' : '')
+              }
+            />
+            <div
+              className={
+                'contact-information' +
+                (darkMode ? ' dark-contact-information' : '')
+              }
+            >
+              <ul>
+                <a href='tel:+374 11 700 987'>
+                  <li className='numbers'>+374 11 700 987</li>
+                </a>
+                <a href='mailto:info.doc2b@gmail.com'>
+                  <li className='numbers'>info.doc2b@gmail.com</li>
+                </a>
+                <a
+                  href='https://maps.app.goo.gl/ZsMjDQEGEx1eXLhSA'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <li className='numbers smallAddress'> Նար-Դոս 2 փ․, Երևան</li>
+                </a>
+              </ul>
+            </div>
+          </>
+        )}
       </div>
       <div className='groupedSideBlocks'>
         <div className='AddsSection adds_2'></div>

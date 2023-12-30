@@ -52,7 +52,7 @@ export default function Organization() {
   const handleSearch = async () => {
     if (searchAtribute && searchAtribute !== '') {
       try {
-        setLoading(true);
+        // setLoading(true);
         const result = await SearchCompanies(searchAtribute);
         if (result) {
           if (result.data.length <= 1) {
@@ -62,12 +62,12 @@ export default function Organization() {
           }
           setCompanies(result.data);
           setTimeout(() => {
-            setLoading(false);
+            // setLoading(false);
           }, 500);
         }
       } catch (error) {}
     } else {
-      setLoading(true);
+      // setLoading(true);
       getCompaniesList();
       setSearchResultEmpty(false);
     }
@@ -158,7 +158,10 @@ export default function Organization() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch
@@ -207,7 +210,10 @@ export default function Organization() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch

@@ -10,7 +10,7 @@
   position: relative;
   border-radius: 10px;
   background-color: #e4f4f7;
-  padding: 10px;
+  padding: 15px 10px;
   margin-left: 10px;
   margin-right: 6px;
   margin-bottom: 15px;
@@ -69,7 +69,8 @@
   font-family: 'Arnamu', sans-serif;
   font-weight: 600;
   letter-spacing: 1px;
-  padding-right: 2em;
+  padding-right: 6em;
+  margin-bottom: 60px;
   color: #000000;
 }
 
@@ -86,6 +87,9 @@
 
 .document h3 {
   font-weight: 600;
+  position: absolute;
+  font-family: 'LabGrotesque', sans-serif;
+  bottom: 10px;
 }
 
 .document.lightDark h3,
@@ -100,6 +104,9 @@
 
 .document h4 {
   font-size: 14px;
+  position: absolute;
+  bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .documentPic {

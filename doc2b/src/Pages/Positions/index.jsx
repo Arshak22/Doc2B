@@ -50,7 +50,7 @@ export default function Positions() {
   const handleSearch = async () => {
     if (searchAtribute && searchAtribute !== '') {
       try {
-        setLoading(true);
+        // setLoading(true);
         const result = await SearchPosition(searchAtribute);
         if (result) {
           if (result.data.length <= 1) {
@@ -60,12 +60,12 @@ export default function Positions() {
           }
           setPositions(result.data);
           setTimeout(() => {
-            setLoading(false);
+            // setLoading(false);
           }, 500);
         }
       } catch (error) {}
     } else {
-      setLoading(true);
+      // setLoading(true);
       getPositionsList();
       setSearchResultEmpty(false);
     }
@@ -158,7 +158,10 @@ export default function Positions() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch
@@ -207,7 +210,10 @@ export default function Positions() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch

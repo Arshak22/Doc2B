@@ -2,3 +2,10 @@
   margin-left: 5px;
   margin-bottom: 15px;
 }
+
+@media screen and (max-width: 500px) {
+  .LeftBlockSection .mobileActivitySearchIcon {
+    top: 85px !important;
+    right: 60px !important;
+  }
+}

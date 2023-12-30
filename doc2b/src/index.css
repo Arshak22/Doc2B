@@ -100,8 +100,55 @@ a {
 .inptError,
 .darkInpt.inptError {
   border-color: var(--red) !important;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  50%,
+  90% {
+    transform: translateX(-5px);
+  }
+  30%,
+  70% {
+    transform: translateX(5px);
+  }
 }
 
 .upload-error-btn {
   background: var(--red) !important;
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected,
+.react-datepicker__day--selected,
+.react-datepicker__month-text--selected,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__year-text--selected {
+  background: linear-gradient(
+    80deg,
+    var(--dark-green) 0%,
+    #009da9 40%,
+    #00cedc 100%
+  ) !important;
+  background-color: none !important;
+  color: #ffffff !important;
+}
+
+.react-datepicker__day-names,
+.react-datepicker__week {
+  display: flex !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header,
+.react-datepicker__day-names {
+  text-transform: capitalize;
 }

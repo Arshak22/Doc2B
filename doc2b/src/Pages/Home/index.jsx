@@ -14,9 +14,10 @@ import CaseIcon from '../../assets/Icons/CaseIcon.png';
 
 import { GetAllCompanies } from '../../Platform/CompanyRequests';
 import { GetBasicUserInfo } from '../../Platform/UserInfoRequests';
+import { GetActivities } from '../../Platform/ActivityRequest';
 
 export default function Home() {
-  const { darkMode, setPopUpOpen } = useGlobalContext();
+  const { darkMode, setPopUpOpen, companyID } = useGlobalContext();
   const canvasRef = useRef(null);
   const [hasCompanies, setHasCompnaies] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ export default function Home() {
     []
   );
 
-  const applications = [];
+  const [applications, setApplications] = useState([]);
 
   const getBasicUserInfo = async () => {
     try {
@@ -83,6 +84,23 @@ export default function Home() {
   useEffect(() => {
     getCompaniesList();
   }, []);
+
+  const getActivitiesList = async (id) => {
+    const result = await GetActivities(id);
+    if (result) {
+      setApplications(result.data.slice(0, 6));
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  useEffect(() => {
+    if (companyID) {
+      setLoading(true);
+      getActivitiesList(localStorage.getItem('companyID'));
+    }
+  }, [companyID]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

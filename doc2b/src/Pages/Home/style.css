@@ -181,6 +181,7 @@ input[type='radio']:checked::before {
   margin-top: 15px;
   width: 100%;
   padding: 10px;
+  padding-bottom: 23px;
 }
 
 .sliderHeaderBlock {

@@ -74,7 +74,7 @@ export default function Divisions() {
   const handleSearch = async () => {
     if (searchAtribute && searchAtribute !== '') {
       try {
-        setLoading(true);
+        // setLoading(true);
         const result = await SearchDepartment(
           localStorage.getItem('companyID'),
           searchAtribute
@@ -87,12 +87,12 @@ export default function Divisions() {
           }
           setDivisions(result.data);
           setTimeout(() => {
-            setLoading(false);
+            // setLoading(false);
           }, 500);
         }
       } catch (error) {}
     } else {
-      setLoading(true);
+      // setLoading(true);
       getDivisonsList(localStorage.getItem('companyID'));
       setSearchResultEmpty(false);
     }
@@ -183,7 +183,10 @@ export default function Divisions() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch
@@ -232,7 +235,10 @@ export default function Divisions() {
                     className={
                       'inpts headerInpt' + (darkMode ? ' darkInpt' : '')
                     }
-                    onChange={(e) => setSearchAtribute(e.target.value)}
+                    onChange={(e) => {
+                      setSearchAtribute(e.target.value);
+                      handleSearch();
+                    }}
                     onKeyDown={handleKeyDown}
                   />
                   <ImSearch
